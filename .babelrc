@@ -1,0 +1,8 @@
+{
+  "presets": ["@babel/preset-flow", "@babel/preset-react"],
+  "plugins": [
+    "@babel/plugin-syntax-object-rest-spread",
+    "@babel/plugin-proposal-class-properties",
+    "react-flow-props-to-prop-types"
+  ]
+}

@@ -1,4 +1,4 @@
-/** @flow */
+// @flow
 
 import {PureComponent, type Node, type Ref} from 'react';
 
@@ -6,34 +6,28 @@ import {PureComponent, type Node, type Ref} from 'react';
 const callAll = (...fns) => (...args: Array<*>) =>
   fns.forEach(fn => fn && fn(...args));
 
-type CollapsePropType = {
+type Props = {
   children: ({
     isOpen: boolean,
-    isPartiallyOpen: boolean,
     getTogglerProps: (*) => {},
     getCollapsibleProps: (*) => {},
-    getPartialCollapsibleProps: (*) => {},
-    getPartialTogglerProps: (*) => {},
     contentRef: Ref<*>
   }) => Node,
   isOpen: ?boolean,
   defaultOpen: boolean,
-  isPartiallyOpen: ?boolean,
   collapsedHeight: number
 };
 
-type CollapseStateType = {
+type State = {
   height: number | string,
   isOpen: ?boolean,
-  isPartiallyOpen: ?boolean,
   counter: number
 };
 
-class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
+export default class Collapse extends PureComponent<Props, State> {
   static defaultProps = {
     isOpen: null,
     defaultOpen: false,
-    isPartiallyOpen: null,
     collapsedHeight: 0
   };
 
@@ -42,9 +36,6 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
   state = {
     height: this.props.collapsedHeight,
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
-    isPartiallyOpen: this.getIsPartiallyOpen({
-      isPartiallyOpen: this.props.isPartiallyOpen
-    }),
     counter: 0
   };
 
@@ -59,10 +50,7 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
     }
   }
 
-  componentDidUpdate(
-    prevProps: CollapsePropType,
-    prevState: CollapseStateType
-  ) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const isCurrentlyOpen = this.getIsOpen();
 
     if (this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen) {
@@ -76,33 +64,10 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
         });
       }
     }
-
-    if (isCurrentlyOpen) {
-      if (
-        this.getIsPartiallyOpen(prevState, prevProps) !==
-        this.getIsPartiallyOpen()
-      ) {
-        this.setState(this.setOpen());
-      }
-    }
   }
 
   collapsible: ?HTMLElement;
   content: ?HTMLElement;
-
-  /**
-   * Returns the state of the isPartiallyOpen prop.
-   * If it is controlled, return the prop value.
-   * If is isn't, use internal state
-   */
-  getIsPartiallyOpen(
-    state: $Shape<CollapseStateType> = this.state,
-    props: $Shape<CollapsePropType> = this.props
-  ) {
-    return props.isPartiallyOpen !== null
-      ? props.isPartiallyOpen
-      : state.isPartiallyOpen;
-  }
 
   /**
    * Returns the state of the isOpen prop.
@@ -110,20 +75,19 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
    * If is isn't, use internal state
    */
   getIsOpen(
-    state: $Shape<CollapseStateType> = this.state,
-    props: $Shape<CollapsePropType> = this.props
+    state: $Shape<State> = this.state,
+    props: $Shape<Props> = this.props
   ) {
     return props.isOpen !== null ? props.isOpen : state.isOpen;
   }
 
-  setOpen = () => ({height: this.content ? this.content.clientHeight : 'auto'});
+  setOpen = () => ({
+    height: this.content ? this.content.clientHeight : 'auto'
+  });
 
   setClosed = () => ({height: this.props.collapsedHeight});
 
   toggleIsOpen = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
-
-  toggleIsPartiallyOpen = () =>
-    this.setState(({isPartiallyOpen}) => ({isPartiallyOpen: !isPartiallyOpen}));
 
   /**
    * At the end of the transition open, make the height of the collapible 'auto'.
@@ -163,23 +127,6 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
     };
   };
 
-  getPartialTogglerProps = (props: {onClick: () => void} = {onClick() {}}) => {
-    return {
-      ...props,
-      onClick: callAll(props.onClick, this.toggleIsPartiallyOpen)
-    };
-  };
-
-  getPartialCollapsibleProps = (props: {} = {}) => {
-    return {
-      ...props,
-      style: {
-        willChange: 'height',
-        height: this.getIsPartiallyOpen() ? 'auto' : 0
-      }
-    };
-  };
-
   assignCollapsibleRef = (node: ?HTMLElement) => (this.collapsible = node);
 
   assignContentRef = (node: ?HTMLElement) => (this.content = node);
@@ -187,14 +134,9 @@ class Collapse extends PureComponent<CollapsePropType, CollapseStateType> {
   render() {
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
-      isPartiallyOpen: Boolean(this.getIsPartiallyOpen()),
       getTogglerProps: this.getTogglerProps,
       getCollapsibleProps: this.getCollapsibleProps,
-      getPartialCollapsibleProps: this.getPartialCollapsibleProps,
-      getPartialTogglerProps: this.getPartialTogglerProps,
       contentRef: this.assignContentRef
     });
   }
 }
-
-export default Collapse;
