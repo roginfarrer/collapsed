@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "babel --watch src -d dist",
     "build": "babel src -d dist",
-    "prepublish": "yarn run build"
+    "prepublish": "yarn run build",
+    "docz:dev": "docz dev",
+    "docz:build": "docz build"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-flow-react-proptypes": "^24.1.2",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
+    "docz": "^0.12.5",
     "flow-bin": "^0.83.0"
   },
   "dependencies": {

@@ -1,0 +1,31 @@
+{
+  "config": {
+    "title": "React Collapsed",
+    "description": "Component to build flexible and accessible collapse panels",
+    "themeConfig": {},
+    "menu": [],
+    "ordering": "descending",
+    "version": "1.0.0",
+    "repository": "https://github.com/roginfarrer/collapse",
+    "native": false
+  },
+  "entries": {
+    "index.mdx": {
+      "name": "react-collapsed",
+      "id": "91149a4106ab27ef746308b41227aca8",
+      "filepath": "index.mdx",
+      "link": "https://github.com/roginfarrer/collapse/edit/master/index.mdx",
+      "slug": "index",
+      "route": "/index",
+      "order": 0,
+      "menu": null,
+      "headings": [
+        {
+          "depth": 1,
+          "slug": "hello-world",
+          "value": "Hello world"
+        }
+      ]
+    }
+  }
+}

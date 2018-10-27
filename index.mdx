@@ -1,0 +1,21 @@
+---
+name: react-collapsed
+---
+
+import Collapse from './dist/Collapse';
+
+# Hello world
+
+Hello, I'm a mdx file!
+
+<Collapse>
+  {({getCollapsibleProps, getTogglerProps, contentRef}) => (
+    <React.Fragment>
+      <button {...getTogglerProps()}>Open</button>
+      <div {...getCollapsibleProps()}>
+        <p ref={contentRef} style={{background: 'red', height: 200}}>Testing!</p>
+      </div>
+    </React.Fragment>
+  )}
+</Collapse>
+
