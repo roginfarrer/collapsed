@@ -7,11 +7,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "babel --watch src -d dist",
+    "build:watch": "babel --watch src -d dist",
     "build": "babel src -d dist",
     "prepublish": "yarn run build",
     "docz:dev": "docz dev",
-    "docz:build": "docz build"
+    "docz:build": "docz build",
+    "dev": "yarn build:watch & yarn docz:build"
   },
   "repository": {
     "type": "git",

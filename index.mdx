@@ -2,12 +2,14 @@
 name: react-collapsed
 ---
 
-import Collapse from './dist/Collapse';
+import Collapse from './src/Collapse';
+import Controlled from './Controlled';
 
 # Hello world
 
 Hello, I'm a mdx file!
 
+<Controlled />
 <Collapse>
   {({getCollapsibleProps, getTogglerProps, contentRef}) => (
     <React.Fragment>
@@ -18,4 +20,3 @@ Hello, I'm a mdx file!
     </React.Fragment>
   )}
 </Collapse>
-
