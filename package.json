@@ -7,9 +7,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "babel --watch src -d dist",
+    "build:watch": "babel --watch src -d dist",
     "build": "babel src -d dist",
-    "prepublish": "yarn run build"
+    "prepublish": "yarn run build",
+    "docz:dev": "docz dev",
+    "docz:build": "docz build",
+    "dev": "yarn build:watch & yarn docz:build"
   },
   "repository": {
     "type": "git",
@@ -39,12 +42,14 @@
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-flow-react-proptypes": "^24.1.2",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
+    "docz": "^0.12.5",
     "flow-bin": "^0.83.0"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "prop-types": "^15.6.2",
     "prop-types-extra": "^1.1.0",
+    "raf": "^3.4.0",
     "react": "^16.6.0"
   }
 }
