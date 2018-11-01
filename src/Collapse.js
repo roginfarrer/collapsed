@@ -54,7 +54,7 @@ export default class Collapse extends PureComponent<Props, State> {
     collapsedHeight: 0,
     duration: 1000,
     delay: 0,
-    easing: 'ease',
+    easing: 'linear',
     shouldUseTransitions: false
   };
 
@@ -290,6 +290,7 @@ export default class Collapse extends PureComponent<Props, State> {
         isOpening: null,
         styles: {
           ...prevState.styles,
+          overflow: '',
           display: 'none'
         }
       }));
@@ -327,19 +328,20 @@ export default class Collapse extends PureComponent<Props, State> {
 
   // For those with a hard time reading Flow, this destructures refKey off of props,
   // and gives it a default of 'ref'
-  getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
-    console.log(props);
-    const {refKey, ...others} = props;
+  getCollapsibleProps = (
+    {refKey, ...props}: getCollapsibleProps = {refKey: 'ref'}
+  ) => {
+    const ref = props.refKey || 'ref';
     debugger;
     return {
       id: `CollapsePanel-${this.state.counter}`,
       'aria-hidden': Boolean(this.getIsOpen()),
-      ...others,
-      [refKey]: callAll(this.assignCollapsibleRef, others[refKey]),
+      ...props,
+      [ref]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,
       style: {
         // @TODO: throw a warning if they pass in properties that might conflict with the animation
-        // ...props.style,
+        ...props.style,
         ...this.state.styles,
         transition: `height ${this.props.duration}ms ${this.props.easing} ${
           this.props.delay
