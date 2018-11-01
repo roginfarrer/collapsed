@@ -9,14 +9,20 @@ import Controlled from './Controlled';
 
 Hello, I'm a mdx file!
 
-<Controlled />
+
 <Collapse>
   {({getCollapsibleProps, getTogglerProps, contentRef}) => (
     <React.Fragment>
       <button {...getTogglerProps()}>Open</button>
-      <div {...getCollapsibleProps()}>
-        <p ref={contentRef} style={{background: 'red', height: 200}}>Testing!</p>
+      <div
+        {...getCollapsibleProps({
+          'data-attribute': 'hey'
+        })}
+      >
+        <p style={{background: 'red', height: 200}}>Testing!</p>
+        <button onFocus={() => console.log('focused')}>test</button>
       </div>
     </React.Fragment>
   )}
 </Collapse>
+{/* <Controlled /> */}
