@@ -1,0 +1,39 @@
+---
+name: Basic Demo
+route: /
+---
+
+import {Playground} from 'docz'
+import Collapse from '../src/Collapse';
+
+# Basic Demo
+
+Hello, I'm a mdx file!
+
+<Playground>
+<Collapse>
+  {({getCollapsibleProps, getTogglerProps, contentRef}) => (
+    <React.Fragment>
+      <button {...getTogglerProps()}>Open</button>
+      <div
+        {...getCollapsibleProps({
+          style: {
+            borderRadius: 3,
+            border: '1px solid paleviolet',
+            background: 'lightblue'
+          }
+        })}
+      >
+        <div
+          style={{
+            borderRadius: '50%',
+            background: 'blue',
+            height: '300px',
+            width: '100%',
+          }}
+        />
+      </div>
+    </React.Fragment>
+  )}
+</Collapse>
+</Playground>
