@@ -2,6 +2,8 @@
 import {Component, type Node, type Ref} from 'react';
 import RAF from 'raf';
 
+// @TODO support different open and closing animations
+
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
 const callAll = (...fns) => (...args: Array<*>) =>
   fns.forEach(fn => fn && fn(...args));
@@ -51,7 +53,7 @@ export default class Collapse extends Component<Props, State> {
   static counter = 0;
 
   state = {
-    styles: {},
+    styles: {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     isOpening: null,
     counter: 0
@@ -60,10 +62,12 @@ export default class Collapse extends Component<Props, State> {
   componentDidMount() {
     // Iterate counter to create unique IDs for each instance of this component
     // on the page. Used mainly for `aria-` relationships
+    // @TODO: refactor id counter outside of component
     this.setState({counter: Collapse.counter++});
 
-    // If open by default, update the height
-    // this.transition();
+    if (this.getIsOpen()) {
+      this.setOpen();
+    }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -72,17 +76,13 @@ export default class Collapse extends Component<Props, State> {
       this.collapseEl &&
       this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen
     ) {
-      this.startTransition();
+      if (isCurrentlyOpen) {
+        this.setOpen();
+      } else {
+        this.setClosed();
+      }
     }
   }
-
-  startTransition = () => {
-    if (this.getIsOpen()) {
-      this.setClosed();
-    } else {
-      this.setOpen();
-    }
-  };
 
   setClosed = () => {
     const height = this.getCollapsibleHeight();
