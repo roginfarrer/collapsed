@@ -1,6 +1,5 @@
 // @flow
-
-import {PureComponent, type Node, type Ref} from 'react';
+import {Component, type Node, type Ref} from 'react';
 import RAF from 'raf';
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
@@ -27,7 +26,7 @@ type Props = {
 };
 
 type Styles = {
-  height?: number | string,
+  height?: string,
   overflow?: string,
   display?: string
 };
@@ -38,36 +37,21 @@ type State = {
   counter: number
 };
 
-// Start animation helper using nested requestAnimationFrames
-const startAnimationHelper = (callback: () => {}) => {
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      callback();
-    });
-  });
-};
-
-export default class Collapse extends PureComponent<Props, State> {
+export default class Collapse extends Component<Props, State> {
   static defaultProps = {
     isOpen: null,
     defaultOpen: false,
     collapsedHeight: 0,
-    duration: 1000,
+    duration: 500,
     delay: 0,
-    easing: 'linear',
+    easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
     shouldUseTransitions: false
   };
 
   static counter = 0;
 
   state = {
-    // height: this.props.collapsedHeight,
-    // overflow: this.getIsOpen({isOpen: this.props.defaultOpen}) ? '' : 'hidden',
-    styles: {
-      // display: 'block',
-      // height: 'auto',
-      // overflow: 'visible'
-    },
+    styles: {},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     isOpening: null,
     counter: 0
@@ -82,157 +66,48 @@ export default class Collapse extends PureComponent<Props, State> {
     // this.transition();
   }
 
-  // componentDidUpdate(prevProps: Props, prevState: State) {
-  //   const {delay, duration} = this.props;
-  //   const isCurrentlyOpen = this.getIsOpen();
-  //   // Check if 'height' prop has changed
-  //   if (
-  //     this.content &&
-  //     this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen
-  //   ) {
-  //     // Cache content height
-  //     var style = window.getComputedStyle(this.content);
-  //     var marginTop = style.getPropertyValue('margin-top');
-  //     var marginBottom = style.getPropertyValue('margin-bottom');
-  //     const contentHeight =
-  //       this.content.offsetHeight +
-  //       parseInt(marginTop.split('p')[0], 10) +
-  //       parseInt(marginBottom.split('p')[0], 10);
-
-  //     // set total animation time
-  //     const totalDuration = duration + delay;
-
-  //     let newHeight = null;
-  //     const timeoutState = {
-  //       height: null // it will be always set to either 'auto' or specific number
-  //     };
-  //     const isCurrentHeightAuto = prevState.height === 'auto';
-
-  //     if (isCurrentlyOpen) {
-  //       // If new height is a number
-  //       newHeight = 0;
-  //       timeoutState.height = newHeight;
-  //     } else {
-  //       // If not, animate to content height
-  //       // and then reset to auto
-  //       newHeight = contentHeight;
-  //       timeoutState.height = 'auto';
-  //     }
-
-  //     if (isCurrentHeightAuto) {
-  //       // This is the height to be animated to
-  //       timeoutState.height = newHeight;
-
-  //       // If previous height was 'auto'
-  //       // set starting height explicitly to be able to use transition
-  //       newHeight = contentHeight;
-  //     }
-
-  //     RAF(() =>
-  //       this.setState({
-  //         height: newHeight
-  //       })
-  //     );
-
-  //     // Clear timeouts
-  //     console.log(timeoutState);
-
-  //     if (isCurrentHeightAuto) {
-  //       RAF(() => {
-  //         this.setState(timeoutState);
-  //       });
-  //     } else {
-  //       clearTimeout(this.timeoutID);
-  //       this.timeoutID = setTimeout(() => {
-  //         RAF(() => this.setState(timeoutState));
-  //       }, totalDuration);
-  //     }
-  //   }
-  // }
-
   componentDidUpdate(prevProps: Props, prevState: State) {
     const isCurrentlyOpen = this.getIsOpen();
-    // Check if 'height' prop has changed
-    // if (
-    //   this.collapsible &&
-    //   this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen
-    // ) {
-    //   debugger;
-    //   this.setState({isOpening: 'opening'});
-    // } else {
-    //   debugger;
-    //   this.setState({isOpening: 'closing'});
-    // }
     if (
-      this.collapsible &&
+      this.collapseEl &&
       this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen
     ) {
-      this.transition();
+      this.startTransition();
     }
   }
 
-  // getTransitionDimensions = () => {
-  //   // Cache content height
-  //   const style = window.getComputedStyle(this.content);
-  //   const marginTop = style.getPropertyValue('margin-top');
-  //   const marginBottom = style.getPropertyValue('margin-bottom');
-  //   const contentHeight =
-  //     this.content.offsetHeight +
-  //     parseInt(marginTop.split('p')[0], 10) +
-  //     parseInt(marginBottom.split('p')[0], 10);
-
-  //   return {
-  //     contentHeight,
-  //     totalDuration: this.props.delay + this.props.duration
-  //   };
-  // };
-
-  transition = () => {
-    // Determine current state - closing or opening
-    // If opening to 'auto'
-    const {delay, duration} = this.props;
-    const isCurrentlyOpen = this.getIsOpen();
-
-    if (isCurrentlyOpen) {
-      // Animate closed
-      const height = this.getCollapsibleHeight();
-      return Promise.resolve().then(() => {
-        return this.setStyles({height}).then(() => {
-          this.setState({isOpening: 'closing'});
-          debugger;
-          return RAF(() => this.setStyles({height: 0, overflow: 'hidden'}));
-        });
-      });
+  startTransition = () => {
+    if (this.getIsOpen()) {
+      this.setClosed();
     } else {
-      // Animate open
-      return Promise.resolve().then(() => {
-        return this.setStyles({display: 'block', overflow: 'hidden'}).then(
-          () => {
-            const height = this.getCollapsibleHeight();
-            this.setState({isOpening: 'opening'});
-            return this.setStyles({height});
-          }
-        );
-      });
+      this.setOpen();
     }
   };
+
+  setClosed = () => {
+    const height = this.getCollapsibleHeight();
+    return Promise.resolve().then(() => {
+      return this.setStyles({height: `${height}px`}).then(() => {
+        this.setState({isOpening: 'closing'});
+        return RAF(() => this.setStyles({height: '0px', overflow: 'hidden'}));
+      });
+    });
+  };
+
+  setOpen = () =>
+    Promise.resolve().then(() => {
+      return this.setStyles({display: 'block', overflow: 'hidden'}).then(() => {
+        const height = this.getCollapsibleHeight();
+        this.setState({isOpening: 'opening'});
+        return this.setStyles({height: `${height}px`});
+      });
+    });
 
   getCollapsibleHeight = () => {
-    if (!this.collapsible) {
+    if (!this.collapseEl) {
       return 'auto';
     }
-    return this.collapsible.scrollHeight;
-  };
-
-  measure = () => {
-    const isCurrentlyOpen = this.getIsOpen();
-    // If closed, styles should be {overflow: 'hidden', display: 'none', height: 0}
-    if (!isCurrentlyOpen) {
-      this.setStyles({display: 'block', overflow: 'hidden'}).then(() => {
-        const height = this.getCollapsibleHeight();
-        this.setStyles({height});
-      });
-    }
+    return this.collapseEl.scrollHeight;
   };
 
   setStyles = (newStyles: Styles) => {
@@ -243,22 +118,11 @@ export default class Collapse extends PureComponent<Props, State> {
           () => {
             RAF(() => {
               if (
-                Object.keys(newStyles).some(key => {
-                  let newStyle = newStyles[key];
-                  if (
-                    this.collapsible &&
-                    this.collapsible.style[key].includes('px')
-                  ) {
-                    newStyle =
-                      newStyles[key] || newStyles[key] === 0
-                        ? `${newStyles[key]}px`
-                        : '';
-                  }
-                  return (
-                    !this.collapsible ||
-                    this.collapsible.style[key] !== newStyle
-                  );
-                })
+                Object.keys(newStyles).some(
+                  key =>
+                    !this.collapseEl ||
+                    this.collapseEl.style[key] !== newStyles[key]
+                )
               ) {
                 return check();
               }
@@ -273,7 +137,6 @@ export default class Collapse extends PureComponent<Props, State> {
 
   handleTransitionEnd = () => {
     if (this.state.isOpening === 'opening') {
-      debugger;
       this.setState(prevState => ({
         isOpening: null,
         styles: {
@@ -285,7 +148,6 @@ export default class Collapse extends PureComponent<Props, State> {
       }));
     }
     if (this.state.isOpening === 'closing') {
-      debugger;
       this.setState(prevState => ({
         isOpening: null,
         styles: {
@@ -297,9 +159,7 @@ export default class Collapse extends PureComponent<Props, State> {
     }
   };
 
-  collapsible: ?HTMLElement;
-  content: ?HTMLElement;
-  timeoutID: TimeoutID;
+  collapseEl: ?HTMLElement;
 
   /**
    * Returns the state of the isOpen prop.
@@ -350,12 +210,10 @@ export default class Collapse extends PureComponent<Props, State> {
     };
   };
 
-  assignCollapsibleRef = (node: ?HTMLElement) => (this.collapsible = node);
-
-  assignContentRef = (node: ?HTMLElement) => (this.content = node);
+  assignCollapsibleRef = (node: ?HTMLElement) => (this.collapseEl = node);
 
   render() {
-    console.log(this.state.styles);
+    console.log({styles: this.state.styles, isOpen: this.state.isOpen});
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
       getTogglerProps: this.getTogglerProps,
