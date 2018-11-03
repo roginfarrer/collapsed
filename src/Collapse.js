@@ -49,7 +49,9 @@ export default class Collapse extends Component<Props, State> {
   };
 
   state = {
-    styles: {display: 'none', height: '0px'},
+    styles: this.getIsOpen({isOpen: this.props.defaultOpen})
+      ? {}
+      : {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     transitionState: null
   };
@@ -57,7 +59,6 @@ export default class Collapse extends Component<Props, State> {
   componentDidMount() {
     // Iterate counter to create unique IDs for each instance of this component
     // on the page. Used mainly for `aria-` relationships
-    // @TODO: refactor id counter outside of component
     this.setState({counter: generateId()});
 
     if (this.getIsOpen()) {
@@ -183,9 +184,7 @@ export default class Collapse extends Component<Props, State> {
 
   // For those with a hard time reading Flow, this destructures refKey off of props,
   // and gives it a default of 'ref'
-  getCollapsibleProps = (
-    {refKey, ...props}: getCollapsibleProps = {refKey: 'ref'}
-  ) => {
+  getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
     const ref = props.refKey || 'ref';
     return {
       id: `CollapsePanel-${this.state.counter}`,

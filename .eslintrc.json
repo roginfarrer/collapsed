@@ -6,9 +6,10 @@
     "node": true
   },
   "extends": [
-    "eslint:recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:flowtype/recommended",
+    "eslint:recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -18,12 +19,5 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["react", "jsx-a11y"],
-  "rules": {
-    "indent": ["warning", 2],
-    "linebreak-style": ["error", "unix"],
-    "quotes": ["warning", "single"],
-    "semi": ["warning", "always"],
-    "prop-types": [2]
-  }
+  "plugins": ["react", "jsx-a11y"]
 }
