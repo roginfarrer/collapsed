@@ -4,7 +4,10 @@ import {callAll, generateId} from './utils';
 import RAF from 'raf';
 
 // @TODO support different open and closing animations
-// @TODO Refactor the 'transitionState' state
+
+const CLOSING = 'closing';
+const OPENING = 'opening';
+const WAITING = 'waiting';
 
 type getCollapsibleProps = {
   refKey: string
@@ -68,6 +71,14 @@ export default class Collapse extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     const isCurrentlyOpen = this.getIsOpen();
+    // if (
+    //   prevState.style.height === '0px' && this.state.style.height !== '0px'
+    // ) {
+    //   console.log('set height to auto');
+    //   this.setState({transitionState: WAITING})
+    // } else if (this.state.transitionState === WAITING) {
+    //   this.setState({transitionState: null, styles: {height: 'auto'}});
+    // }
     if (
       this.collapseEl &&
       this.getIsOpen(prevState, prevProps) !== isCurrentlyOpen
@@ -80,6 +91,10 @@ export default class Collapse extends Component<Props, State> {
     }
   }
 
+  // componentWillUnmount() {
+  //   RAF.cancel(this.raf);
+  // }
+
   setClosed = () => {
     const height = this.getCollapsibleHeight();
     return Promise.resolve().then(() => {
@@ -90,14 +105,21 @@ export default class Collapse extends Component<Props, State> {
     });
   };
 
-  setOpen = () =>
-    Promise.resolve().then(() => {
+  setOpen = () => {
+    const totalDuration = this.props.duration + this.props.delay;
+    return Promise.resolve().then(() => {
       return this.setStyles({display: 'block', overflow: 'hidden'}).then(() => {
         const height = this.getCollapsibleHeight();
         this.setState({transitionState: 'opening'});
         return this.setStyles({height: `${height}px`});
+        // .then(() => {
+        //   this.timeout = setTimeout(() => {
+        //     console.log('end transition');
+        //   }, totalDuration);
+        // });
       });
     });
+  };
 
   getCollapsibleHeight = () => {
     if (!this.collapseEl) {
@@ -120,6 +142,7 @@ export default class Collapse extends Component<Props, State> {
                     this.collapseEl.style[key] !== newStyles[key]
                 )
               ) {
+                console.log('returning check');
                 return check();
               }
               resolve();
@@ -133,6 +156,7 @@ export default class Collapse extends Component<Props, State> {
 
   handleTransitionEnd = () => {
     if (this.state.transitionState === 'opening') {
+      console.log('set to auto');
       this.setState(prevState => ({
         transitionState: null,
         styles: {
@@ -196,6 +220,7 @@ export default class Collapse extends Component<Props, State> {
         // @TODO: throw a warning if they pass in properties that might conflict with the animation
         ...props.style,
         ...this.state.styles,
+        overflow: 'hidden',
         transition: `height ${this.props.duration}ms ${this.props.easing} ${
           this.props.delay
         }ms`
