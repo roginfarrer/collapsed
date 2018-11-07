@@ -61,9 +61,10 @@ export default class Collapse extends Component<Props, State> {
   };
 
   state = {
-    styles: this.getIsOpen({isOpen: this.props.defaultOpen})
-      ? {}
-      : {display: 'none', height: '0px'},
+    styles: {},
+    // styles: this.getIsOpen({isOpen: this.props.defaultOpen})
+    //   ? {}
+    //   : {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     transitionState: null
   };
@@ -94,38 +95,32 @@ export default class Collapse extends Component<Props, State> {
 
   setClosed = () => {
     const height = this.getCollapsibleHeight();
-    console.log({height, stateHeight: this.state.styles.height});
+
+    // 'auto' => px height => 0 => display: none
 
     return Promise.resolve()
       .then(() => {
-        return this.setStyles({height}).then(() => {
-          this.setState({transitionState: CLOSING, heightAtTransition: height});
-        });
+        return this.setState(({styles}) => ({styles: {...styles, height}}));
       })
       .then(() => {
-        RAF(() => this.setStyles({height: '0px', overflow: 'hidden'}));
+        RAF(() =>
+          this.setState(({styles}) => ({
+            styles: {...styles, height: '0px', overflow: 'hidden'}
+          }))
+        );
       });
-
-    // RAF(() =>
-    //   this.setState(({styles}) => ({
-    //     styles: {...styles, height: '0px', overflow: 'hidden'}
-    //   }))
-    // );
   };
 
   setOpen = () => {
+    // 0 => px height => height 'auto'
     return Promise.resolve().then(() => {
       return this.setStyles({
         display: 'block',
         overflow: 'hidden'
       }).then(() => {
         const height = this.getCollapsibleHeight();
-        return this.setState(
-          {transitionState: OPENING, heightAtTransition: height},
-          () => {
-            this.setStyles({height});
-          }
-        );
+        this.setState({heightAtTransition: height});
+        return this.setStyles({height});
       });
     });
   };
@@ -190,13 +185,24 @@ export default class Collapse extends Component<Props, State> {
         this.setState(
           ({styles}) => ({styles: {...styles, ...newStyles}}),
           () => {
-            RAF(() => {
+            this.styleCheck = RAF(() => {
               if (
-                Object.keys(newStyles).some(
-                  key =>
+                Object.keys(newStyles).some(key => {
+                  if (
                     !this.collapseEl ||
                     this.collapseEl.style[key] !== newStyles[key]
-                )
+                  ) {
+                    console.log({
+                      key,
+                      el: this.collapseEl.style[key],
+                      style: newStyles[key]
+                    });
+                  }
+                  return (
+                    !this.collapseEl ||
+                    this.collapseEl.style[key] !== newStyles[key]
+                  );
+                })
               ) {
                 console.log('check');
                 return check();
@@ -212,43 +218,16 @@ export default class Collapse extends Component<Props, State> {
 
   completeTransition = () => {
     console.log('complete transition');
-    // this.setState(({transitionState, styles}) => {
-    //   if (transitionState === OPENING) {
-    //     return {
-    //       transitionState: null,
-    //       styles: {
-    //         ...styles,
-    //         display: '',
-    //         overflow: '',
-    //         height: 'auto'
-    //       }
-    //     };
-    //   }
-    //   if (transitionState === CLOSING) {
-    //     return {
-    //       transitionState: null,
-    //       styles: {...styles, overflow: '', display: 'none'}
-    //     };
-    //   }
-    //   return null;
-    // });
-    if (this.state.transitionState === OPENING) {
-      this.setStyles({
-        display: '',
-        overflow: '',
-        height: 'auto'
-      });
-    }
-    if (this.state.transitionState === CLOSING) {
-      // this.setState(({styles}) => ({
-      //   transitionState: null,
-      //   styles: {...styles, overflow: '', display: 'none'}
-      // }));
-      this.setStyles({
-        overflow: '',
-        display: 'none'
-      });
-    }
+    this.setState({styles: {}});
+    // if (this.getIsOpen()) {
+    //   this.setState(({styles}) => ({
+    //     styles: {...styles, display: '', overflow: '', height: 'auto'}
+    //   }));
+    // } else {
+    //   this.setState(({styles}) => ({
+    //     styles: {...styles, display: 'none', overflow: ''}
+    //   }));
+    // }
   };
 
   handleTransitionEnd = e => {
@@ -282,8 +261,8 @@ export default class Collapse extends Component<Props, State> {
     if (this.transitionRaf) {
       RAF.cancel(this.transitionRaf);
     }
-    // if (this.closeRaf) {
-    //   RAF.cancel(this.closeRaf);
+    // if (this.styleCheck) {
+    //   RAF.cancel(this.styleCheck);
     // }
     this.transitionRaf = RAF(this.completeTransition);
   };
@@ -320,15 +299,17 @@ export default class Collapse extends Component<Props, State> {
   // and gives it a default of 'ref'
   getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
     const ref = props.refKey || 'ref';
+    const isOpen = this.getIsOpen();
     return {
       id: `CollapsePanel-${this.state.counter}`,
-      'aria-hidden': Boolean(this.getIsOpen()),
+      'aria-hidden': Boolean(isOpen),
       ...props,
       [ref]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,
       style: {
         // @TODO: throw a warning if they pass in properties that might conflict with the animation
         ...props.style,
+        ...(!isOpen ? {height: 'auto'} : {height: '0px'}),
         ...this.state.styles,
         transition: `height ${this.props.duration}ms ${this.props.easing} ${
           this.props.delay
@@ -340,6 +321,10 @@ export default class Collapse extends Component<Props, State> {
   assignCollapsibleRef = (node: ?HTMLElement) => (this.collapseEl = node);
 
   render() {
+    console.log(
+      {...(this.getIsOpen() ? {height: 'auto'} : {height: '0px'})},
+      this.state.styles.height
+    );
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
       getTogglerProps: this.getTogglerProps,
