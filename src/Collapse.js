@@ -8,6 +8,16 @@ import RAF from 'raf';
 const CLOSING = 'closing';
 const OPENING = 'opening';
 
+const TRANSITION_STATES = {
+  OPEN: {
+    height: 'auto'
+  },
+  CLOSED: {
+    height: '0px',
+    display: 'none'
+  }
+};
+
 type getCollapsibleProps = {
   refKey: string
 };
@@ -84,42 +94,101 @@ export default class Collapse extends Component<Props, State> {
 
   setClosed = () => {
     const height = this.getCollapsibleHeight();
-    return Promise.resolve().then(() => {
-      return this.setStyles({
-        styles: {height: `${height}px`}
-      }).then(() => {
-        this.setState({transitionState: CLOSING, heightAtTransition: height});
-        return RAF(() =>
-          this.setStyles({styles: {height: '0px', overflow: 'hidden'}})
-        );
+    console.log({height, stateHeight: this.state.styles.height});
+
+    return Promise.resolve()
+      .then(() => {
+        return this.setStyles({height}).then(() => {
+          this.setState({transitionState: CLOSING, heightAtTransition: height});
+        });
+      })
+      .then(() => {
+        RAF(() => this.setStyles({height: '0px', overflow: 'hidden'}));
       });
-    });
+
+    // RAF(() =>
+    //   this.setState(({styles}) => ({
+    //     styles: {...styles, height: '0px', overflow: 'hidden'}
+    //   }))
+    // );
   };
 
   setOpen = () => {
     return Promise.resolve().then(() => {
       return this.setStyles({
-        styles: {display: 'block', overflow: 'hidden'}
+        display: 'block',
+        overflow: 'hidden'
       }).then(() => {
         const height = this.getCollapsibleHeight();
-        this.setState({transitionState: OPENING, heightAtTransition: height});
-        return this.setStyles({styles: {height: `${height}px`}});
+        return this.setState(
+          {transitionState: OPENING, heightAtTransition: height},
+          () => {
+            this.setStyles({height});
+          }
+        );
       });
     });
   };
+
+  // transition = direction => {
+  //   debugger;
+  //   return Promise.resolve()
+  //     .then(() => {
+  //       if (direction === 'open') {
+  //         return this.setStyles({
+  //           display: 'block',
+  //           overflow: 'hidden'
+  //         }).then(() => {
+  //           const height = this.getCollapsibleHeight();
+  //           return this.setState(
+  //             {transitionState: OPENING, heightAtTransition: height},
+  //             () => {
+  //               this.setStyles({height});
+  //             }
+  //           );
+  //         });
+  //       } else {
+  //         const height = this.getCollapsibleHeight();
+  //         return Promise.resolve().then(() => {
+  //           return this.setStyles({height}).then(() => {
+  //             return this.setState(
+  //               {transitionState: CLOSING, heightAtTransition: height},
+  //               () => {
+  //                 RAF(() =>
+  //                   this.setStyles({height: '0px', overflow: 'hidden'})
+  //                 );
+  //               }
+  //             );
+  //           });
+  //         });
+  //       }
+  //     })
+  //     .then(() => {
+  //       RAF(() => {
+  //         this.setState(({styles}) => ({
+  //           styles: {
+  //             ...styles,
+  //             ...(direction === 'open'
+  //               ? {height: 'auto', display: ''}
+  //               : {display: 'none'})
+  //           }
+  //         }));
+  //       });
+  //     });
+  // };
 
   getCollapsibleHeight = () => {
     if (!this.collapseEl) {
       return 'auto';
     }
-    return this.collapseEl.scrollHeight;
+    return `${this.collapseEl.scrollHeight}px`;
   };
 
-  setStyles = ({styles: newStyles, ...state}: {styles: {}}) => {
+  setStyles = (newStyles: Styles) => {
     return new Promise<any>(resolve => {
       const check = () => {
         this.setState(
-          ({styles}) => ({...state, styles: {...styles, ...newStyles}}),
+          ({styles}) => ({styles: {...styles, ...newStyles}}),
           () => {
             RAF(() => {
               if (
@@ -129,6 +198,7 @@ export default class Collapse extends Component<Props, State> {
                     this.collapseEl.style[key] !== newStyles[key]
                 )
               ) {
+                console.log('check');
                 return check();
               }
               resolve();
@@ -141,16 +211,42 @@ export default class Collapse extends Component<Props, State> {
   };
 
   completeTransition = () => {
+    console.log('complete transition');
+    // this.setState(({transitionState, styles}) => {
+    //   if (transitionState === OPENING) {
+    //     return {
+    //       transitionState: null,
+    //       styles: {
+    //         ...styles,
+    //         display: '',
+    //         overflow: '',
+    //         height: 'auto'
+    //       }
+    //     };
+    //   }
+    //   if (transitionState === CLOSING) {
+    //     return {
+    //       transitionState: null,
+    //       styles: {...styles, overflow: '', display: 'none'}
+    //     };
+    //   }
+    //   return null;
+    // });
     if (this.state.transitionState === OPENING) {
       this.setStyles({
-        transitionState: null,
-        styles: {display: '', overflow: '', height: 'auto'}
+        display: '',
+        overflow: '',
+        height: 'auto'
       });
     }
     if (this.state.transitionState === CLOSING) {
+      // this.setState(({styles}) => ({
+      //   transitionState: null,
+      //   styles: {...styles, overflow: '', display: 'none'}
+      // }));
       this.setStyles({
-        transitionState: null,
-        styles: {overflow: '', display: 'none'}
+        overflow: '',
+        display: 'none'
       });
     }
   };
@@ -168,7 +264,13 @@ export default class Collapse extends Component<Props, State> {
     const height = this.getCollapsibleHeight();
     const isCurrentlyOpen = this.getIsOpen();
     if (isCurrentlyOpen && height !== this.state.heightAtTransition) {
-      this.setStyles({styles: {height: `${height}px`}});
+      console.log('reset styles on transition end');
+      this.setState(({styles}) => {
+        return {
+          heightAtTransition: height,
+          styles: {...styles, height}
+        };
+      });
       return;
     }
 
@@ -177,10 +279,13 @@ export default class Collapse extends Component<Props, State> {
     // will fire more than once if there are multiple
     // properties that were transitioned.
 
-    if (this.raf) {
-      RAF.cancel(this.raf);
+    if (this.transitionRaf) {
+      RAF.cancel(this.transitionRaf);
     }
-    this.raf = RAF(this.completeTransition);
+    // if (this.closeRaf) {
+    //   RAF.cancel(this.closeRaf);
+    // }
+    this.transitionRaf = RAF(this.completeTransition);
   };
 
   collapseEl: ?HTMLElement;

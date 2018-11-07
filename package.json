@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "Component to build flexible and accessible collapse panels",
   "main": "dist/Collapse.js",
   "directories": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/roginfarrer/collapse.git"
+    "url": "git+https://github.com/roginfarrer/react-collapsed.git"
   },
   "keywords": [
     "collapse",
