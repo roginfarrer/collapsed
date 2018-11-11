@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A small (< 3.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
   "directories": {
@@ -31,7 +31,7 @@
   "bugs": {
     "url": "https://github.com/roginfarrer/react-collapsed/issues"
   },
-  "homepage": "https://github.com/roginfarrer/react-collapsed#readme",
+  "homepage": "https://react-collapsed.netlify.com/",
   "peerDependencies": {
     "react": "15 || 16"
   },

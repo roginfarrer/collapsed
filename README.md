@@ -12,7 +12,7 @@ A small (< 3.5kb), headless component for creating flexible and accessible expan
 
 ## Demo
 
-URL here
+[See the demo site!](https://react-collapsed.netlify.com/)
 
 ## Installation
 
