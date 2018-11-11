@@ -2,17 +2,15 @@
   "name": "react-collapsed",
   "version": "0.1",
   "description": "Component to build flexible and accessible collapse panels",
-  "main": "dist/Collapse.js",
+  "main": "dist/collapse.min.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "build:watch": "babel --watch src -d dist",
-    "build": "babel src -d dist",
-    "prepublish": "yarn run build",
-    "docz:dev": "docz dev",
-    "docz:build": "docz build",
-    "dev": "yarn build:watch & yarn docz:build",
+    "build:watch": "rollup -w -c -o dist/collapse.min.js",
+    "build": "rollup -c -o dist/collapse.min.js",
+    "prepublish": "yarn build",
+    "dev": "yarn concurrently \"yarn build:watch\" \"docz dev\"",
     "test": "jest"
   },
   "repository": {
@@ -44,12 +42,18 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
+    "concurrently": "^4.0.1",
     "docz": "^0.12.5",
     "flow-bin": "^0.83.0",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.0",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1",
     "react-testing-library": "^5.2.3",
-    "regenerator-runtime": "^0.12.1"
+    "regenerator-runtime": "^0.12.1",
+    "rollup": "^0.67.1",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
     "raf": "^3.4.0"

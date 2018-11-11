@@ -1,5 +1,5 @@
 import React from 'react';
-import Collapse from '../dist/Collapse';
+import Collapse from '../src/Collapse';
 
 export default class ControlledDemo extends React.Component {
   state = {
