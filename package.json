@@ -1,7 +1,7 @@
 {
   "name": "react-collapsed",
-  "version": "0.1",
-  "description": "Component to build flexible and accessible collapse panels",
+  "version": "0.1.0",
+  "description": "A small (< 3.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
   "directories": {
     "doc": "docs"
@@ -23,14 +23,15 @@
     "collapsible",
     "animate",
     "height",
-    "render"
+    "render",
+    "expand"
   ],
   "author": "Rogin Farrer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/roginfarrer/collapse/issues"
+    "url": "https://github.com/roginfarrer/react-collapsed/issues"
   },
-  "homepage": "https://github.com/roginfarrer/collapse#readme",
+  "homepage": "https://github.com/roginfarrer/react-collapsed#readme",
   "peerDependencies": {
     "react": "15 || 16"
   },

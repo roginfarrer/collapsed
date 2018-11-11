@@ -2,6 +2,7 @@ src/
 .docz/
 docs/
 examples/
+.vscode/
 rollup.config.js
 .babelrc
 .vscode
