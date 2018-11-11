@@ -9,11 +9,14 @@ export default class ControlledDemo extends React.Component {
   toggleIsOpen = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
 
   render() {
+    console.log(this.state.isOpen);
     return (
-      <Collapse>
+      <Collapse isOpen={this.state.isOpen}>
         {({getCollapsibleProps, getTogglerProps}) => (
           <React.Fragment>
-            <button {...getTogglerProps()}>Open</button>
+            <button {...getTogglerProps({onClick: this.toggleIsOpen})}>
+              Open
+            </button>
             <div
               {...getCollapsibleProps({
                 style: {

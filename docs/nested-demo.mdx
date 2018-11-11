@@ -6,11 +6,9 @@ route: /nested-demo
 import {Playground} from 'docz'
 import Collapse from '../src/Collapse';
 
-# Basic Demo
+# Nested Demo
 
-Hello, I'm a mdx file!
-
-<Collapse duration={2000}>
+<Collapse>
   {({getCollapsibleProps, getTogglerProps, contentRef}) => (
     <React.Fragment>
       <button {...getTogglerProps()}>Open</button>
@@ -24,7 +22,7 @@ Hello, I'm a mdx file!
         })}
       >
         <div style={{minHeight: 200, border: '1px solid blue'}}>
-          <Collapse defaultOpen duration={2000}>
+          <Collapse defaultOpen>
             {({getCollapsibleProps, getTogglerProps, contentRef}) => (
               <React.Fragment>
                 <button {...getTogglerProps({style: {display: 'block'}})}>Open</button>

@@ -1,9 +1,8 @@
 // @flow
+
 import {Component, type Node, type Ref} from 'react';
 import {callAll, generateId} from './utils';
 import RAF from 'raf';
-
-// @TODO support different open and closing animations
 
 type getCollapsibleProps = {
   refKey: string
@@ -39,10 +38,9 @@ export default class Collapse extends Component<Props, State> {
   static defaultProps = {
     isOpen: null,
     defaultOpen: false,
-    duration: 600,
+    duration: 500,
     delay: 0,
-    easing: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
-    shouldUseTransitions: false
+    easing: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
   };
 
   state = {
