@@ -1,9 +1,5 @@
 {
-  "presets": [
-    "@babel/env",
-    "@babel/preset-flow",
-    "@babel/preset-react"
-  ],
+  "presets": ["@babel/env", "@babel/preset-flow", "@babel/preset-react"],
   "plugins": [
     "@babel/plugin-syntax-object-rest-spread",
     "@babel/plugin-proposal-class-properties",
