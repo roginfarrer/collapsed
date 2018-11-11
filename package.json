@@ -9,7 +9,7 @@
   "scripts": {
     "build:watch": "rollup -w -c -o dist/collapse.min.js",
     "build": "rollup -c -o dist/collapse.min.js",
-    "prepublish": "yarn build",
+    "prepublish": "yarn jest && yarn build",
     "dev": "yarn concurrently \"yarn build:watch\" \"docz dev\"",
     "test": "jest"
   },
@@ -36,11 +36,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.5",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-0",
+    "babel-jest": "^23.6.0",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
     "concurrently": "^4.0.1",
     "docz": "^0.12.5",
