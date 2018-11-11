@@ -157,7 +157,6 @@ export default class Collapse extends Component<Props, State> {
     const isCurrentlyOpen = this.getIsOpen();
     if (isCurrentlyOpen && height !== this.state.heightAtTransition) {
       this.setState(({styles}) => {
-        console.log('hey');
         return {
           heightAtTransition: height,
           styles: {...styles, height}
