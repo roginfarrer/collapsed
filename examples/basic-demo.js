@@ -4,7 +4,7 @@ import Collapse from '../src/Collapse';
 export default function BasicDemo() {
   return (
     <Collapse>
-      {({getCollapsibleProps, getTogglerProps, contentRef}) => (
+      {({getCollapsibleProps, getTogglerProps}) => (
         <React.Fragment>
           <button {...getTogglerProps()}>Open</button>
           <div

@@ -1,11 +1,11 @@
 {
   "name": "react-collapsed",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A small (< 3.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build:watch": "rollup -w -c -o dist/collapse.min.js",
     "build": "rollup -c -o dist/collapse.min.js",
@@ -44,10 +44,15 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-0",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
     "concurrently": "^4.0.1",
     "docz": "^0.12.5",
+    "eslint": "^5.9.0",
+    "eslint-plugin-flowtype": "^3.2.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
     "flow-bin": "^0.83.0",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.0",
