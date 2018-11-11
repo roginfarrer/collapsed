@@ -11,7 +11,7 @@ export default class ControlledDemo extends React.Component {
   render() {
     return (
       <Collapse>
-        {({getCollapsibleProps, getTogglerProps, contentRef}) => (
+        {({getCollapsibleProps, getTogglerProps}) => (
           <React.Fragment>
             <button {...getTogglerProps()}>Open</button>
             <div

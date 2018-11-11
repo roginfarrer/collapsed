@@ -5,9 +5,6 @@ import RAF from 'raf';
 
 // @TODO support different open and closing animations
 
-const CLOSING = 'closing';
-const OPENING = 'opening';
-
 type getCollapsibleProps = {
   refKey: string
 };
@@ -21,7 +18,6 @@ type Props = {
   }) => Node,
   isOpen: ?boolean,
   defaultOpen: boolean,
-  collapsedHeight: number,
   duration: number,
   easing: string,
   delay: number
@@ -43,7 +39,6 @@ export default class Collapse extends Component<Props, State> {
   static defaultProps = {
     isOpen: null,
     defaultOpen: false,
-    collapsedHeight: 0,
     duration: 600,
     delay: 0,
     easing: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
@@ -52,7 +47,7 @@ export default class Collapse extends Component<Props, State> {
 
   state = {
     styles: this.getIsOpen({isOpen: this.props.defaultOpen})
-      ? {}
+      ? {height: 'auto'}
       : {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     transitionState: null
@@ -78,20 +73,16 @@ export default class Collapse extends Component<Props, State> {
     }
   }
 
-  componentWillUnmount() {
-    RAF.cancel(this.raf);
-  }
-
   setClosed = () => {
     const height = this.getCollapsibleHeight();
     return Promise.resolve().then(() => {
-      return this.setStyles({
-        styles: {height: `${height}px`}
-      }).then(() => {
-        this.setState({transitionState: CLOSING, heightAtTransition: height});
-        return RAF(() =>
-          this.setStyles({styles: {height: '0px', overflow: 'hidden'}})
-        );
+      return this.setStyles({height}).then(() => {
+        return RAF(() => {
+          this.setState(({styles}) => ({
+            heightAtTransition: height,
+            styles: {...styles, height: '0px', overflow: 'hidden'}
+          }));
+        });
       });
     });
   };
@@ -99,11 +90,12 @@ export default class Collapse extends Component<Props, State> {
   setOpen = () => {
     return Promise.resolve().then(() => {
       return this.setStyles({
-        styles: {display: 'block', overflow: 'hidden'}
+        display: 'block',
+        overflow: 'hidden'
       }).then(() => {
         const height = this.getCollapsibleHeight();
-        this.setState({transitionState: OPENING, heightAtTransition: height});
-        return this.setStyles({styles: {height: `${height}px`}});
+        this.setState({heightAtTransition: height});
+        return this.setStyles({height});
       });
     });
   };
@@ -112,22 +104,23 @@ export default class Collapse extends Component<Props, State> {
     if (!this.collapseEl) {
       return 'auto';
     }
-    return this.collapseEl.scrollHeight;
+    return `${this.collapseEl.scrollHeight}px`;
   };
 
-  setStyles = ({styles: newStyles, ...state}: {styles: {}}) => {
+  setStyles = (newStyles: Styles) => {
     return new Promise<any>(resolve => {
       const check = () => {
         this.setState(
-          ({styles}) => ({...state, styles: {...styles, ...newStyles}}),
+          ({styles}) => ({styles: {...styles, ...newStyles}}),
           () => {
-            RAF(() => {
+            this.styleCheck = RAF(() => {
               if (
-                Object.keys(newStyles).some(
-                  key =>
+                Object.keys(newStyles).some(key => {
+                  return (
                     !this.collapseEl ||
                     this.collapseEl.style[key] !== newStyles[key]
-                )
+                  );
+                })
               ) {
                 return check();
               }
@@ -141,17 +134,14 @@ export default class Collapse extends Component<Props, State> {
   };
 
   completeTransition = () => {
-    if (this.state.transitionState === OPENING) {
-      this.setStyles({
-        transitionState: null,
-        styles: {display: '', overflow: '', height: 'auto'}
-      });
-    }
-    if (this.state.transitionState === CLOSING) {
-      this.setStyles({
-        transitionState: null,
-        styles: {overflow: '', display: 'none'}
-      });
+    if (this.getIsOpen()) {
+      this.setState(({styles}) => ({
+        styles: {...styles, display: '', overflow: '', height: 'auto'}
+      }));
+    } else {
+      this.setState(({styles}) => ({
+        styles: {...styles, display: 'none', overflow: ''}
+      }));
     }
   };
 
@@ -168,23 +158,20 @@ export default class Collapse extends Component<Props, State> {
     const height = this.getCollapsibleHeight();
     const isCurrentlyOpen = this.getIsOpen();
     if (isCurrentlyOpen && height !== this.state.heightAtTransition) {
-      this.setStyles({styles: {height: `${height}px`}});
+      this.setState(({styles}) => {
+        console.log('hey');
+        return {
+          heightAtTransition: height,
+          styles: {...styles, height}
+        };
+      });
       return;
     }
 
-    // We have to debounce the action of stopping
-    // the "transition" state, since onTransitionEnd
-    // will fire more than once if there are multiple
-    // properties that were transitioned.
-
-    if (this.raf) {
-      RAF.cancel(this.raf);
-    }
-    this.raf = RAF(this.completeTransition);
+    RAF(this.completeTransition);
   };
 
   collapseEl: ?HTMLElement;
-  transitionState: null | OPENING | CLOSING;
 
   /**
    * Returns the state of the isOpen prop.
@@ -198,7 +185,9 @@ export default class Collapse extends Component<Props, State> {
     return props.isOpen !== null ? props.isOpen : state.isOpen;
   }
 
-  toggleIsOpen = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
+  toggleIsOpen = () => {
+    this.setState(({isOpen}) => ({isOpen: !isOpen}));
+  };
 
   getTogglerProps = (props: {onClick: ?() => void} = {onClick() {}}) => {
     return {
@@ -215,9 +204,10 @@ export default class Collapse extends Component<Props, State> {
   // and gives it a default of 'ref'
   getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
     const ref = props.refKey || 'ref';
+    const isOpen = this.getIsOpen();
     return {
       id: `CollapsePanel-${this.state.counter}`,
-      'aria-hidden': Boolean(this.getIsOpen()),
+      'aria-hidden': Boolean(isOpen),
       ...props,
       [ref]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,

@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "Component to build flexible and accessible collapse panels",
   "main": "dist/Collapse.js",
   "directories": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/roginfarrer/collapse.git"
+    "url": "git+https://github.com/roginfarrer/react-collapsed.git"
   },
   "keywords": [
     "collapse",
@@ -33,24 +33,18 @@
     "url": "https://github.com/roginfarrer/collapse/issues"
   },
   "homepage": "https://github.com/roginfarrer/collapse#readme",
+  "peerDependencies": {
+    "react": "15 || 16"
+  },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.4.2",
-    "babel-plugin-flow-react-proptypes": "^24.1.2",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
     "docz": "^0.12.5",
-    "eslint": "^5.8.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
     "flow-bin": "^0.83.0",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.0",
@@ -58,8 +52,6 @@
     "regenerator-runtime": "^0.12.1"
   },
   "dependencies": {
-    "prop-types": "^15.6.2",
-    "raf": "^3.4.0",
-    "react": "^16.6.0"
+    "raf": "^3.4.0"
   }
 }
