@@ -9,28 +9,29 @@ import Collapse from '../src/Collapse';
 
 Hello, I'm a mdx file!
 
-<Collapse defaultOpen>
-  {({getCollapsibleProps, getTogglerProps, contentRef}) => (
-    <React.Fragment>
-      <button {...getTogglerProps()}>Open</button>
-      <div
-        {...getCollapsibleProps({
-          style: {
-            borderRadius: 3,
-            border: '1px solid paleviolet',
-            background: 'lightblue'
-          }
-        })}
-      >
+<Playground>
+  <Collapse defaultOpen>
+    {({getCollapsibleProps, getTogglerProps, isOpen}) => (
+      <React.Fragment>
+        <button {...getTogglerProps()}>Open</button>
         <div
-          style={{
-            borderRadius: '50%',
-            background: 'blue',
-            height: '300px',
-            width: '100%',
-          }}
-        />
-      </div>
-    </React.Fragment>
-  )}
-</Collapse>
+          {...getCollapsibleProps({
+            style: {
+              borderRadius: 3,
+              border: '1px solid paleviolet',
+              background: 'lightblue'
+            }
+          })}
+        >
+          {isOpen ? 'open' : 'closed'}
+          <div
+            style={{
+              height: '300px',
+              width: '100%',
+            }}
+          />
+        </div>
+      </React.Fragment>
+    )}
+  </Collapse>
+</Playground>
