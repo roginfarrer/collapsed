@@ -2,6 +2,8 @@
 
 let idCounter = 0;
 
+export const noop = () => {};
+
 /**
  * This generates a unique ID for an instance of Collapse
  * @return {String} the unique ID

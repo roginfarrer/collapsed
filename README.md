@@ -32,10 +32,10 @@ You can let ReactCollapsed handle the expanding and closing for you:
 import Collapse from 'react-collapsed';
 
 <Collapse>
-  {({getCollapsibleProps, getTogglerProps, isOpen}) => (
+  {({getCollapseProps, getTogglerProps, isOpen}) => (
     <React.Fragment>
       <button {...getTogglerProps()}>Toggle Collapse</button>
-      <div {...getCollapsibleProps()}>
+      <div {...getCollapseProps()}>
         {isOpen ? `I'm visible!` : `You can't see me!`}
       </div>
     </React.Fragment>
@@ -58,12 +58,12 @@ class ControlledDemo extends React.Component {
   render() {
     return (
       <Collapse isOpen={this.state.isOpen}>
-        {({getCollapsibleProps, getTogglerProps}) => (
+        {({getCollapseProps, getTogglerProps}) => (
           <React.Fragment>
             <button {...getTogglerProps({onClick: this.handleClick})}>
               Toggle Collapse
             </button>
-            <div {...getCollapsibleProps()}>
+            <div {...getCollapseProps()}>
               {this.state.isOpen ? `I'm visible!` : `You can't see me!`}
             </div>
           </React.Fragment>

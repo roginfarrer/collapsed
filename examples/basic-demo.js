@@ -4,11 +4,11 @@ import Collapse from '../src/Collapse';
 export default function BasicDemo() {
   return (
     <Collapse>
-      {({getCollapsibleProps, getTogglerProps}) => (
+      {({getCollapseProps, getTogglerProps}) => (
         <React.Fragment>
           <button {...getTogglerProps()}>Open</button>
           <div
-            {...getCollapsibleProps({
+            {...getCollapseProps({
               style: {
                 borderRadius: 3,
                 border: '1px solid paleviolet',

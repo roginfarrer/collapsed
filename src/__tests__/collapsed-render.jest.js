@@ -9,7 +9,7 @@ const collapseTestId = 'collapse';
 
 const Demo = props => (
   <Collapse {...props}>
-    {({getCollapsibleProps, getTogglerProps}) => (
+    {({getCollapseProps, getTogglerProps}) => (
       <React.Fragment>
         <button
           {...getTogglerProps({
@@ -19,7 +19,7 @@ const Demo = props => (
         >
           Open
         </button>
-        <div {...getCollapsibleProps({'data-testid': collapseTestId})}>
+        <div {...getCollapseProps({'data-testid': collapseTestId})}>
           <div
             style={{
               height: '300px'

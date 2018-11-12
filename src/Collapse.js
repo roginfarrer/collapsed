@@ -1,10 +1,10 @@
 // @flow
 
 import {Component, type Node, type Ref} from 'react';
-import {callAll, generateId} from './utils';
+import {callAll, generateId, noop} from './utils';
 import RAF from 'raf';
 
-type getCollapsibleProps = {
+type GetCollapseProps = {
   refKey: string
 };
 
@@ -12,7 +12,7 @@ type Props = {
   children: ({
     isOpen: boolean,
     getTogglerProps: (*) => {},
-    getCollapsibleProps: getCollapsibleProps => {},
+    getCollapseProps: getCollapseProps => {},
     contentRef: Ref<*>
   }) => Node,
   isOpen: ?boolean,
@@ -165,7 +165,10 @@ export default class Collapse extends Component<Props, State> {
       return;
     }
 
-    RAF(this.completeTransition);
+    if (this.transitionRAF) {
+      RAF.cancel(this.transitionRAF);
+    }
+    this.transitionRAF = RAF(this.completeTransition);
   };
 
   collapseEl: ?HTMLElement;
@@ -188,25 +191,29 @@ export default class Collapse extends Component<Props, State> {
 
   getTogglerProps = (props: {onClick: ?() => void} = {onClick() {}}) => {
     return {
+      type: 'button',
+      role: 'button',
       id: `CollapseToggle-${this.state.counter}`,
       'aria-controls': `CollapsePanel-${this.state.counter}`,
       'aria-expanded': Boolean(this.getIsOpen()),
       tabIndex: 0,
       ...props,
-      onClick: callAll(props.onClick, this.toggleIsOpen)
+      onClick: props.disabled ? noop : callAll(props.onClick, this.toggleIsOpen)
     };
   };
 
   // For those with a hard time reading Flow, this destructures refKey off of props,
   // and gives it a default of 'ref'
-  getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
-    const ref = props.refKey || 'ref';
+  getCollapseProps = (
+    {refKey, ref, ...props}: GetCollapseProps = {refKey: 'ref'}
+  ) => {
+    const realRef = refKey || 'ref';
     const isOpen = this.getIsOpen();
     return {
       id: `CollapsePanel-${this.state.counter}`,
-      'aria-hidden': Boolean(isOpen),
+      'aria-hidden': !isOpen,
       ...props,
-      [ref]: callAll(this.assignCollapsibleRef, props[ref]),
+      [realRef]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,
       style: {
         // @TODO: throw a warning if they pass in properties that might conflict with the animation
@@ -225,7 +232,7 @@ export default class Collapse extends Component<Props, State> {
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
       getTogglerProps: this.getTogglerProps,
-      getCollapsibleProps: this.getCollapsibleProps
+      getCollapseProps: this.getCollapseProps
     });
   }
 }

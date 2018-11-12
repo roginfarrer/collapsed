@@ -2,36 +2,41 @@
 name: Basic Demo
 ---
 
-import {Playground} from 'docz'
+import {Playground} from 'docz';
 import Collapse from '../src/Collapse';
 
 # Basic Demo
 
-Hello, I'm a mdx file!
-
 <Playground>
-  <Collapse defaultOpen>
-    {({getCollapsibleProps, getTogglerProps, isOpen}) => (
-      <React.Fragment>
-        <button {...getTogglerProps()}>Open</button>
-        <div
-          {...getCollapsibleProps({
-            style: {
-              borderRadius: 3,
-              border: '1px solid paleviolet',
-              background: 'lightblue'
-            }
-          })}
-        >
-          {isOpen ? 'open' : 'closed'}
-          <div
-            style={{
-              height: '300px',
-              width: '100%',
-            }}
-          />
-        </div>
-      </React.Fragment>
-    )}
-  </Collapse>
+  {/* Fixed height to minimize the code snippet jumping around :) */}
+  <div style={{minHeight: 400}}>
+    <Collapse defaultOpen>
+      {({getCollapseProps, getTogglerProps, isOpen}) => (
+        <React.Fragment>
+          <button {...getTogglerProps({style: {marginBottom: '1em'}})}>
+            {isOpen ? 'Close' : 'Open'}
+          </button>
+          <div {...getCollapseProps()}>
+            <p
+              style={{
+                border: '3px solid #0B5FFF',
+                margin: 0,
+                padding: '1em'
+              }}
+            >
+              In the morning I walked down the Boulevard to the rue Soufflot for
+              coffee and brioche. It was a fine morning. The horse-chestnut
+              trees in the Luxembourg gardens were in bloom. There was the
+              pleasant early-morning feeling of a hot day. I read the papers
+              with the coffee and then smoked a cigarette. The flower-women were
+              coming up from the market and arranging their daily stock.
+              Students went by going up to the law school, or down to the
+              Sorbonne. The Boulevard was busy with trams and people going to
+              work.
+            </p>
+          </div>
+        </React.Fragment>
+      )}
+    </Collapse>
+  </div>
 </Playground>
