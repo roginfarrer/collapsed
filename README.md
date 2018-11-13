@@ -84,3 +84,7 @@ class ControlledDemo extends React.Component {
 | duration    |          | `500`                                      | Length of animation (in MS)                     |
 | easing      |          | `cubic-bezier(0.250, 0.460, 0.450, 0.940)` | CSS timing function for animation               |
 | delay       |          | `0`                                        | Animation delay (in MS)                         |
+
+## Acknowledgments
+
+Received lots of inspiration for implementation from [react-show](https://github.com/react-tools/react-show). If you need a more generalized API for CSS animations, check it out!
