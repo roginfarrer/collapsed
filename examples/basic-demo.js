@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import Collapse from '../src/Collapse';
 

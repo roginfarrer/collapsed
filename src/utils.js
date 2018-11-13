@@ -11,5 +11,5 @@ export const noop = () => {};
 export const generateId = (): string => String(idCounter++);
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
-export const callAll = (...fns) => (...args: Array<*>) =>
+export const callAll = (...fns: any) => (...args: Array<*>) =>
   fns.forEach(fn => fn && fn(...args));

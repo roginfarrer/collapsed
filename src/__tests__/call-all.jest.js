@@ -1,4 +1,3 @@
-// @flow
 import 'jest-dom/extend-expect';
 import {callAll} from '../utils';
 
