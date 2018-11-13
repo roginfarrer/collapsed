@@ -1,0 +1,34 @@
+.CollapseDemo {
+  display: inline-block;
+  border: 3px solid #0b5fff;
+  margin: 0;
+  padding: 1em;
+}
+
+.DemoContainer {
+  min-height: 500px;
+}
+
+@media screen and (min-width: 360px) {
+  .DemoContainer {
+    min-height: 500px;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .DemoContainer {
+    min-height: 300px;
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .DemoContainer {
+    min-height: 250px;
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .DemoContainer {
+    min-height: 210px;
+  }
+}

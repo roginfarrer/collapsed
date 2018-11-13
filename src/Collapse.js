@@ -1,19 +1,25 @@
 // @flow
 
-import {Component, type Node, type Ref} from 'react';
-import {callAll, generateId} from './utils';
+import {Component, type Node} from 'react';
+import {callAll, generateId, noop} from './utils';
 import RAF from 'raf';
 
-type getCollapsibleProps = {
-  refKey: string
+type GetCollapseProps = {
+  refKey?: string,
+  ref?: string,
+  style?: {}
+};
+
+type GetTogglerProps = {
+  onClick?: () => void,
+  disabled?: boolean
 };
 
 type Props = {
   children: ({
     isOpen: boolean,
     getTogglerProps: (*) => {},
-    getCollapsibleProps: getCollapsibleProps => {},
-    contentRef: Ref<*>
+    getCollapseProps: (void | GetCollapseProps) => {}
   }) => Node,
   isOpen: ?boolean,
   defaultOpen: boolean,
@@ -31,7 +37,8 @@ type Styles = {
 type State = {
   styles: Styles,
   isOpen: ?boolean,
-  counter: number
+  heightAtTransition: string,
+  counter: string
 };
 
 export default class Collapse extends Component<Props, State> {
@@ -48,7 +55,8 @@ export default class Collapse extends Component<Props, State> {
       ? {height: 'auto'}
       : {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
-    transitionState: null
+    heightAtTransition: '0',
+    counter: '0'
   };
 
   componentDidMount() {
@@ -111,11 +119,12 @@ export default class Collapse extends Component<Props, State> {
         this.setState(
           ({styles}) => ({styles: {...styles, ...newStyles}}),
           () => {
-            this.styleCheck = RAF(() => {
+            RAF(() => {
               if (
                 Object.keys(newStyles).some(key => {
                   return (
                     !this.collapseEl ||
+                    // $FlowFixMe Not sure why this error is happening?
                     this.collapseEl.style[key] !== newStyles[key]
                   );
                 })
@@ -143,7 +152,7 @@ export default class Collapse extends Component<Props, State> {
     }
   };
 
-  handleTransitionEnd = e => {
+  handleTransitionEnd = (e: SyntheticEvent<HTMLElement>) => {
     if (e) {
       e.persist();
 
@@ -165,10 +174,14 @@ export default class Collapse extends Component<Props, State> {
       return;
     }
 
-    RAF(this.completeTransition);
+    if (this.transitionRAF) {
+      RAF.cancel(this.transitionRAF);
+    }
+    this.transitionRAF = RAF(this.completeTransition);
   };
 
   collapseEl: ?HTMLElement;
+  transitionRAF: ?TimeoutID;
 
   /**
    * Returns the state of the isOpen prop.
@@ -186,25 +199,34 @@ export default class Collapse extends Component<Props, State> {
     this.setState(({isOpen}) => ({isOpen: !isOpen}));
   };
 
-  getTogglerProps = (props: {onClick: ?() => void} = {onClick() {}}) => {
+  getTogglerProps = (
+    props: GetTogglerProps = {
+      onClick() {},
+      disabled: false
+    }
+  ) => {
     return {
+      type: 'button',
+      role: 'button',
       id: `CollapseToggle-${this.state.counter}`,
       'aria-controls': `CollapsePanel-${this.state.counter}`,
       'aria-expanded': Boolean(this.getIsOpen()),
       tabIndex: 0,
       ...props,
-      onClick: callAll(props.onClick, this.toggleIsOpen)
+      onClick: props.disabled ? noop : callAll(props.onClick, this.toggleIsOpen)
     };
   };
 
   // For those with a hard time reading Flow, this destructures refKey off of props,
   // and gives it a default of 'ref'
-  getCollapsibleProps = (props: getCollapsibleProps = {refKey: 'ref'}) => {
-    const ref = props.refKey || 'ref';
+  getCollapseProps = (
+    {refKey, ...props}: GetCollapseProps = {refKey: 'ref'}
+  ) => {
+    const ref = refKey || 'ref';
     const isOpen = this.getIsOpen();
     return {
       id: `CollapsePanel-${this.state.counter}`,
-      'aria-hidden': Boolean(isOpen),
+      'aria-hidden': !isOpen,
       ...props,
       [ref]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,
@@ -225,7 +247,7 @@ export default class Collapse extends Component<Props, State> {
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
       getTogglerProps: this.getTogglerProps,
-      getCollapsibleProps: this.getCollapsibleProps
+      getCollapseProps: this.getCollapseProps
     });
   }
 }
