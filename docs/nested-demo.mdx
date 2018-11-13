@@ -5,6 +5,7 @@ route: /nested-demo
 
 import {Playground} from 'docz';
 import Collapse from '../src/Collapse';
+import {CollapseDemo} from './components/ui-components';
 
 # Nested Demo
 
@@ -15,14 +16,8 @@ import Collapse from '../src/Collapse';
         {isOpen ? 'Close' : 'Expand'}
       </button>
       <section {...getCollapseProps()}>
-        <div
-          style={{
-            border: '3px solid #0B5FFF',
-            margin: 0,
-            padding: '1em'
-          }}
-        >
-          <p>
+        <CollapseDemo is="div">
+          <p style={{margin: 0}}>
             Friends, Romans, countrymen, lend me your ears;
             <br />
             I come to bury Caesar, not to praise him.
@@ -55,7 +50,7 @@ import Collapse from '../src/Collapse';
                     Read more?
                   </button>
                 )}
-                <p {...getCollapseProps()}>
+                <p {...getCollapseProps({style: {margin: 0}})}>
                   He was my friend, faithful and just to me:
                   <br />
                   But Brutus says he was ambitious;
@@ -110,7 +105,7 @@ import Collapse from '../src/Collapse';
               </React.Fragment>
             )}
           </Collapse>
-        </div>
+        </CollapseDemo>
       </section>
     </React.Fragment>
   )}

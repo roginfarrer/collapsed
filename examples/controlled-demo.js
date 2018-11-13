@@ -1,5 +1,6 @@
 import React from 'react';
 import Collapse from '../src/Collapse';
+import {CollapseDemo} from '../docs/components/ui-components';
 
 export default class ControlledDemo extends React.Component {
   state = {
@@ -23,13 +24,7 @@ export default class ControlledDemo extends React.Component {
               {isOpen ? 'Close' : 'Open'}
             </button>
             <div {...getCollapseProps()}>
-              <p
-                style={{
-                  border: '3px solid #0B5FFF',
-                  margin: 0,
-                  padding: '1em'
-                }}
-              >
+              <CollapseDemo>
                 In the morning I walked down the Boulevard to the rue Soufflot
                 for coffee and brioche. It was a fine morning. The
                 horse-chestnut trees in the Luxembourg gardens were in bloom.
@@ -39,7 +34,7 @@ export default class ControlledDemo extends React.Component {
                 daily stock. Students went by going up to the law school, or
                 down to the Sorbonne. The Boulevard was busy with trams and
                 people going to work.
-              </p>
+              </CollapseDemo>
             </div>
           </React.Fragment>
         )}

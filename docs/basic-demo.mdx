@@ -4,12 +4,13 @@ name: Basic Demo
 
 import {Playground} from 'docz';
 import Collapse from '../src/Collapse';
+import {DemoContainer, CollapseDemo} from './components/ui-components';
 
 # Basic Demo
 
 <Playground>
   {/* Fixed height to minimize the code snippet jumping around :) */}
-  <div style={{minHeight: 400}}>
+  <DemoContainer>
     <Collapse defaultOpen>
       {({getCollapseProps, getTogglerProps, isOpen}) => (
         <React.Fragment>
@@ -17,13 +18,7 @@ import Collapse from '../src/Collapse';
             {isOpen ? 'Close' : 'Open'}
           </button>
           <div {...getCollapseProps()}>
-            <p
-              style={{
-                border: '3px solid #0B5FFF',
-                margin: 0,
-                padding: '1em'
-              }}
-            >
+            <CollapseDemo>
               In the morning I walked down the Boulevard to the rue Soufflot for
               coffee and brioche. It was a fine morning. The horse-chestnut
               trees in the Luxembourg gardens were in bloom. There was the
@@ -33,10 +28,10 @@ import Collapse from '../src/Collapse';
               Students went by going up to the law school, or down to the
               Sorbonne. The Boulevard was busy with trams and people going to
               work.
-            </p>
+            </CollapseDemo>
           </div>
         </React.Fragment>
       )}
     </Collapse>
-  </div>
+  </DemoContainer>
 </Playground>
