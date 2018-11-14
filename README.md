@@ -1,13 +1,13 @@
 # React-Collapsed
 
-A small (< 3.5kb), headless component for creating flexible and accessible expand/collapse components.
+A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.
 
 ## Features
 
 - Handles the height of animations of your elements, `auto` included!
 - You control the UI - with prop-getters, you give ReactCollapsed's logic to your elements
 - Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-- Small footprint (< 3.5kb gzipped)
+- Small footprint (< 2.5kb gzipped)
 - No animation framework required! Simply powered by CSS animations
 
 ## Demo
@@ -17,9 +17,9 @@ A small (< 3.5kb), headless component for creating flexible and accessible expan
 ## Installation
 
 ```bash
-yarn add react-collapsed
+$ yarn add react-collapsed
 # or
-npm install --save react-collapsed
+$ npm i react-collapsed
 ```
 
 ## Usage

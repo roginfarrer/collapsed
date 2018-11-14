@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Collapse from '../src/Collapse';
-import {CollapseDemo} from '../docs/components/ui-components';
+import {CollapseDemo} from './components/ui-components';
 
 export default class ControlledDemo extends React.Component<
   void,

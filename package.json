@@ -1,21 +1,27 @@
 {
   "name": "react-collapsed",
   "version": "0.2.0",
-  "description": "A small (< 3.5kb), headless component for creating flexible and accessible expand/collapse components.",
+  "description": "A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build:watch": "rollup -w -c -o dist/collapse.min.js",
     "build": "rollup -c -o dist/collapse.min.js",
-    "prepublish": "yarn jest && yarn build",
-    "dev": "yarn concurrently \"yarn build:watch\" \"docz dev\"",
-    "test": "jest"
+    "dev": "yarn docz dev",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "yarn flow",
+    "validate": "yarn flow && yarn build && yarn test",
+    "setup": "yarn install && yarn validate",
+    "prepublish": "yarn jest && yarn build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/roginfarrer/react-collapsed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/roginfarrer/react-collapsed/issues"
   },
   "keywords": [
     "collapse",
@@ -26,11 +32,8 @@
     "render",
     "expand"
   ],
-  "author": "Rogin Farrer",
+  "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/roginfarrer/react-collapsed/issues"
-  },
   "homepage": "https://react-collapsed.netlify.com/",
   "peerDependencies": {
     "react": "15 || 16"
@@ -47,7 +50,6 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
-    "concurrently": "^4.0.1",
     "docz": "^0.12.5",
     "docz-plugin-css": "^0.11.0",
     "eslint": "^5.9.0",
@@ -68,5 +70,10 @@
   },
   "dependencies": {
     "raf": "^3.4.0"
-  }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "dist",
+    ".docz"
+  ]
 }
