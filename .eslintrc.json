@@ -19,5 +19,8 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["react", "jsx-a11y"]
+  "plugins": ["react", "jsx-a11y"],
+  "rules": {
+    "flowtype/space-after-type-colon": [0]
+  }
 }

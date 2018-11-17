@@ -1,7 +1,14 @@
 // @flow
 
 import {Component, type Node} from 'react';
-import {callAll, generateId, noop} from './utils';
+import {
+  callAll,
+  generateId,
+  noop,
+  makeTransitionStyles,
+  warnBreakingStyles
+} from './utils';
+import type {TransitionProps} from './types';
 import RAF from 'raf';
 
 type GetCollapseProps = {
@@ -15,17 +22,14 @@ type GetTogglerProps = {
   disabled?: boolean
 };
 
-type Props = {
+type Props = TransitionProps & {
   children: ({
     isOpen: boolean,
     getTogglerProps: (*) => {},
     getCollapseProps: (void | GetCollapseProps) => {}
   }) => Node,
   isOpen: ?boolean,
-  defaultOpen: boolean,
-  duration: number,
-  easing: string,
-  delay: number
+  defaultOpen: boolean
 };
 
 type Styles = {
@@ -180,6 +184,13 @@ export default class Collapse extends Component<Props, State> {
     this.transitionRAF = RAF(this.completeTransition);
   };
 
+  makeTransitionProperty = () => {
+    if (this.getIsOpen()) {
+      return makeTransitionStyles(this.props, 'in');
+    }
+    return makeTransitionStyles(this.props, 'out');
+  };
+
   collapseEl: ?HTMLElement;
   transitionRAF: ?TimeoutID;
 
@@ -224,6 +235,11 @@ export default class Collapse extends Component<Props, State> {
   ) => {
     const ref = refKey || 'ref';
     const isOpen = this.getIsOpen();
+
+    if (process.env.NODE_ENV !== 'production' && props.style) {
+      warnBreakingStyles(props.style);
+    }
+
     return {
       id: `CollapsePanel-${this.state.counter}`,
       'aria-hidden': !isOpen,
@@ -231,12 +247,10 @@ export default class Collapse extends Component<Props, State> {
       [ref]: callAll(this.assignCollapsibleRef, props[ref]),
       onTransitionEnd: this.handleTransitionEnd,
       style: {
-        // @TODO: throw a warning if they pass in properties that might conflict with the animation
         ...props.style,
         ...this.state.styles,
-        transition: `height ${this.props.duration}ms ${this.props.easing} ${
-          this.props.delay
-        }ms`
+        ...this.makeTransitionProperty(),
+        transitionProperty: 'height'
       }
     };
   };
