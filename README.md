@@ -76,14 +76,14 @@ class ControlledDemo extends React.Component {
 
 ## API
 
-| Prop        | Required | Default                                    | Description                                     |
-| ----------- | -------- | ------------------------------------------ | ----------------------------------------------- |
-| isOpen      |          | `null`                                     | If true, the Collapse is expanded               |
-| defaultOpen |          | `false`                                    | If true, the Collapse will be expanded on mount |
-| children    | `true`   |                                            | Render prop to create the Collapse UI           |
-| duration    |          | `500`                                      | Length of animation (in MS)                     |
-| easing      |          | `cubic-bezier(0.250, 0.460, 0.450, 0.940)` | CSS timing function for animation               |
-| delay       |          | `0`                                        | Animation delay (in MS)                         |
+| Prop        | Type             | Default                                    | Description                                     |
+| ----------- | ---------------- | ------------------------------------------ | ----------------------------------------------- |
+| children    | func             |                                            | Render prop to create the Collapse UI           |
+| isOpen      | bool             | `null`                                     | If true, the Collapse is expanded               |
+| defaultOpen | bool             | `false`                                    | If true, the Collapse will be expanded on mount |
+| duration    | number \| object | `500`                                      | Length of animation (in MS)                     |
+| easing      | number \| object | `cubic-bezier(0.250, 0.460, 0.450, 0.940)` | CSS timing function for animation               |
+| delay       | number \| object | `0`                                        | Animation delay (in MS)                         |
 
 ## Acknowledgments
 

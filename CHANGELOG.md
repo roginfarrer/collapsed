@@ -1,3 +1,9 @@
+# 1.0.0
+
+Bumped to full release! :)
+
+- `duration`, `easing`, and `delay` now support taking an object with `in` and `out` keys to configure differing in-and-out transitions
+
 # 0.2.0
 
 ### Breaking Changes
