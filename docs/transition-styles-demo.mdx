@@ -1,5 +1,5 @@
 ---
-name: Basic
+name: Custom In-And-Out
 menu: Demo
 ---
 
@@ -12,7 +12,15 @@ import {DemoContainer, CollapseDemo} from './components/ui-components';
 <Playground>
   {/* Fixed height to minimize the code snippet jumping around :) */}
   <DemoContainer>
-    <Collapse defaultOpen>
+    <Collapse
+      defaultOpen
+      duration={{in: 900, out: 500}}
+      easing={{
+        in: 'cubic-bezier(0.470, 0.000, 0.745, 0.715)',
+        out: 'cubic-bezier(0.230, 1.000, 0.320, 1.000)'
+      }}
+      delay={{out: 100}}
+    >
       {({getCollapseProps, getTogglerProps, isOpen}) => (
         <React.Fragment>
           <button {...getTogglerProps({style: {marginBottom: '1em'}})}>
