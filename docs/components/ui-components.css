@@ -1,6 +1,7 @@
 .CollapseDemo {
   display: inline-block;
-  border: 3px solid #0b5fff;
+  background-color: #0b5fff;
+  color: #fff;
   margin: 0;
   padding: 1em;
 }

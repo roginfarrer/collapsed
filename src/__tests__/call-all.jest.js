@@ -2,7 +2,7 @@ import 'jest-dom/extend-expect';
 import {callAll} from '../utils';
 
 describe('callAll', () => {
-  test('it calls the two functions passed into it', () => {
+  it('it calls the two functions passed into it', () => {
     const functionOne = jest.fn();
     const functionTwo = jest.fn();
     const theFunk = callAll(functionOne, functionTwo);
