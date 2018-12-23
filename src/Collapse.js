@@ -110,13 +110,6 @@ export default class Collapse extends Component<Props, State> {
     });
   };
 
-  getCollapsibleHeight = () => {
-    if (!this.collapseEl) {
-      return 'auto';
-    }
-    return `${this.collapseEl.scrollHeight}px`;
-  };
-
   setStyles = (newStyles: Styles) => {
     return new Promise<any>(resolve => {
       const check = () => {
@@ -189,6 +182,13 @@ export default class Collapse extends Component<Props, State> {
       return makeTransitionStyles(this.props, 'in');
     }
     return makeTransitionStyles(this.props, 'out');
+  };
+
+  getCollapsibleHeight = () => {
+    if (!this.collapseEl) {
+      return 'auto';
+    }
+    return `${this.collapseEl.scrollHeight}px`;
   };
 
   collapseEl: ?HTMLElement;
