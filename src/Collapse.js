@@ -1,15 +1,146 @@
 // @flow
 
-import {Component, type Node} from 'react';
+import {Component, useState, useLayoutEffect, useRef} from 'react';
+import type {Node} from 'react';
 import {
   callAll,
   generateId,
+  useUniqueId,
   noop,
   makeTransitionStyles,
   warnBreakingStyles
 } from './utils';
 import type {TransitionProps} from './types';
 import RAF from 'raf';
+
+function getElHeight(el) {
+  if (!el || !el.current) {
+    return 'auto';
+  }
+  return `${el.current.scrollHeight}px`;
+}
+
+export function useCollapse(argIsOpen: boolean) {
+  const {uniqueId, isFirstRender} = useUniqueId();
+  const el = useRef(null);
+  const [innerIsOpen, setOpen] = useState(false);
+  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
+  const [heightAtTransition, setHeightAtTransition] = useState('0');
+  const isOpen = typeof argIsOpen === 'undefined' ? innerIsOpen : argIsOpen;
+  const [styles, setStyles] = useState(
+    isOpen ? {height: 'auto'} : {display: 'none', height: '0px'}
+  );
+
+  useLayoutEffect(() => {
+    if (isFirstRender) {
+      return;
+    }
+    if (isOpen) {
+      setStyles(styles => ({
+        ...styles,
+        display: 'block',
+        overflow: 'hidden'
+      }));
+      setShouldAnimateOpen(true);
+    } else {
+      const height = getElHeight(el);
+      setStyles(styles => ({...styles, height}));
+      setShouldAnimateOpen(false);
+    }
+  }, [isOpen]);
+
+  useLayoutEffect(() => {
+    if (isFirstRender) {
+      return;
+    }
+
+    if (shouldAnimateOpen) {
+      const height = getElHeight(el);
+      setStyles(styles => ({...styles, height}));
+      setHeightAtTransition(height);
+    } else {
+      // RAF required to transition, otherwise will flash closed
+      requestAnimationFrame(() => {
+        const height = getElHeight(el);
+        setHeightAtTransition(height);
+        setStyles(styles => ({
+          ...styles,
+          height: '0px',
+          overflow: 'hidden'
+        }));
+      });
+    }
+  }, [shouldAnimateOpen]);
+
+  const handleTransitionEnd = e => {
+    if (e) {
+      e.persist();
+
+      // Only handle transitionEnd for this element
+      if (e.target !== el.current) {
+        return;
+      }
+    }
+
+    const height = getElHeight(el);
+    if (isOpen && height !== heightAtTransition) {
+      setHeightAtTransition(height);
+      setStyles(styles => ({...styles, height}));
+      return;
+    }
+
+    completeTransition();
+  };
+
+  const completeTransition = () => {
+    if (isOpen) {
+      setStyles({
+        height: 'auto'
+      });
+    } else {
+      setStyles({
+        display: 'none',
+        height: '0px'
+      });
+    }
+  };
+
+  return {
+    getTogglerProps(
+      {disabled, onClick}: {disabled: boolean, onClick: () => void} = {
+        disabled: false,
+        onClick: noop
+      }
+    ) {
+      return {
+        type: 'button',
+        role: 'button',
+        id: `react-collapsed-toggle-${uniqueId}`,
+        'aria-controls': `react-collapsed-panel-${uniqueId}`,
+        'aria-expanded': Boolean(isOpen),
+        tabIndex: 0,
+        onClick: disabled ? noop : callAll(onClick, () => setOpen(!innerIsOpen))
+      };
+    },
+    getCollapseProps() {
+      return {
+        id: `react-collapsed-${uniqueId}`,
+        'aria-hidden': isOpen ? null : 'true',
+        ref: el,
+        onTransitionEnd: handleTransitionEnd,
+        style: {
+          ...styles,
+          transitionProperty: 'height',
+          transitionDuration: '500ms',
+          transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
+          willChange: 'height',
+          transform: 'translateZ(0)'
+        }
+      };
+    },
+    isOpen
+  };
+}
 
 type GetCollapseProps = {
   refKey?: string,

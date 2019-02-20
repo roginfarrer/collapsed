@@ -1,5 +1,6 @@
 // @flow
 
+import {useRef, useEffect} from 'react';
 import type {TransitionProps} from './types';
 
 let idCounter = 0;
@@ -10,6 +11,23 @@ export const noop = () => {};
  * This generates a unique ID for an instance of Collapse
  * @return {String} the unique ID
  */
+export function useUniqueId() {
+  const firstUpdate = useRef(true);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      String(idCounter++);
+      firstUpdate.current = false;
+    }
+  }, []);
+
+  console.log(idCounter, firstUpdate);
+
+  return {
+    isFirstRender: firstUpdate.current,
+    uniqueId: idCounter
+  };
+}
 export const generateId = (): string => String(idCounter++);
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
