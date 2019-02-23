@@ -2,6 +2,7 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+  setupFilesAfterEnv: ['react-testing-library/cleanup-after-each'],
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

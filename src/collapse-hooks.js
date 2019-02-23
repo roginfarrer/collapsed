@@ -10,11 +10,11 @@ function getElHeight(el) {
 }
 
 function maybeUseState(
-  {isOpen, initialOpen} = {
-    initialOpen: false
+  {isOpen, defaultOpen} = {
+    defaultOpen: false
   }
 ) {
-  const [open, setOpen] = useState(initialOpen);
+  const [open, setOpen] = useState(defaultOpen);
   const definedOpen = typeof isOpen !== 'undefined' ? isOpen : open;
   return [definedOpen, setOpen];
 }
@@ -31,20 +31,24 @@ function makeTransitionStyles({
   return {
     expandStyles: {
       ...expand,
-      transitionProperty: `${expand.transitionProperty || ''} height`
+      transitionProperty: `${
+        expand.transitionProperty ? `${expand.transitionProperty}, ` : ''
+      } height`
     },
     collapseStyles: {
       ...collapse,
-      transitionProperty: `${collapse.transitionProperty || ''} height`
+      transitionProperty: `${
+        collapse.transitionProperty ? `${collapse.transitionProperty}, ` : ''
+      } height`
     }
   };
 }
 
 // config will be transition styles
-export function useCollapse(initialOpen = false, config = {}) {
+export function useCollapse(initialState = {}, config = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
-  const [isOpen, setOpen] = maybeUseState(initialOpen);
+  const [isOpen, setOpen] = maybeUseState(initialState);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
   const [styles, setStyles] = useState(
@@ -135,7 +139,7 @@ export function useCollapse(initialOpen = false, config = {}) {
         role: 'button',
         id: `react-collapsed-toggle-${uniqueId}`,
         'aria-controls': `react-collapsed-panel-${uniqueId}`,
-        'aria-expanded': isOpen,
+        'aria-expanded': isOpen ? 'true' : 'false',
         tabIndex: 0,
         ...rest,
         onClick: disabled ? noop : callAll(onClick, toggleOpen)

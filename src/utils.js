@@ -7,7 +7,10 @@ let idCounter = 0;
 
 export const noop = () => {};
 
-export function useLayoutEffectAfterMount(cb, dependencies) {
+export function useLayoutEffectAfterMount(
+  cb: () => void,
+  dependencies: Array<*>
+) {
   const justMounted = useRef(true);
   useLayoutEffect(() => {
     if (!justMounted.current) {
