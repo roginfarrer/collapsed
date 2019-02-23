@@ -1,6 +1,6 @@
 // @flow
 
-import {Component, useState, useLayoutEffect, useRef} from 'react';
+import {Component, useState, useLayoutEffect, useRef, useCallback} from 'react';
 import type {Node} from 'react';
 import {
   callAll,
@@ -20,13 +20,59 @@ function getElHeight(el) {
   return `${el.current.scrollHeight}px`;
 }
 
-export function useCollapse(argIsOpen: boolean) {
+type UseSomeState = {
+  value?: boolean,
+  defaultValue: boolean
+};
+
+function maybeUseState(
+  {value, defaultValue}: UseSomeState = {
+    defaultValue: false
+  }
+) {
+  const [stateValue, setStateValue] = useState(defaultValue);
+  const definedValue = typeof value !== 'undefined' ? value : stateValue;
+  return [definedValue, setStateValue];
+}
+
+type HookGetTogglerProps = {
+  disabled: boolean,
+  onClick: () => void,
+  clickHandler: () => void,
+  uniqueId: string | number,
+  isOpen: boolean
+};
+
+// function getTogglerProps(
+//   {
+//     disabled,
+//     onClick,
+//     clickHandler,
+//     uniqueId,
+//     isOpen,
+//     ...rest
+//   }: HookGetTogglerProps = {
+//     disabled: false,
+//     onClick: noop
+//   }
+// ) {
+//   return {
+//     type: 'button',
+//     role: 'button',
+//     id: `react-collapsed-toggle-${uniqueId}`,
+//     'aria-controls': `react-collapsed-panel-${uniqueId}`,
+//     'aria-expanded': isOpen,
+//     tabIndex: 0,
+//     ...rest,
+//     onClick: disabled ? noop : callAll(onClick, clickHandler)
+//   };
+// }
+
+export function useCollapse(isOpen: boolean = false) {
   const {uniqueId, isFirstRender} = useUniqueId();
   const el = useRef(null);
-  const [innerIsOpen, setOpen] = useState(false);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
-  const isOpen = typeof argIsOpen === 'undefined' ? innerIsOpen : argIsOpen;
   const [styles, setStyles] = useState(
     isOpen ? {height: 'auto'} : {display: 'none', height: '0px'}
   );
@@ -72,42 +118,41 @@ export function useCollapse(argIsOpen: boolean) {
     }
   }, [shouldAnimateOpen]);
 
-  const handleTransitionEnd = e => {
-    if (e) {
-      e.persist();
+  const handleTransitionEnd = useCallback(
+    (e: SyntheticEvent<HTMLElement>) => {
+      if (e) {
+        e.persist();
 
-      // Only handle transitionEnd for this element
-      if (e.target !== el.current) {
+        // Only handle transitionEnd for this element
+        if (e.target !== el.current) {
+          return;
+        }
+      }
+
+      const height = getElHeight(el);
+      if (isOpen && height !== heightAtTransition) {
+        setHeightAtTransition(height);
+        setStyles(styles => ({...styles, height}));
         return;
       }
-    }
 
-    const height = getElHeight(el);
-    if (isOpen && height !== heightAtTransition) {
-      setHeightAtTransition(height);
-      setStyles(styles => ({...styles, height}));
-      return;
-    }
+      if (isOpen) {
+        setStyles({});
+      } else {
+        setStyles({
+          display: 'none',
+          height: '0px'
+        });
+      }
+    },
+    [shouldAnimateOpen]
+  );
 
-    completeTransition();
-  };
-
-  const completeTransition = () => {
-    if (isOpen) {
-      setStyles({
-        height: 'auto'
-      });
-    } else {
-      setStyles({
-        display: 'none',
-        height: '0px'
-      });
-    }
-  };
+  // const handleClick = useCallback(() => setOpen(!isOpen), [isOpen]);
 
   return {
     getTogglerProps(
-      {disabled, onClick}: {disabled: boolean, onClick: () => void} = {
+      {disabled, onClick, ...rest}: GetTogglerProps = {
         disabled: false,
         onClick: noop
       }
@@ -117,14 +162,15 @@ export function useCollapse(argIsOpen: boolean) {
         role: 'button',
         id: `react-collapsed-toggle-${uniqueId}`,
         'aria-controls': `react-collapsed-panel-${uniqueId}`,
-        'aria-expanded': Boolean(isOpen),
+        'aria-expanded': isOpen,
         tabIndex: 0,
-        onClick: disabled ? noop : callAll(onClick, () => setOpen(!innerIsOpen))
+        ...rest,
+        onClick: disabled ? noop : onClick
       };
     },
     getCollapseProps() {
       return {
-        id: `react-collapsed-${uniqueId}`,
+        id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': isOpen ? null : 'true',
         ref: el,
         onTransitionEnd: handleTransitionEnd,

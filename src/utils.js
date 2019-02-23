@@ -1,32 +1,42 @@
 // @flow
 
-import {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useCallback, useLayoutEffect} from 'react';
 import type {TransitionProps} from './types';
 
 let idCounter = 0;
 
 export const noop = () => {};
 
+export function useLayoutEffectAfterMount(cb, dependencies) {
+  const justMounted = useRef(true);
+  useLayoutEffect(() => {
+    if (!justMounted.current) {
+      return cb();
+    }
+    justMounted.current = false;
+  }, dependencies);
+}
+
+function useEffectOnMount(cb, dependencies) {
+  const justMounted = useRef(true);
+  useEffect(() => {
+    if (justMounted.current) {
+      return cb();
+    }
+    justMounted.current = false;
+  }, dependencies);
+}
+
 /**
  * This generates a unique ID for an instance of Collapse
  * @return {String} the unique ID
  */
 export function useUniqueId() {
-  const firstUpdate = useRef(true);
-
-  useEffect(() => {
-    if (firstUpdate.current) {
-      String(idCounter++);
-      firstUpdate.current = false;
-    }
+  let counter = React.useMemo(() => idCounter++, []);
+  useEffectOnMount(() => {
+    counter++;
   }, []);
-
-  console.log(idCounter, firstUpdate);
-
-  return {
-    isFirstRender: firstUpdate.current,
-    uniqueId: idCounter
-  };
+  return counter;
 }
 export const generateId = (): string => String(idCounter++);
 

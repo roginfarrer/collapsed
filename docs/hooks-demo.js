@@ -1,17 +1,12 @@
 import React, {useState} from 'react';
-import {useCollapse} from '../src/Collapse';
+import {useCollapse} from '../src/collapse-hooks';
 
 export default function Demo() {
-  // const [isOpen, setOpen] = useState(null);
-  const {getCollapseProps, getTogglerProps, isOpen} = useCollapse();
+  const [isOpen, setOpen] = useState(false);
+  const {getCollapseProps, getTogglerProps} = useCollapse({isOpen});
   return (
     <div>
-      <button
-        // onClick={() => setOpen(!isOpen)}
-        {...getTogglerProps()}
-      >
-        Toggle
-      </button>
+      <div onClick={() => setOpen(oldOpen => !oldOpen)}>Toggle</div>
       <div {...getCollapseProps()}>
         <div style={{background: 'blue', height: 400, color: 'white'}}>
           {isOpen ? 'open' : 'closed'}
