@@ -1,90 +1,37 @@
-// @flow
-
-import React, {useRef, useEffect, useCallback, useLayoutEffect} from 'react';
-import type {TransitionProps} from './types';
-
-let idCounter = 0;
-
 export const noop = () => {};
 
-export function useLayoutEffectAfterMount(
-  cb: () => void,
-  dependencies: Array<*>
-) {
-  const justMounted = useRef(true);
-  useLayoutEffect(() => {
-    if (!justMounted.current) {
-      return cb();
-    }
-    justMounted.current = false;
-  }, dependencies);
+export function getElementHeight(el) {
+  if (!el || !el.current) {
+    return 'auto';
+  }
+  return `${el.current.scrollHeight}px`;
 }
-
-function useEffectOnMount(cb, dependencies) {
-  const justMounted = useRef(true);
-  useEffect(() => {
-    if (justMounted.current) {
-      return cb();
-    }
-    justMounted.current = false;
-  }, dependencies);
-}
-
-/**
- * This generates a unique ID for an instance of Collapse
- * @return {String} the unique ID
- */
-export function useUniqueId() {
-  let counter = React.useMemo(() => idCounter++, []);
-  useEffectOnMount(() => {
-    counter++;
-  }, []);
-  return counter;
-}
-export const generateId = (): string => String(idCounter++);
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
-export const callAll = (...fns: any) => (...args: Array<*>) =>
+export const callAll = (...fns) => (...args) =>
   fns.forEach(fn => fn && fn(...args));
 
-export const makeTransitionStyles = (
-  props: TransitionProps,
-  direction: 'in' | 'out'
-) => {
-  const {easing, delay, duration} = props;
+const defaultTransitionStyles = {
+  transitionDuration: '500ms',
+  transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
+};
+
+export function makeTransitionStyles({
+  expand = defaultTransitionStyles,
+  collapse = defaultTransitionStyles,
+}) {
   return {
-    transitionTimingFunction:
-      typeof easing === 'string' ? easing : easing[direction],
-    transitionDuration: `${
-      typeof duration === 'number' ? duration : duration[direction]
-    }ms`,
-    transitionDelay: `${
-      typeof delay === 'number' ? delay : delay[direction]
-    }ms`,
+    expandStyles: {
+      ...expand,
+      transitionProperty: `${
+        expand.transitionProperty ? `${expand.transitionProperty}, ` : ''
+      } height`,
+    },
+    collapseStyles: {
+      ...collapse,
+      transitionProperty: `${
+        collapse.transitionProperty ? `${collapse.transitionProperty}, ` : ''
+      } height`,
+    },
   };
-};
-
-const STYLE_PROPERTY_BLACKLIST = [
-  'height',
-  'transitionDelay',
-  'transitionDuration',
-  'transition',
-  'transitionDelay',
-  'transitionTimingFunction',
-];
-
-let WARNING_CALLED = false;
-export const warnBreakingStyles = (style: {}) => {
-  const stylesToWarn = Object.keys(style).filter(prop =>
-    STYLE_PROPERTY_BLACKLIST.includes(prop)
-  );
-  if (stylesToWarn.length > 0 && !WARNING_CALLED) {
-    WARNING_CALLED = true;
-    // eslint-disable-next-line no-console
-    console.warn(
-      `react-collapsed: A style property was passed to the Collapse that conflicts with the animation behavior of the component. Remove the following properties to ensure the normal behavior of the component: ${stylesToWarn.join(
-        ', '
-      )}`
-    );
-  }
-};
+}

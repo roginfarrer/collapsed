@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useCollapse} from '../src/collapse-hooks';
+import {useCollapse} from '../src/collapsed';
 
 export default function Demo() {
   const [isOpen, setOpen] = useState(false);

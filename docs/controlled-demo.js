@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Collapse from '../src/Collapse';
+import Collapse from '../src/collapsed';
 import {CollapseDemo} from './components/ui-components';
 
 export default class ControlledDemo extends React.Component<

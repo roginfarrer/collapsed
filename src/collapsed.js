@@ -1,44 +1,7 @@
 import {useState, useRef, useCallback, useMemo} from 'react';
-import {callAll, useUniqueId, noop, useLayoutEffectAfterMount} from './utils';
+import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
+import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
 import RAF from 'raf';
-
-function getElHeight(el) {
-  if (!el || !el.current) {
-    return 'auto';
-  }
-  return `${el.current.scrollHeight}px`;
-}
-
-function useStateOrProps({isOpen, defaultOpen} = {defaultOpen: false}) {
-  const [open, setOpen] = useState(defaultOpen);
-  const definedOpen = typeof isOpen !== 'undefined' ? isOpen : open;
-  return [definedOpen, setOpen];
-}
-
-const defaultTransitionStyles = {
-  transitionDuration: '500ms',
-  transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
-};
-
-function makeTransitionStyles({
-  expand = defaultTransitionStyles,
-  collapse = defaultTransitionStyles,
-}) {
-  return {
-    expandStyles: {
-      ...expand,
-      transitionProperty: `${
-        expand.transitionProperty ? `${expand.transitionProperty}, ` : ''
-      } height`,
-    },
-    collapseStyles: {
-      ...collapse,
-      transitionProperty: `${
-        collapse.transitionProperty ? `${collapse.transitionProperty}, ` : ''
-      } height`,
-    },
-  };
-}
 
 // config will be transition styles
 export function useCollapse(initialState, config = {}) {
@@ -56,46 +19,40 @@ export function useCollapse(initialState, config = {}) {
     [config]
   );
 
-  useLayoutEffectAfterMount(
-    () => {
-      if (isOpen) {
+  useLayoutEffectAfterMount(() => {
+    if (isOpen) {
+      setStyles(styles => ({
+        ...styles,
+        ...expandStyles,
+        display: 'block',
+        overflow: 'hidden',
+      }));
+      setShouldAnimateOpen(true);
+    } else {
+      const height = getElementHeight(el);
+      setStyles(styles => ({...styles, ...collapseStyles, height}));
+      setShouldAnimateOpen(false);
+    }
+  }, [isOpen]);
+
+  useLayoutEffectAfterMount(() => {
+    if (shouldAnimateOpen) {
+      const height = getElementHeight(el);
+      setStyles(styles => ({...styles, height}));
+      setHeightAtTransition(height);
+    } else {
+      // RAF required to transition, otherwise will flash closed
+      RAF(() => {
+        const height = getElementHeight(el);
+        setHeightAtTransition(height);
         setStyles(styles => ({
           ...styles,
-          ...expandStyles,
-          display: 'block',
+          height: '0px',
           overflow: 'hidden',
         }));
-        setShouldAnimateOpen(true);
-      } else {
-        const height = getElHeight(el);
-        setStyles(styles => ({...styles, ...collapseStyles, height}));
-        setShouldAnimateOpen(false);
-      }
-    },
-    [isOpen]
-  );
-
-  useLayoutEffectAfterMount(
-    () => {
-      if (shouldAnimateOpen) {
-        const height = getElHeight(el);
-        setStyles(styles => ({...styles, height}));
-        setHeightAtTransition(height);
-      } else {
-        // RAF required to transition, otherwise will flash closed
-        RAF(() => {
-          const height = getElHeight(el);
-          setHeightAtTransition(height);
-          setStyles(styles => ({
-            ...styles,
-            height: '0px',
-            overflow: 'hidden',
-          }));
-        });
-      }
-    },
-    [shouldAnimateOpen]
-  );
+      });
+    }
+  }, [shouldAnimateOpen]);
 
   const handleTransitionEnd = e => {
     if (e) {
@@ -107,7 +64,7 @@ export function useCollapse(initialState, config = {}) {
       }
     }
 
-    const height = getElHeight(el);
+    const height = getElementHeight(el);
     if (isOpen && height !== heightAtTransition) {
       setHeightAtTransition(height);
       setStyles(styles => ({...styles, height}));

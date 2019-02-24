@@ -1,5 +1,5 @@
 import {renderHook, cleanup, act} from 'react-hooks-testing-library';
-import {useCollapse} from '../collapse-hooks';
+import {useCollapse} from '../collapsed';
 // add custom jest matchers from jest-dom
 import 'jest-dom/extend-expect';
 

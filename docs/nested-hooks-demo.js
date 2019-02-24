@@ -1,5 +1,5 @@
 import React from 'react';
-import {useCollapse} from '../src/collapse-hooks';
+import {useCollapse} from '../src/collapsed';
 import {CollapseDemo} from './components/ui-components';
 
 export default function NestedDemo() {

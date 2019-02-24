@@ -7,7 +7,7 @@ import commonjs from 'rollup-plugin-commonjs';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-  input: 'src/Collapse.js',
+  input: 'src/collapsed.js',
   external: ['react', 'raf'],
   plugins: [
     babel({
