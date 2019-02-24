@@ -11,10 +11,10 @@ export default {
   external: ['react', 'raf'],
   plugins: [
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     }),
     commonjs(),
-    production && uglify()
+    production && uglify(),
   ],
   output: {
     format: 'umd',
@@ -22,7 +22,7 @@ export default {
     sourcemap: true,
     globals: {
       react: 'React',
-      raf: 'RAF'
-    }
-  }
+      raf: 'RAF',
+    },
+  },
 };

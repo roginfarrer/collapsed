@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './ui-components.css';
 
 type CollapseDemoProps = {
-  is: string
+  is: string,
 };
 
 export const CollapseDemo = ({is: Component, ...props}: CollapseDemoProps) => (

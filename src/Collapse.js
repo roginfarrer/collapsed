@@ -6,7 +6,7 @@ import {
   generateId,
   noop,
   makeTransitionStyles,
-  warnBreakingStyles
+  warnBreakingStyles,
 } from './utils';
 import type {TransitionProps} from './types';
 import RAF from 'raf';
@@ -14,35 +14,35 @@ import RAF from 'raf';
 type GetCollapseProps = {
   refKey?: string,
   ref?: string,
-  style?: {}
+  style?: {},
 };
 
 type GetTogglerProps = {
   onClick?: () => void,
-  disabled?: boolean
+  disabled?: boolean,
 };
 
 type Props = TransitionProps & {
   children: ({
     isOpen: boolean,
     getTogglerProps: (*) => {},
-    getCollapseProps: (void | GetCollapseProps) => {}
+    getCollapseProps: (void | GetCollapseProps) => {},
   }) => Node,
   isOpen: ?boolean,
-  defaultOpen: boolean
+  defaultOpen: boolean,
 };
 
 type Styles = {
   height?: string,
   overflow?: string,
-  display?: string
+  display?: string,
 };
 
 type State = {
   styles: Styles,
   isOpen: ?boolean,
   heightAtTransition: string,
-  counter: string
+  counter: string,
 };
 
 export default class Collapse extends Component<Props, State> {
@@ -51,7 +51,7 @@ export default class Collapse extends Component<Props, State> {
     defaultOpen: false,
     duration: 500,
     delay: 0,
-    easing: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
+    easing: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
   };
 
   state = {
@@ -60,7 +60,7 @@ export default class Collapse extends Component<Props, State> {
       : {display: 'none', height: '0px'},
     isOpen: this.getIsOpen({isOpen: this.props.defaultOpen}),
     heightAtTransition: '0',
-    counter: '0'
+    counter: '0',
   };
 
   componentDidMount() {
@@ -90,7 +90,7 @@ export default class Collapse extends Component<Props, State> {
         return RAF(() => {
           this.setState(({styles}) => ({
             heightAtTransition: height,
-            styles: {...styles, height: '0px', overflow: 'hidden'}
+            styles: {...styles, height: '0px', overflow: 'hidden'},
           }));
         });
       });
@@ -101,7 +101,7 @@ export default class Collapse extends Component<Props, State> {
     return Promise.resolve().then(() => {
       return this.setStyles({
         display: 'block',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }).then(() => {
         const height = this.getCollapsibleHeight();
         this.setState({heightAtTransition: height});
@@ -111,40 +111,44 @@ export default class Collapse extends Component<Props, State> {
   };
 
   setStyles = (newStyles: Styles) => {
-    return new Promise<any>(resolve => {
-      const check = () => {
-        this.setState(
-          ({styles}) => ({styles: {...styles, ...newStyles}}),
-          () => {
-            RAF(() => {
-              if (
-                Object.keys(newStyles).some(key => {
-                  return (
-                    !this.collapseEl ||
-                    // $FlowFixMe Not sure why this error is happening?
-                    this.collapseEl.style[key] !== newStyles[key]
-                  );
-                })
-              ) {
-                return check();
-              }
-              resolve();
-            });
-          }
-        );
-      };
-      check();
-    });
+    return (
+      new Promise() <
+      any >
+      (resolve => {
+        const check = () => {
+          this.setState(
+            ({styles}) => ({styles: {...styles, ...newStyles}}),
+            () => {
+              RAF(() => {
+                if (
+                  Object.keys(newStyles).some(key => {
+                    return (
+                      !this.collapseEl ||
+                      // $FlowFixMe Not sure why this error is happening?
+                      this.collapseEl.style[key] !== newStyles[key]
+                    );
+                  })
+                ) {
+                  return check();
+                }
+                resolve();
+              });
+            }
+          );
+        };
+        check();
+      })
+    );
   };
 
   completeTransition = () => {
     if (this.getIsOpen()) {
       this.setState(({styles}) => ({
-        styles: {...styles, display: '', overflow: '', height: 'auto'}
+        styles: {...styles, display: '', overflow: '', height: 'auto'},
       }));
     } else {
       this.setState(({styles}) => ({
-        styles: {...styles, display: 'none', overflow: ''}
+        styles: {...styles, display: 'none', overflow: ''},
       }));
     }
   };
@@ -165,7 +169,7 @@ export default class Collapse extends Component<Props, State> {
       this.setState(({styles}) => {
         return {
           heightAtTransition: height,
-          styles: {...styles, height}
+          styles: {...styles, height},
         };
       });
       return;
@@ -213,7 +217,7 @@ export default class Collapse extends Component<Props, State> {
   getTogglerProps = (
     props: GetTogglerProps = {
       onClick() {},
-      disabled: false
+      disabled: false,
     }
   ) => {
     return {
@@ -224,7 +228,9 @@ export default class Collapse extends Component<Props, State> {
       'aria-expanded': Boolean(this.getIsOpen()),
       tabIndex: 0,
       ...props,
-      onClick: props.disabled ? noop : callAll(props.onClick, this.toggleIsOpen)
+      onClick: props.disabled
+        ? noop
+        : callAll(props.onClick, this.toggleIsOpen),
     };
   };
 
@@ -250,8 +256,8 @@ export default class Collapse extends Component<Props, State> {
         ...props.style,
         ...this.state.styles,
         ...this.makeTransitionProperty(),
-        transitionProperty: 'height'
-      }
+        transitionProperty: 'height',
+      },
     };
   };
 
@@ -261,7 +267,7 @@ export default class Collapse extends Component<Props, State> {
     return this.props.children({
       isOpen: Boolean(this.getIsOpen()),
       getTogglerProps: this.getTogglerProps,
-      getCollapseProps: this.getCollapseProps
+      getCollapseProps: this.getCollapseProps,
     });
   }
 }

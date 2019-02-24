@@ -5,18 +5,18 @@ export type TransitionProps = {
     | number
     | {
         in: number,
-        out: number
+        out: number,
       },
   easing:
     | string
     | {
         in: string,
-        out: string
+        out: string,
       },
   delay:
     | number
     | {
         in: number,
-        out: number
-      }
+        out: number,
+      },
 };

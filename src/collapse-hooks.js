@@ -17,26 +17,26 @@ function useStateOrProps({isOpen, defaultOpen} = {defaultOpen: false}) {
 
 const defaultTransitionStyles = {
   transitionDuration: '500ms',
-  transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
+  transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
 };
 
 function makeTransitionStyles({
   expand = defaultTransitionStyles,
-  collapse = defaultTransitionStyles
+  collapse = defaultTransitionStyles,
 }) {
   return {
     expandStyles: {
       ...expand,
       transitionProperty: `${
         expand.transitionProperty ? `${expand.transitionProperty}, ` : ''
-      } height`
+      } height`,
     },
     collapseStyles: {
       ...collapse,
       transitionProperty: `${
         collapse.transitionProperty ? `${collapse.transitionProperty}, ` : ''
-      } height`
-    }
+      } height`,
+    },
   };
 }
 
@@ -56,40 +56,46 @@ export function useCollapse(initialState, config = {}) {
     [config]
   );
 
-  useLayoutEffectAfterMount(() => {
-    if (isOpen) {
-      setStyles(styles => ({
-        ...styles,
-        ...expandStyles,
-        display: 'block',
-        overflow: 'hidden'
-      }));
-      setShouldAnimateOpen(true);
-    } else {
-      const height = getElHeight(el);
-      setStyles(styles => ({...styles, ...collapseStyles, height}));
-      setShouldAnimateOpen(false);
-    }
-  }, [isOpen]);
-
-  useLayoutEffectAfterMount(() => {
-    if (shouldAnimateOpen) {
-      const height = getElHeight(el);
-      setStyles(styles => ({...styles, height}));
-      setHeightAtTransition(height);
-    } else {
-      // RAF required to transition, otherwise will flash closed
-      RAF(() => {
-        const height = getElHeight(el);
-        setHeightAtTransition(height);
+  useLayoutEffectAfterMount(
+    () => {
+      if (isOpen) {
         setStyles(styles => ({
           ...styles,
-          height: '0px',
-          overflow: 'hidden'
+          ...expandStyles,
+          display: 'block',
+          overflow: 'hidden',
         }));
-      });
-    }
-  }, [shouldAnimateOpen]);
+        setShouldAnimateOpen(true);
+      } else {
+        const height = getElHeight(el);
+        setStyles(styles => ({...styles, ...collapseStyles, height}));
+        setShouldAnimateOpen(false);
+      }
+    },
+    [isOpen]
+  );
+
+  useLayoutEffectAfterMount(
+    () => {
+      if (shouldAnimateOpen) {
+        const height = getElHeight(el);
+        setStyles(styles => ({...styles, height}));
+        setHeightAtTransition(height);
+      } else {
+        // RAF required to transition, otherwise will flash closed
+        RAF(() => {
+          const height = getElHeight(el);
+          setHeightAtTransition(height);
+          setStyles(styles => ({
+            ...styles,
+            height: '0px',
+            overflow: 'hidden',
+          }));
+        });
+      }
+    },
+    [shouldAnimateOpen]
+  );
 
   const handleTransitionEnd = e => {
     if (e) {
@@ -113,7 +119,7 @@ export function useCollapse(initialState, config = {}) {
     } else {
       setStyles({
         display: 'none',
-        height: '0px'
+        height: '0px',
       });
     }
   };
@@ -124,7 +130,7 @@ export function useCollapse(initialState, config = {}) {
     getToggleProps(
       {disabled, onClick, ...rest} = {
         disabled: false,
-        onClick: noop
+        onClick: noop,
       }
     ) {
       return {
@@ -135,7 +141,7 @@ export function useCollapse(initialState, config = {}) {
         'aria-expanded': isOpen ? 'true' : 'false',
         tabIndex: 0,
         ...rest,
-        onClick: disabled ? noop : callAll(onClick, toggleOpen)
+        onClick: disabled ? noop : callAll(onClick, toggleOpen),
       };
     },
     getCollapseProps({style, ...rest} = {style: {}}) {
@@ -149,11 +155,11 @@ export function useCollapse(initialState, config = {}) {
           // style from argument
           ...style,
           // styles from state
-          ...styles
-        }
+          ...styles,
+        },
       };
     },
     isOpen,
-    toggleOpen
+    toggleOpen,
   };
 }

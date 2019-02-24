@@ -6,12 +6,12 @@ export default function NestedDemo() {
   const {
     getCollapseProps: outerCollapseProps,
     getToggleProps: outerToggleProps,
-    isOpen: outerOpen
+    isOpen: outerOpen,
   } = useCollapse();
   const {
     getCollapseProps: innerCollapseProps,
     getToggleProps: innerToggleProps,
-    isOpen: innerOpen
+    isOpen: innerOpen,
   } = useCollapse();
 
   return (

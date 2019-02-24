@@ -43,7 +43,7 @@ test('Collapse has expected props when closed (default)', () => {
   expect(collapse.style).toEqual(
     expect.objectContaining({
       display: 'none',
-      height: '0px'
+      height: '0px',
     })
   );
 });
@@ -56,7 +56,7 @@ test('Collapse has expected props when open', () => {
   expect(collapse.style).not.toEqual(
     expect.objectContaining({
       display: 'none',
-      height: '0px'
+      height: '0px',
     })
   );
 });

@@ -58,7 +58,9 @@ export const makeTransitionStyles = (
     transitionDuration: `${
       typeof duration === 'number' ? duration : duration[direction]
     }ms`,
-    transitionDelay: `${typeof delay === 'number' ? delay : delay[direction]}ms`
+    transitionDelay: `${
+      typeof delay === 'number' ? delay : delay[direction]
+    }ms`,
   };
 };
 
@@ -68,7 +70,7 @@ const STYLE_PROPERTY_BLACKLIST = [
   'transitionDuration',
   'transition',
   'transitionDelay',
-  'transitionTimingFunction'
+  'transitionTimingFunction',
 ];
 
 let WARNING_CALLED = false;

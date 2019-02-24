@@ -1,17 +1,18 @@
 {
   "name": "react-collapsed",
   "version": "1.0.0",
-  "description": "A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.",
+  "description":
+    "A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "scripts": {
     "build": "rollup -c -o dist/collapse.min.js",
     "dev": "yarn docz dev",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "rogin-scripts test",
+    "test-watch": "yarn test --watch",
+    "test-coverage": "yarn test --coverage",
     "lint": "yarn flow",
+    "format": "rogin-scripts format",
     "validate": "yarn flow && yarn build && yarn test",
     "setup": "yarn install && yarn validate",
     "prepublish": "yarn jest && yarn build"
@@ -65,20 +66,18 @@
     "react-hooks-testing-library": "^0.3.3",
     "react-testing-library": "^5.2.3",
     "regenerator-runtime": "^0.12.1",
+    "rogin-scripts": "^0.0.6-development",
     "rollup": "^0.67.1",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.3.1",
     "raf": "^3.4.0"
   },
   "resolutions": {
     "docz-core": "^0.13.7"
   },
-  "eslintIgnore": [
-    "node_modules",
-    "dist",
-    ".docz"
-  ]
+  "eslintIgnore": ["node_modules", "dist", ".docz"]
 }

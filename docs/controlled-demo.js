@@ -9,7 +9,7 @@ export default class ControlledDemo extends React.Component<
   {isOpen: boolean}
 > {
   state = {
-    isOpen: true
+    isOpen: true,
   };
 
   handleClick = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
@@ -23,7 +23,7 @@ export default class ControlledDemo extends React.Component<
             <button
               {...getTogglerProps({
                 style: {marginBottom: '1em'},
-                onClick: this.handleClick
+                onClick: this.handleClick,
               })}
             >
               {isOpen ? 'Close' : 'Open'}

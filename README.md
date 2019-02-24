@@ -4,11 +4,11 @@ A small (< 2.5kb), headless component for creating flexible and accessible expan
 
 ## Features
 
-- Handles the height of animations of your elements, `auto` included!
-- You control the UI - with prop-getters, you give ReactCollapsed's logic to your elements
-- Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-- Small footprint (< 2.5kb gzipped)
-- No animation framework required! Simply powered by CSS animations
+* Handles the height of animations of your elements, `auto` included!
+* You control the UI - with prop-getters, you give ReactCollapsed's logic to your elements
+* Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
+* Small footprint (< 2.5kb gzipped)
+* No animation framework required! Simply powered by CSS animations
 
 ## Demo
 
@@ -50,7 +50,7 @@ import Collapse from 'react-collapsed';
 
 class ControlledDemo extends React.Component {
   state = {
-    isOpen: false
+    isOpen: false,
   };
 
   handleClick = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
