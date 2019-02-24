@@ -3,10 +3,10 @@ import {useCollapse} from '../src/collapse-hooks';
 
 export default function Demo() {
   const [isOpen, setOpen] = useState(false);
-  const {getCollapseProps, getTogglerProps} = useCollapse({isOpen});
+  const {getCollapseProps, getToggleProps} = useCollapse({isOpen});
   return (
     <div>
-      <div {...getTogglerProps({onClick: () => setOpen(oldOpen => !oldOpen)})}>
+      <div {...getToggleProps({onClick: () => setOpen(oldOpen => !oldOpen)})}>
         Toggle
       </div>
       <div {...getCollapseProps()}>

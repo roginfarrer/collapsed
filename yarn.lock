@@ -8073,6 +8073,12 @@ react-feather@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.1.6.tgz#2a547e3d5cd5e383d3da0128d593cbdb3c1b32f7"
 
+react-hooks-testing-library@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/react-hooks-testing-library/-/react-hooks-testing-library-0.3.3.tgz#0b3f536d454bb5f1d15a1bb8e16b6e8e0ea82936"
+  dependencies:
+    react-testing-library "^6.0.0"
+
 react-hot-loader@^4.6.3:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.7.0.tgz#0ffccb931ce8435cf4a3744d2a3fd32eab1671be"
@@ -8169,6 +8175,13 @@ react-sizes@^1.0.4:
 react-testing-library@^5.2.3:
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.9.0.tgz#e1c8a586d2f2cbd5f0035474ca90258eef1fece6"
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    dom-testing-library "^3.13.1"
+
+react-testing-library@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-6.0.0.tgz#81edfcfae8a795525f48685be9bf561df45bb35d"
   dependencies:
     "@babel/runtime" "^7.3.1"
     dom-testing-library "^3.13.1"

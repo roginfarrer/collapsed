@@ -9,11 +9,7 @@ function getElHeight(el) {
   return `${el.current.scrollHeight}px`;
 }
 
-function maybeUseState(
-  {isOpen, defaultOpen} = {
-    defaultOpen: false
-  }
-) {
+function useStateOrProps({isOpen, defaultOpen} = {defaultOpen: false}) {
   const [open, setOpen] = useState(defaultOpen);
   const definedOpen = typeof isOpen !== 'undefined' ? isOpen : open;
   return [definedOpen, setOpen];
@@ -45,10 +41,10 @@ function makeTransitionStyles({
 }
 
 // config will be transition styles
-export function useCollapse(initialState = {}, config = {}) {
+export function useCollapse(initialState, config = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
-  const [isOpen, setOpen] = maybeUseState(initialState);
+  const [isOpen, setOpen] = useStateOrProps(initialState);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
   const [styles, setStyles] = useState(
@@ -95,40 +91,37 @@ export function useCollapse(initialState = {}, config = {}) {
     }
   }, [shouldAnimateOpen]);
 
-  const handleTransitionEnd = useCallback(
-    e => {
-      if (e) {
-        e.persist();
+  const handleTransitionEnd = e => {
+    if (e) {
+      e.persist();
 
-        // Only handle transitionEnd for this element
-        if (e.target !== el.current) {
-          return;
-        }
-      }
-
-      const height = getElHeight(el);
-      if (isOpen && height !== heightAtTransition) {
-        setHeightAtTransition(height);
-        setStyles(styles => ({...styles, height}));
+      // Only handle transitionEnd for this element
+      if (e.target !== el.current) {
         return;
       }
+    }
 
-      if (isOpen) {
-        setStyles({});
-      } else {
-        setStyles({
-          display: 'none',
-          height: '0px'
-        });
-      }
-    },
-    [shouldAnimateOpen]
-  );
+    const height = getElHeight(el);
+    if (isOpen && height !== heightAtTransition) {
+      setHeightAtTransition(height);
+      setStyles(styles => ({...styles, height}));
+      return;
+    }
+
+    if (isOpen) {
+      setStyles({});
+    } else {
+      setStyles({
+        display: 'none',
+        height: '0px'
+      });
+    }
+  };
 
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
   return {
-    getTogglerProps(
+    getToggleProps(
       {disabled, onClick, ...rest} = {
         disabled: false,
         onClick: noop

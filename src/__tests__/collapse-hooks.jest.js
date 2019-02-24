@@ -1,15 +1,14 @@
 import React from 'react';
 import {render, cleanup} from 'react-testing-library';
 import {useCollapse} from '../collapse-hooks';
-
 // add custom jest matchers from jest-dom
 import 'jest-dom/extend-expect';
 
 function Uncontrolled({defaultOpen} = {defaultOpen: false}) {
-  const {getCollapseProps, getTogglerProps} = useCollapse({defaultOpen});
+  const {getCollapseProps, getToggleProps} = useCollapse({defaultOpen});
   return (
     <div>
-      <div {...getTogglerProps()} data-testid="toggle">
+      <div {...getToggleProps()} data-testid="toggle">
         Toggle
       </div>
       <div {...getCollapseProps()} data-testid="collapse">
@@ -62,7 +61,7 @@ test('Collapse has expected props when open', () => {
   );
 });
 
-test('Toggle aria-controls matches Collapse id', () => {
+test("Toggle's aria-controls matches Collapse's id", () => {
   const {getByTestId} = render(<Uncontrolled />);
   const toggle = getByTestId('toggle');
   const collapse = getByTestId('collapse');
