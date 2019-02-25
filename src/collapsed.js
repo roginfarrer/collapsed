@@ -3,7 +3,6 @@ import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
 import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
 import RAF from 'raf';
 
-// config will be transition styles
 export function useCollapse(initialState, config = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);

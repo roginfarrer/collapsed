@@ -1,0 +1,42 @@
+---
+title: Controlled
+route: /controlled-demo
+menu: Demo
+---
+
+import ControlledDemo from './controlled-demo';
+
+# Controlled
+
+While ReactCollapsed can control the expanded behavior for you, you're welcome to handle it yourself via the `isOpen` prop.
+
+<ControlledDemo />
+
+```jsx
+function Collapse() {
+  const [open, setOpen] = React.useState(false);
+  const {getCollapseProps, getToggleProps, isOpen} = useCollapse(open);
+
+  return (
+    <React.Fragment>
+      <button
+        {...getToggleProps({onClick: () => setOpen(oldOpen => !oldOpen)})}
+      >
+        {isOpen ? 'Close' : 'Open'}
+      </button>
+      <CollapseDemo {...getCollapseProps()}>
+        <CollapseDemo>
+          In the morning I walked down the Boulevard to the rue Soufflot for
+          coffee and brioche. It was a fine morning. The horse-chestnut trees in
+          the Luxembourg gardens were in bloom. There was the pleasant
+          early-morning feeling of a hot day. I read the papers with the coffee
+          and then smoked a cigarette. The flower-women were coming up from the
+          market and arranging their daily stock. Students went by going up to
+          the law school, or down to the Sorbonne. The Boulevard was busy with
+          trams and people going to work.
+        </CollapseDemo>
+      </CollapseDemo>
+    </React.Fragment>
+  );
+}
+```
