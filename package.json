@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha.1",
   "description": "A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.",
   "main": "dist/collapse.min.js",
   "files": [
