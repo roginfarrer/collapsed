@@ -35,20 +35,19 @@ export function useCollapse(initialState, config = {}) {
   }, [isOpen]);
 
   useLayoutEffectAfterMount(() => {
+    const height = getElementHeight(el);
     if (shouldAnimateOpen) {
-      const height = getElementHeight(el);
       setStyles(styles => ({...styles, height}));
       setHeightAtTransition(height);
     } else {
       // RAF required to transition, otherwise will flash closed
       RAF(() => {
-        const height = getElementHeight(el);
-        setHeightAtTransition(height);
         setStyles(styles => ({
           ...styles,
           height: '0px',
           overflow: 'hidden',
         }));
+        setHeightAtTransition(height);
       });
     }
   }, [shouldAnimateOpen]);

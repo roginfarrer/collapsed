@@ -1,17 +1,26 @@
 import React from 'react';
-import {render, cleanup} from 'react-testing-library';
+import {render, cleanup, fireEvent} from 'react-testing-library';
 import {useCollapse} from '../collapsed';
+import * as utils from '../utils';
 // add custom jest matchers from jest-dom
 import 'jest-dom/extend-expect';
 
-function Uncontrolled({defaultOpen} = {defaultOpen: false}) {
+jest.mock('../utils');
+
+function Uncontrolled(
+  {defaultOpen, toggleProps, collapseProps} = {
+    defaultOpen: false,
+    toggleProps: {},
+    collapseProps: {},
+  }
+) {
   const {getCollapseProps, getToggleProps} = useCollapse({defaultOpen});
   return (
     <div>
-      <div {...getToggleProps()} data-testid="toggle">
+      <div {...getToggleProps(toggleProps)} data-testid="toggle">
         Toggle
       </div>
-      <div {...getCollapseProps()} data-testid="collapse">
+      <div {...getCollapseProps(collapseProps)} data-testid="collapse">
         <div style={{background: 'blue', height: 400, color: 'white'}} />
       </div>
     </div>
@@ -77,4 +86,42 @@ test('Re-render does not modify id', () => {
 
   rerender(<Uncontrolled defaultOpen />);
   expect(collapseId).toEqual(collapse.getAttribute('id'));
+});
+
+test('clicking the toggle expands the collapse', () => {
+  // Mocked since ref element sizes = :( in jsdom
+  utils.getElementHeight.mockReturnValue(400);
+
+  const {getByTestId} = render(<Uncontrolled />);
+  const toggle = getByTestId('toggle');
+  const collapse = getByTestId('collapse');
+
+  expect(collapse.style.height).toBe('0px');
+  fireEvent.click(toggle);
+  expect(collapse.style.height).toBe('400px');
+});
+
+test('clicking the toggle closes the collapse', () => {
+  // Mocked since ref element sizes = :( in jsdom
+  utils.getElementHeight.mockReturnValue(0);
+
+  const {getByTestId} = render(<Uncontrolled defaultOpen />);
+  const toggle = getByTestId('toggle');
+  const collapse = getByTestId('collapse');
+
+  // No defined height when open
+  expect(collapse.style.height).toBe('');
+  fireEvent.click(toggle);
+  expect(collapse.style.height).toBe('0px');
+});
+
+test('toggle click calls onClick argument with isOpen', () => {
+  const onClick = jest.fn();
+  const {getByTestId} = render(
+    <Uncontrolled defaultOpen toggleProps={{onClick}} />
+  );
+  const toggle = getByTestId('toggle');
+
+  fireEvent.click(toggle);
+  expect(onClick).toHaveBeenCalled();
 });
