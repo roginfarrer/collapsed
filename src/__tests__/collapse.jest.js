@@ -1,5 +1,6 @@
 import React from 'react';
 import {render, cleanup, fireEvent} from 'react-testing-library';
+import {renderHook, act} from 'react-hooks-testing-library';
 import {useCollapse} from '../collapsed';
 import * as utils from '../utils';
 // add custom jest matchers from jest-dom
@@ -28,6 +29,24 @@ function Uncontrolled(
 }
 
 afterEach(cleanup);
+
+test('returns expected constants', () => {
+  const {result} = renderHook(useCollapse);
+  const {isOpen, getToggleProps, getCollapseProps, toggleOpen} = result.current;
+
+  expect(typeof isOpen).toBe('boolean');
+  expect(typeof toggleOpen).toBe('function');
+  expect(typeof getToggleProps()).toBe('object');
+  expect(typeof getCollapseProps()).toBe('object');
+});
+
+test('toggleOpen toggles isOpen', () => {
+  const {result} = renderHook(useCollapse);
+  const {toggleOpen} = result.current;
+  act(toggleOpen);
+  const {isOpen} = result.current;
+  expect(isOpen).toBe(true);
+});
 
 test('Toggle has expected props when closed (default)', () => {
   const {getByTestId} = render(<Uncontrolled />);
