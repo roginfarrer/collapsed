@@ -19,6 +19,8 @@ export function useCollapse(initialConfig = {}) {
     [initialConfig.expandStyles, initialConfig.collapseStyles]
   );
 
+  const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
+
   useLayoutEffectAfterMount(() => {
     if (isOpen) {
       setMountChildren(true);
@@ -72,8 +74,6 @@ export function useCollapse(initialConfig = {}) {
       });
     }
   };
-
-  const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
   return {
     getToggleProps(
