@@ -1,18 +1,16 @@
 ---
-title: Controlled
+title: Controlled Expand
 route: /controlled-demo
 menu: Demo
 ---
 
-import ControlledDemo from './controlled-demo';
+import ControlledDemo from './';
 
-# Controlled
-
-While ReactCollapsed can control the expanded behavior for you, you're welcome to handle it yourself via the `isOpen` prop.
+# Controlled `isOpen`
 
 <ControlledDemo />
 
-```jsx
+```js
 function Collapse() {
   const [open, setOpen] = React.useState(false);
   const {getCollapseProps, getToggleProps, isOpen} = useCollapse(open);
@@ -24,7 +22,7 @@ function Collapse() {
       >
         {isOpen ? 'Close' : 'Open'}
       </button>
-      <CollapseDemo {...getCollapseProps()}>
+      <div {...getCollapseProps()}>
         <CollapseDemo>
           In the morning I walked down the Boulevard to the rue Soufflot for
           coffee and brioche. It was a fine morning. The horse-chestnut trees in
@@ -35,7 +33,7 @@ function Collapse() {
           the law school, or down to the Sorbonne. The Boulevard was busy with
           trams and people going to work.
         </CollapseDemo>
-      </CollapseDemo>
+      </div>
     </React.Fragment>
   );
 }

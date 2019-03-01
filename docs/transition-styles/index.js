@@ -2,18 +2,21 @@ import React from 'react';
 import {useCollapse} from '../../src/collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';
 
-// const expand = {
-//   transitionDuration: 300,
-//   transitionTimingFunction: 'ease-in-out',
-// };
+const collapseStyles = {
+  transitionDuration: '1.5s',
+  transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.49, 0.99)',
+};
 
-// const collapse = {
-//   transitionDuration: 1000,
-//   transitionTimingFunction: 'ease-out',
-// };
+const expandStyles = {
+  transitionDuration: '1000ms',
+  transitionTimingFunction: 'ease-out',
+};
 
 export default function Demo() {
-  const {getCollapseProps, getToggleProps, isOpen} = useCollapse();
+  const {getCollapseProps, getToggleProps, isOpen} = useCollapse({
+    collapseStyles,
+    expandStyles,
+  });
 
   return (
     <React.Fragment>

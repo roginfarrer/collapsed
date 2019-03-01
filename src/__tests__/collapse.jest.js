@@ -9,13 +9,13 @@ import 'jest-dom/extend-expect';
 jest.mock('../utils');
 
 function Uncontrolled(
-  {defaultOpen, toggleProps, collapseProps} = {
-    defaultOpen: false,
+  {toggleProps, collapseProps, props} = {
+    props: {defaultOpen: false},
     toggleProps: {},
     collapseProps: {},
   }
 ) {
-  const {getCollapseProps, getToggleProps} = useCollapse({defaultOpen});
+  const {getCollapseProps, getToggleProps} = useCollapse(props);
   return (
     <div>
       <div {...getToggleProps(toggleProps)} data-testid="toggle">
@@ -29,6 +29,11 @@ function Uncontrolled(
 }
 
 afterEach(cleanup);
+
+test('does not throw', () => {
+  const result = () => render(<Uncontrolled props={{}} />);
+  expect(result).not.toThrow();
+});
 
 test('returns expected constants', () => {
   const {result} = renderHook(useCollapse);
@@ -58,7 +63,7 @@ test('Toggle has expected props when closed (default)', () => {
 });
 
 test('Toggle has expected props when collapse is open', () => {
-  const {getByTestId} = render(<Uncontrolled defaultOpen />);
+  const {getByTestId} = render(<Uncontrolled props={{defaultOpen: true}} />);
   const toggle = getByTestId('toggle');
   expect(toggle.getAttribute('aria-expanded')).toBe('true');
 });
@@ -77,7 +82,7 @@ test('Collapse has expected props when closed (default)', () => {
 });
 
 test('Collapse has expected props when open', () => {
-  const {getByTestId} = render(<Uncontrolled defaultOpen />);
+  const {getByTestId} = render(<Uncontrolled props={{defaultOpen: true}} />);
   const collapse = getByTestId('collapse');
   expect(collapse.getAttribute('id')).toBeDefined();
   expect(collapse.getAttribute('aria-hidden')).toBe(null);
@@ -124,7 +129,7 @@ test('clicking the toggle closes the collapse', () => {
   // Mocked since ref element sizes = :( in jsdom
   utils.getElementHeight.mockReturnValue(0);
 
-  const {getByTestId} = render(<Uncontrolled defaultOpen />);
+  const {getByTestId} = render(<Uncontrolled props={{defaultOpen: true}} />);
   const toggle = getByTestId('toggle');
   const collapse = getByTestId('collapse');
 
@@ -137,7 +142,7 @@ test('clicking the toggle closes the collapse', () => {
 test('toggle click calls onClick argument with isOpen', () => {
   const onClick = jest.fn();
   const {getByTestId} = render(
-    <Uncontrolled defaultOpen toggleProps={{onClick}} />
+    <Uncontrolled props={{defaultOpen: true}} toggleProps={{onClick}} />
   );
   const toggle = getByTestId('toggle');
 

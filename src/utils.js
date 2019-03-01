@@ -16,22 +16,27 @@ const defaultTransitionStyles = {
   transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
 };
 
+function joinStyles(string) {
+  if (string) {
+    const styles = ['height'];
+    styles.push(...string.split(', '));
+    return styles.join(', ');
+  }
+  return 'height';
+}
+
 export function makeTransitionStyles({
-  expand = defaultTransitionStyles,
-  collapse = defaultTransitionStyles,
+  expandStyles = defaultTransitionStyles,
+  collapseStyles = defaultTransitionStyles,
 }) {
   return {
     expandStyles: {
-      ...expand,
-      transitionProperty: `${
-        expand.transitionProperty ? `${expand.transitionProperty}, ` : ''
-      } height`,
+      ...expandStyles,
+      transitionProperty: joinStyles(expandStyles.transitionProperty),
     },
     collapseStyles: {
-      ...collapse,
-      transitionProperty: `${
-        collapse.transitionProperty ? `${collapse.transitionProperty}, ` : ''
-      } height`,
+      ...collapseStyles,
+      transitionProperty: joinStyles(collapseStyles.transitionProperty),
     },
   };
 }

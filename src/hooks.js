@@ -1,7 +1,7 @@
 import {useState, useRef, useEffect, useLayoutEffect, useMemo} from 'react';
 
-export function useStateOrProps({isOpen, defaultOpen} = {defaultOpen: false}) {
-  const [open, setOpen] = useState(defaultOpen);
+export function useStateOrProps({isOpen, defaultOpen}) {
+  const [open, setOpen] = useState(defaultOpen || false);
   const definedOpen = typeof isOpen !== 'undefined' ? isOpen : open;
   return [definedOpen, setOpen];
 }

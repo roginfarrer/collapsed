@@ -3,8 +3,8 @@ import {useCollapse} from '../../src/collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';
 
 export default function Collapse() {
-  const [open, setOpen] = React.useState(false);
-  const {getCollapseProps, getToggleProps, isOpen} = useCollapse(open);
+  const [isOpen, setOpen] = React.useState(false);
+  const {getCollapseProps, getToggleProps} = useCollapse({isOpen});
 
   return (
     <React.Fragment>

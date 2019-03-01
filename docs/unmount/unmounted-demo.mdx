@@ -1,0 +1,44 @@
+---
+name: Unmount Content when Closed
+menu: Demo
+route: /unmount-demo
+---
+
+import Demo from './';
+import {Playground} from 'docz';
+
+# Unmount Collapse Content when Closed
+
+When the collapse panel is closed, its contents are still rendered in the DOM. If you need to unmount its content, use the `mountChildren` property to control when the content should be mounted.
+
+<Demo />
+
+```js
+function Collapse() {
+  const {getCollapseProps, getToggleProps, isOpen, mountChildren} = useCollapse(
+    {
+      defaultOpen: true,
+    }
+  );
+
+  return (
+    <React.Fragment>
+      <button {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</button>
+      <div {...getCollapseProps()}>
+        {mountChildren && (
+          <CollapseDemo>
+            In the morning I walked down the Boulevard to the rue Soufflot for
+            coffee and brioche. It was a fine morning. The horse-chestnut trees
+            in the Luxembourg gardens were in bloom. There was the pleasant
+            early-morning feeling of a hot day. I read the papers with the
+            coffee and then smoked a cigarette. The flower-women were coming up
+            from the market and arranging their daily stock. Students went by
+            going up to the law school, or down to the Sorbonne. The Boulevard
+            was busy with trams and people going to work.
+          </CollapseDemo>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+```

@@ -3,23 +3,25 @@ import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
 import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
 import RAF from 'raf';
 
-export function useCollapse(initialState, config = {}) {
+export function useCollapse(initialConfig = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
-  const [isOpen, setOpen] = useStateOrProps(initialState);
+  const [isOpen, setOpen] = useStateOrProps(initialConfig);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
   const [styles, setStyles] = useState(
     isOpen ? null : {display: 'none', height: '0px'}
   );
+  const [mountChildren, setMountChildren] = useState(isOpen);
 
   const {expandStyles, collapseStyles} = useMemo(
-    () => makeTransitionStyles(config),
-    [config]
+    () => makeTransitionStyles(initialConfig),
+    [initialConfig.expandStyles, initialConfig.collapseStyles]
   );
 
   useLayoutEffectAfterMount(() => {
     if (isOpen) {
+      setMountChildren(true);
       setStyles(styles => ({
         ...styles,
         ...expandStyles,
@@ -52,16 +54,7 @@ export function useCollapse(initialState, config = {}) {
     }
   }, [shouldAnimateOpen]);
 
-  const handleTransitionEnd = e => {
-    if (e) {
-      e.persist();
-
-      // Only handle transitionEnd for this element
-      if (e.target !== el.current) {
-        return;
-      }
-    }
-
+  const handleTransitionEnd = () => {
     const height = getElementHeight(el);
     if (isOpen && height !== heightAtTransition) {
       setHeightAtTransition(height);
@@ -72,6 +65,7 @@ export function useCollapse(initialState, config = {}) {
     if (isOpen) {
       setStyles({});
     } else {
+      setMountChildren(false);
       setStyles({
         display: 'none',
         height: '0px',
@@ -99,13 +93,15 @@ export function useCollapse(initialState, config = {}) {
         onClick: disabled ? noop : callAll(onClick, toggleOpen),
       };
     },
-    getCollapseProps({style, ...rest} = {style: {}}) {
+    getCollapseProps(
+      {style, onTransitionEnd, ...rest} = {style: {}, onTransitionEnd: noop}
+    ) {
       return {
         id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': isOpen ? null : 'true',
         ...rest,
         ref: el,
-        onTransitionEnd: handleTransitionEnd,
+        onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
         style: {
           // style from argument
           ...style,
@@ -116,5 +112,6 @@ export function useCollapse(initialState, config = {}) {
     },
     isOpen,
     toggleOpen,
+    mountChildren,
   };
 }

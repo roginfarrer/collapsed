@@ -2,12 +2,14 @@ import React from 'react';
 import {useCollapse} from '../../src/collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';
 
-export default function NestedDemo() {
+export default function Demo() {
   const {
     getCollapseProps: outerCollapseProps,
     getToggleProps: outerToggleProps,
     isOpen: outerOpen,
-  } = useCollapse();
+  } = useCollapse({
+    defaultOpen: true,
+  });
   const {
     getCollapseProps: innerCollapseProps,
     getToggleProps: innerToggleProps,
@@ -67,36 +69,6 @@ export default function NestedDemo() {
             When that the poor have cried, Caesar hath wept:
             <br />
             Ambition should be made of sterner stuff:
-            <br />
-            Yet Brutus says he was ambitious;
-            <br />
-            And Brutus is an honourable man.
-            <br />
-            You all did see that on the Lupercal
-            <br />
-            I thrice presented him a kingly crown,
-            <br />
-            Which he did thrice refuse: was this ambition?
-            <br />
-            Yet Brutus says he was ambitious;
-            <br />
-            And, sure, he is an honourable man.
-            <br />
-            I speak not to disprove what Brutus spoke,
-            <br />
-            But here I am to speak what I do know.
-            <br />
-            You all did love him once, not without cause:
-            <br />
-            What cause withholds you then, to mourn for him?
-            <br />
-            O judgment! thou art fled to brutish beasts,
-            <br />
-            And men have lost their reason. Bear with me;
-            <br />
-            My heart is in the coffin there with Caesar,
-            <br />
-            And I must pause till it come back to me.
           </p>
           {innerOpen && (
             <button {...innerToggleProps({style: {display: 'block'}})}>
