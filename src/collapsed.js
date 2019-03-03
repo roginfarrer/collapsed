@@ -1,13 +1,13 @@
 import {useState, useRef, useCallback, useMemo} from 'react';
+import raf from 'raf';
 import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
 import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
-import RAF from 'raf';
 
 export function useCollapse(initialConfig = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
-  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
+  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(false);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
   const [styles, setStyles] = useState(
     isOpen ? null : {display: 'none', height: '0px'}
@@ -24,8 +24,8 @@ export function useCollapse(initialConfig = {}) {
   useLayoutEffectAfterMount(() => {
     if (isOpen) {
       setMountChildren(true);
-      setStyles(styles => ({
-        ...styles,
+      setStyles(oldStyles => ({
+        ...oldStyles,
         ...expandStyles,
         display: 'block',
         overflow: 'hidden',
@@ -33,7 +33,7 @@ export function useCollapse(initialConfig = {}) {
       setShouldAnimateOpen(true);
     } else {
       const height = getElementHeight(el);
-      setStyles(styles => ({...styles, ...collapseStyles, height}));
+      setStyles(oldStyles => ({...oldStyles, ...collapseStyles, height}));
       setShouldAnimateOpen(false);
     }
   }, [isOpen]);
@@ -41,13 +41,13 @@ export function useCollapse(initialConfig = {}) {
   useLayoutEffectAfterMount(() => {
     const height = getElementHeight(el);
     if (shouldAnimateOpen) {
-      setStyles(styles => ({...styles, height}));
+      setStyles(oldStyles => ({...oldStyles, height}));
       setHeightAtTransition(height);
     } else {
       // RAF required to transition, otherwise will flash closed
-      RAF(() => {
-        setStyles(styles => ({
-          ...styles,
+      raf(() => {
+        setStyles(oldStyles => ({
+          ...oldStyles,
           height: '0px',
           overflow: 'hidden',
         }));
@@ -60,12 +60,12 @@ export function useCollapse(initialConfig = {}) {
     const height = getElementHeight(el);
     if (isOpen && height !== heightAtTransition) {
       setHeightAtTransition(height);
-      setStyles(styles => ({...styles, height}));
+      setStyles(oldStyles => ({...oldStyles, height}));
       return;
     }
 
     if (isOpen) {
-      setStyles({});
+      setStyles(null);
     } else {
       setMountChildren(false);
       setStyles({

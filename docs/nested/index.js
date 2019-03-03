@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-child-element-spacing */
 import React from 'react';
 import {useCollapse} from '../../src/collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';

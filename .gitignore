@@ -3,3 +3,4 @@ dist
 .docz/
 .vscode/
 coverage
+.eslintcache

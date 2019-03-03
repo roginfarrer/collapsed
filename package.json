@@ -12,10 +12,9 @@
     "test": "rogin-scripts test",
     "test-watch": "yarn test --watch",
     "test-coverage": "yarn test --coverage",
-    "lint": "yarn flow",
+    "lint": "rogin-scripts lint",
     "format": "rogin-scripts format",
-    "validate": "yarn flow && yarn build && yarn test",
-    "setup": "yarn install && yarn validate",
+    "validate": "yarn lint && yarn build && yarn test",
     "prepublish": "yarn jest && yarn build"
   },
   "repository": {
@@ -55,14 +54,10 @@
     "docz": "^0.13.7",
     "docz-plugin-css": "^0.11.0",
     "docz-theme-default": "^0.13.7",
-    "eslint": "^5.9.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-react-hooks": "^1.2.0",
-    "flow-bin": "0.93.0",
+    "eslint-plugin-react-hooks": "^1.4.0",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.0",
+    "prettier": "^1.16.4",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-hooks-testing-library": "^0.3.3",
@@ -84,6 +79,7 @@
   "eslintIgnore": [
     "node_modules",
     "dist",
-    ".docz"
+    ".docz",
+    "coverage"
   ]
 }
