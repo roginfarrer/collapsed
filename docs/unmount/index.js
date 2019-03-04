@@ -2,7 +2,7 @@ import React from 'react';
 import {useCollapse} from '../../src/collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';
 
-export default function Demo() {
+export default function Collapse() {
   const {getCollapseProps, getToggleProps, isOpen, mountChildren} = useCollapse(
     {
       defaultOpen: true,

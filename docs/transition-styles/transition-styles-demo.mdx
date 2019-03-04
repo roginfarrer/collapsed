@@ -2,6 +2,7 @@
 name: Custom Transition Styles
 menu: Demo
 route: /transition-styles-demo
+order: 5
 ---
 
 import Demo from './';
@@ -21,7 +22,7 @@ const expandStyles = {
   transitionTimingFunction: 'ease-out',
 };
 
-function Collapse() {
+export default function Collapse() {
   const {getCollapseProps, getToggleProps, isOpen} = useCollapse({
     collapseStyles,
     expandStyles,
@@ -31,7 +32,7 @@ function Collapse() {
     <React.Fragment>
       <button {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</button>
       <div {...getCollapseProps()}>
-        <CollapseDemo>
+        <p>
           In the morning I walked down the Boulevard to the rue Soufflot for
           coffee and brioche. It was a fine morning. The horse-chestnut trees in
           the Luxembourg gardens were in bloom. There was the pleasant
@@ -40,7 +41,7 @@ function Collapse() {
           market and arranging their daily stock. Students went by going up to
           the law school, or down to the Sorbonne. The Boulevard was busy with
           trams and people going to work.
-        </CollapseDemo>
+        </p>
       </div>
     </React.Fragment>
   );

@@ -7,7 +7,7 @@ export function useCollapse(initialConfig = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
-  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(false);
+  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState('0');
   const [styles, setStyles] = useState(
     isOpen ? null : {display: 'none', height: '0px'}
@@ -44,7 +44,7 @@ export function useCollapse(initialConfig = {}) {
       setStyles(oldStyles => ({...oldStyles, height}));
       setHeightAtTransition(height);
     } else {
-      // RAF required to transition, otherwise will flash closed
+      // requstAnimationFrame required to transition, otherwise will flash closed
       raf(() => {
         setStyles(oldStyles => ({
           ...oldStyles,

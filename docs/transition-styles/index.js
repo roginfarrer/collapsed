@@ -12,8 +12,9 @@ const expandStyles = {
   transitionTimingFunction: 'ease-out',
 };
 
-export default function Demo() {
+export default function Collapse() {
   const {getCollapseProps, getToggleProps, isOpen} = useCollapse({
+    defaultOpen: true,
     collapseStyles,
     expandStyles,
   });
