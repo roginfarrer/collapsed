@@ -11,7 +11,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const isProd = NODE_ENV === 'production';
 
 const baseConfig = {
-  input: 'src/collapsed.js',
+  input: 'src/react-collapsed.js',
   external: ['react', 'raf'],
   output: {
     name: 'ReactCollapsed',
