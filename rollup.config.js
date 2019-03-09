@@ -1,28 +1,56 @@
-import {uglify} from 'rollup-plugin-uglify';
+import {terser} from 'rollup-plugin-terser';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import resolve from 'rollup-plugin-node-resolve';
 
-// `npm run build` -> `production` is true
-// `npm run dev` -> `production` is false
-const production = !process.env.ROLLUP_WATCH;
+import pkg from './package.json';
 
-export default {
+const baseConfig = {
   input: 'src/collapsed.js',
   external: ['react', 'raf'],
+};
+
+const cjsConfig = {
+  ...baseConfig,
   plugins: [
-    babel({
-      exclude: 'node_modules/**',
-    }),
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
     commonjs(),
-    production && uglify(),
+    terser(),
   ],
   output: {
-    format: 'umd',
+    format: 'cjs',
+    file: pkg.main,
     name: 'ReactCollapsed',
     sourcemap: true,
-    globals: {
-      react: 'React',
-      raf: 'RAF',
-    },
   },
 };
+
+const esmConfig = {
+  ...baseConfig,
+  plugins: [
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
+    terser(),
+  ],
+  output: {
+    format: 'esm',
+    file: pkg.module,
+    name: 'ReactCollapsed',
+    sourcemap: true,
+  },
+};
+
+const umdConfig = {
+  ...esmConfig,
+  output: {
+    ...esmConfig.output,
+    format: 'umd',
+    file: 'dist/react-collapsed.umd.js',
+  },
+};
+
+export default [cjsConfig, esmConfig, umdConfig];

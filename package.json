@@ -2,12 +2,13 @@
   "name": "react-collapsed",
   "version": "2.0.0-alpha.1",
   "description": "A React hook for creating flexible and accessible expand/collapse components.",
-  "main": "dist/collapse.min.js",
+  "main": "dist/react-collapsed.cjs.min.js",
+  "module": "dist/react-collapsed.esm.min.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build": "rollup -c -o dist/collapse.min.js",
+    "build": "rollup -c",
     "dev": "yarn docz dev",
     "test": "rogin-scripts test",
     "test-watch": "yarn test --watch",
@@ -68,6 +69,9 @@
     "rollup": "^0.67.1",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
