@@ -260,7 +260,7 @@
     "@babel/helper-create-class-features-plugin" "^7.2.3"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-proposal-class-properties@^7.1.0", "@babel/plugin-proposal-class-properties@^7.2.1":
+"@babel/plugin-proposal-class-properties@^7.2.1":
   version "7.3.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.3.3.tgz#e69ee114a834a671293ace001708cc1682ed63f9"
   dependencies:
@@ -1295,15 +1295,11 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
-ansi-styles@^3.0.0, ansi-styles@^3.2.0, ansi-styles@^3.2.1:
+ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d"
   dependencies:
     color-convert "^1.9.0"
-
-any-promise@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -1474,12 +1470,6 @@ assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
 
-ast-pretty-print@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/ast-pretty-print/-/ast-pretty-print-1.3.0.tgz#6654e50ee3de665c541fcf038ddbae5097ce8c43"
-  dependencies:
-    ansi-styles "^3.0.0"
-
 ast-types-flow@0.0.7, ast-types-flow@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
@@ -1563,7 +1553,7 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
-babel-core@^6.0.0, babel-core@^6.24.1, babel-core@^6.25.0, babel-core@^6.26.0:
+babel-core@^6.0.0, babel-core@^6.26.0:
   version "6.26.3"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
   dependencies:
@@ -1591,10 +1581,6 @@ babel-core@^7.0.0-0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
 
-babel-errors@^1.0.1, babel-errors@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/babel-errors/-/babel-errors-1.1.1.tgz#43f7142dd3b365633c758d155bffa3ba41523794"
-
 babel-eslint@^10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.0.1.tgz#919681dc099614cd7d31d45c8908695092a1faed"
@@ -1616,48 +1602,6 @@ babel-eslint@^9.0.0:
     "@babel/types" "^7.0.0"
     eslint-scope "3.7.1"
     eslint-visitor-keys "^1.0.0"
-
-babel-explode-module@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/babel-explode-module/-/babel-explode-module-1.4.0.tgz#b20076f0ee5ff28e8f16baa3146fe136a27c6504"
-  dependencies:
-    babel-types "^6.24.1"
-
-babel-explode-module@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/babel-explode-module/-/babel-explode-module-2.0.0.tgz#d635653b44b1bdf1d5ceafacafb891611876ce3b"
-  dependencies:
-    babel-types "^6.24.1"
-
-babel-file-loader@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/babel-file-loader/-/babel-file-loader-1.0.3.tgz#b9df875e136d6cddc9dfcb36334cd1ad58fffe7f"
-  dependencies:
-    babel-errors "^1.0.1"
-    babel-file "^1.0.2"
-    babel-plugin-tester "^3.0.0"
-    babel-types "^6.24.1"
-    read-file-async "^1.0.0"
-    resolve "^1.3.3"
-    resolve-async "^1.0.1"
-
-babel-file@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/babel-file/-/babel-file-1.0.2.tgz#6435c01fc79c33365751957156a0561965a29d56"
-  dependencies:
-    babel-core "^6.24.1"
-    babel-errors "^1.0.1"
-
-babel-flow-identifiers@^1.1.2:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/babel-flow-identifiers/-/babel-flow-identifiers-1.1.3.tgz#8ada2633e7afa2cab58892ee2b25b2b6cc4ce598"
-  dependencies:
-    babel-flow-scope "^1.2.1"
-    babel-identifiers "^1.0.0"
-
-babel-flow-scope@^1.2.0, babel-flow-scope@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/babel-flow-scope/-/babel-flow-scope-1.2.1.tgz#2b646211811a203ef0b11ebd219af29428b15990"
 
 babel-generator@^6.18.0, babel-generator@^6.26.0:
   version "6.26.1"
@@ -1684,22 +1628,12 @@ babel-helper-remove-or-void@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/babel-helper-remove-or-void/-/babel-helper-remove-or-void-0.4.3.tgz#a4f03b40077a0ffe88e45d07010dee241ff5ae60"
 
-babel-helper-simplify-module@^2.2.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/babel-helper-simplify-module/-/babel-helper-simplify-module-2.2.1.tgz#54cf5b2f7930eef638458b2eaaeeacfbafa3842c"
-  dependencies:
-    babel-explode-module "^1.4.0"
-
 babel-helpers@^6.24.1:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-helpers/-/babel-helpers-6.24.1.tgz#3471de9caec388e5c850e597e58a26ddf37602b2"
   dependencies:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
-
-babel-identifiers@^1.0.0:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/babel-identifiers/-/babel-identifiers-1.1.2.tgz#fed5d526c88b1c669ba2dbd1148eaed4357aea42"
 
 babel-jest@^23.6.0:
   version "23.6.0"
@@ -1716,13 +1650,6 @@ babel-loader@^8.0.2:
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
     util.promisify "^1.0.0"
-
-babel-log@^1.0.3:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/babel-log/-/babel-log-1.0.4.tgz#e3bebf1de68d10e094605392181d290a91876200"
-  dependencies:
-    ansi-styles "^3.0.0"
-    ast-pretty-print "^1.2.0"
 
 babel-messages@^6.23.0:
   version "6.23.0"
@@ -1792,20 +1719,6 @@ babel-plugin-react-docgen@^2.0.0:
     react-docgen "^3.0.0"
     recast "^0.14.7"
 
-babel-plugin-react-flow-props-to-prop-types@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-react-flow-props-to-prop-types/-/babel-plugin-react-flow-props-to-prop-types-0.15.0.tgz#0008ecf31bb68f43c11dec57e366f58b73a8acbd"
-  dependencies:
-    babel-errors "^1.1.0"
-    babel-explode-module "^2.0.0"
-    babel-file-loader "^1.0.1"
-    babel-flow-identifiers "^1.1.2"
-    babel-flow-scope "^1.2.0"
-    babel-helper-simplify-module "^2.2.0"
-    babel-log "^1.0.3"
-    babel-react-components "^1.0.1"
-    babel-types "^6.24.1"
-
 babel-plugin-syntax-jsx@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
@@ -1813,17 +1726,6 @@ babel-plugin-syntax-jsx@^6.18.0:
 babel-plugin-syntax-object-rest-spread@^6.13.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-object-rest-spread/-/babel-plugin-syntax-object-rest-spread-6.13.0.tgz#fd6536f2bce13836ffa3a5458c4903a597bb3bf5"
-
-babel-plugin-tester@^3.0.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-tester/-/babel-plugin-tester-3.3.0.tgz#9844f77a661b48b5c7e08bd54acca590dbcee5b4"
-  dependencies:
-    babel-core "^6.25.0"
-    common-tags "^1.4.0"
-    invariant "^2.2.2"
-    lodash.merge "^4.6.0"
-    path-exists "^3.0.0"
-    strip-indent "^2.0.0"
 
 babel-plugin-transform-dynamic-import@^2.0.0:
   version "2.1.0"
@@ -1874,10 +1776,6 @@ babel-preset-jest@^23.2.0:
     babel-plugin-jest-hoist "^23.2.0"
     babel-plugin-syntax-object-rest-spread "^6.13.0"
 
-babel-react-components@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/babel-react-components/-/babel-react-components-1.1.0.tgz#3683490747259ea41cef734ceb9fc6098bc5dcd2"
-
 babel-register@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.26.0.tgz#6ed021173e2fcb486d7acb45c6009a856f647071"
@@ -1921,7 +1819,7 @@ babel-traverse@^6.0.0, babel-traverse@^6.18.0, babel-traverse@^6.26.0:
     invariant "^2.2.2"
     lodash "^4.17.4"
 
-babel-types@^6.0.0, babel-types@^6.18.0, babel-types@^6.24.1, babel-types@^6.26.0:
+babel-types@^6.0.0, babel-types@^6.18.0, babel-types@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-6.26.0.tgz#a3b073f94ab49eb6fa55cd65227a334380632497"
   dependencies:
@@ -2663,7 +2561,7 @@ commander@^2.11.0, commander@^2.18.0, commander@^2.19.0, commander@^2.8.1:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
 
-common-tags@^1.4.0, common-tags@^1.8.0:
+common-tags@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.8.0.tgz#8e3153e542d4a39e9b10554434afaaf98956a937"
 
@@ -6509,7 +6407,7 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
-lodash.merge@^4.6.0, lodash.merge@^4.6.1:
+lodash.merge@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
 
@@ -8640,13 +8538,6 @@ react@^16.8.3:
     prop-types "^15.6.2"
     scheduler "^0.13.3"
 
-read-file-async@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/read-file-async/-/read-file-async-1.0.0.tgz#118fd0b8d0f76dc95cbb658e72ea6f107210deae"
-  dependencies:
-    graceful-fs "^4.1.11"
-    typeable-promisify "^1.0.1"
-
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"
@@ -9089,13 +8980,6 @@ reselect@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-3.0.1.tgz#efdaa98ea7451324d092b2b2163a6a1d7a9a2147"
 
-resolve-async@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/resolve-async/-/resolve-async-1.0.1.tgz#6bf9f26451e9a64a58a13edb82e615ddfcbda86b"
-  dependencies:
-    resolve "^1.3.3"
-    typeable-promisify "^1.0.1"
-
 resolve-cwd@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-2.0.0.tgz#00a9f7387556e27038eae232caa372a6a59b665a"
@@ -9122,7 +9006,7 @@ resolve@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
-resolve@^1.1.6, resolve@^1.10.0, resolve@^1.3.2, resolve@^1.3.3, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.7.1, resolve@^1.8.1, resolve@^1.9.0:
+resolve@^1.1.6, resolve@^1.10.0, resolve@^1.3.2, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.7.1, resolve@^1.8.1, resolve@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.10.0.tgz#3bdaaeaf45cc07f375656dfd2e54ed0810b101ba"
   dependencies:
@@ -9303,15 +9187,6 @@ rollup-plugin-terser@^4.0.2, rollup-plugin-terser@^4.0.4:
     jest-worker "^24.0.0"
     serialize-javascript "^1.6.1"
     terser "^3.14.1"
-
-rollup-plugin-uglify@^6.0.0:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-uglify/-/rollup-plugin-uglify-6.0.2.tgz#681042cfdf7ea4e514971946344e1a95bc2772fe"
-  dependencies:
-    "@babel/code-frame" "^7.0.0"
-    jest-worker "^24.0.0"
-    serialize-javascript "^1.6.1"
-    uglify-js "^3.4.9"
 
 rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.0, rollup-pluginutils@^2.3.1, rollup-pluginutils@^2.3.3:
   version "2.4.1"
@@ -10388,12 +10263,6 @@ type-is@~1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.18"
 
-typeable-promisify@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/typeable-promisify/-/typeable-promisify-1.0.1.tgz#005d43502e7753affccc8af8c05e3ac24f30e617"
-  dependencies:
-    any-promise "^1.3.0"
-
 typedarray-to-buffer@~1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-1.0.4.tgz#9bb8ba0e841fb3f4cf1fe7c245e9f3fa8a5fe99c"
@@ -10406,7 +10275,7 @@ ua-parser-js@^0.7.18:
   version "0.7.19"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.19.tgz#94151be4c0a7fb1d001af7022fdaca4642659e4b"
 
-uglify-js@3.4.x, uglify-js@^3.1.4, uglify-js@^3.4.9:
+uglify-js@3.4.x, uglify-js@^3.1.4:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.4.9.tgz#af02f180c1207d76432e473ed24a28f4a782bae3"
   dependencies:

@@ -3,49 +3,74 @@ import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 
 import pkg from './package.json';
+
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProd = NODE_ENV === 'production';
 
 const baseConfig = {
   input: 'src/collapsed.js',
   external: ['react', 'raf'],
+  output: {
+    name: 'ReactCollapsed',
+    sourcemap: true,
+    globals: {
+      react: 'React',
+      raf: 'raf',
+    },
+  },
 };
 
 const cjsConfig = {
   ...baseConfig,
   plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
     peerDepsExternal(),
     resolve(),
     babel({exclude: 'node_modules/**'}),
     commonjs(),
-    terser(),
+    isProd && terser(),
   ],
   output: {
+    ...baseConfig.output,
     format: 'cjs',
     file: pkg.main,
-    name: 'ReactCollapsed',
-    sourcemap: true,
   },
 };
 
 const esmConfig = {
   ...baseConfig,
   plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
     peerDepsExternal(),
     resolve(),
     babel({exclude: 'node_modules/**'}),
-    terser(),
+    isProd && terser(),
   ],
   output: {
-    format: 'esm',
+    ...baseConfig.output,
+    format: 'es',
     file: pkg.module,
-    name: 'ReactCollapsed',
-    sourcemap: true,
   },
 };
 
 const umdConfig = {
-  ...esmConfig,
+  ...baseConfig,
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
+    isProd && terser(),
+  ],
   output: {
     ...esmConfig.output,
     format: 'umd',

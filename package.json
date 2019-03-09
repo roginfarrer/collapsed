@@ -2,13 +2,13 @@
   "name": "react-collapsed",
   "version": "2.0.0-alpha.1",
   "description": "A React hook for creating flexible and accessible expand/collapse components.",
-  "main": "dist/react-collapsed.cjs.min.js",
-  "module": "dist/react-collapsed.esm.min.js",
+  "main": "dist/react-collapsed.cjs.js",
+  "module": "dist/react-collapsed.esm.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "rm -rf dist/ && rollup -c",
     "dev": "yarn docz dev",
     "test": "rogin-scripts test",
     "test-watch": "yarn test --watch",
@@ -16,7 +16,7 @@
     "lint": "rogin-scripts lint",
     "format": "rogin-scripts format",
     "validate": "yarn lint && yarn build && yarn test",
-    "prepublish": "yarn jest && yarn build"
+    "prepublishOnly": "NODE_ENV=production yarn build"
   },
   "repository": {
     "type": "git",
@@ -45,14 +45,12 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.5",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.5",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
-    "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
     "docz": "^0.13.7",
     "docz-plugin-css": "^0.11.0",
     "docz-theme-default": "^0.13.7",
@@ -71,8 +69,8 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.1",
     "rollup-plugin-peer-deps-external": "^2.2.0",
-    "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-uglify": "^6.0.0"
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-terser": "^4.0.4"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
