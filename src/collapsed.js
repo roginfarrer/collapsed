@@ -3,7 +3,7 @@ import raf from 'raf';
 import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
 import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
 
-export function useCollapse(initialConfig = {}) {
+export default function useCollapse(initialConfig = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
