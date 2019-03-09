@@ -1,5 +1,5 @@
 import React from 'react';
-import {useCollapse} from '../../src/collapsed';
+import useCollapse from '../../src/react-collapsed';
 import {CollapseDemo} from '../_ui-components/ui-components';
 
 const collapseStyles = {

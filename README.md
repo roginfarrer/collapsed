@@ -29,7 +29,7 @@ $ npm i react-collapsed
 You can let ReactCollapsed handle the expanding and closing for you:
 
 ```js
-import {useCollapse} from 'react-collapsed';
+import useCollapse from 'react-collapsed';
 
 function Demo() {
   const {getCollapseProps, getToggleProps, isOpen} = useCollapse();
@@ -47,7 +47,7 @@ function Demo() {
 
 ```js
 import {useState} from 'react';
-import {useCollapse} from 'react-collapsed';
+import useCollapse from 'react-collapsed';
 
 function Demo() {
   const [isOpen, setOpen] = useState(false);
