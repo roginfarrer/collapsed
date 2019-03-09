@@ -4,6 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 
 import pkg from './package.json';
 
@@ -33,6 +34,7 @@ const cjsConfig = {
     resolve(),
     babel({exclude: 'node_modules/**'}),
     commonjs(),
+    sizeSnapshot(),
     isProd && terser(),
   ],
   output: {
@@ -51,6 +53,7 @@ const esmConfig = {
     peerDepsExternal(),
     resolve(),
     babel({exclude: 'node_modules/**'}),
+    // sizeSnapshot(), this errors for some reason?
     isProd && terser(),
   ],
   output: {
@@ -69,6 +72,7 @@ const umdConfig = {
     peerDepsExternal(),
     resolve(),
     babel({exclude: 'node_modules/**'}),
+    sizeSnapshot(),
     isProd && terser(),
   ],
   output: {

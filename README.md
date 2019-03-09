@@ -1,6 +1,6 @@
-# React-Collapsed
+# React-Collapsed (useCollapse) 🙈
 
-A tiny (< 2.5kb) react-hook for creating flexible and accessible expand/collapse components.
+A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse components in React.
 
 ## Features
 
@@ -26,9 +26,8 @@ $ npm i react-collapsed
 
 ### Simple Usage
 
-You can let ReactCollapsed handle the expanding and closing for you:
-
 ```js
+import React from 'react';
 import useCollapse from 'react-collapsed';
 
 function Demo() {
@@ -46,7 +45,7 @@ function Demo() {
 ### Control it yourself
 
 ```js
-import {useState} from 'react';
+import React, {useState} from 'react';
 import useCollapse from 'react-collapsed';
 
 function Demo() {
