@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, cleanup, fireEvent} from 'react-testing-library';
 import {renderHook, act} from 'react-hooks-testing-library';
-import {useCollapse} from '../collapsed';
+import useCollapse from '../../src/react-collapsed';
 import * as utils from '../utils';
 // add custom jest matchers from jest-dom
 import 'jest-dom/extend-expect';
