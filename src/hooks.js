@@ -13,17 +13,18 @@ export function useLayoutEffectAfterMount(cb, dependencies) {
       return cb();
     }
     justMounted.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 }
 
-function useEffectOnMount(cb, dependencies) {
+function useEffectOnMount(cb) {
   const justMounted = useRef(true);
   useEffect(() => {
     if (justMounted.current) {
       return cb();
     }
     justMounted.current = false;
-  }, dependencies);
+  });
 }
 
 let idCounter = 0;
@@ -36,6 +37,6 @@ export function useUniqueId() {
   let counter = useMemo(() => idCounter++, []);
   useEffectOnMount(() => {
     counter++;
-  }, []);
+  });
   return counter;
 }

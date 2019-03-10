@@ -25,6 +25,7 @@ export default function useCollapse(initialConfig = {}) {
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
   useLayoutEffectAfterMount(() => {
