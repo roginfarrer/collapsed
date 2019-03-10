@@ -1,20 +1,22 @@
 {
   "name": "react-collapsed",
-  "version": "1.0.0",
-  "description": "A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.",
-  "main": "dist/collapse.min.js",
+  "version": "2.0.0",
+  "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
+  "main": "dist/react-collapsed.cjs.js",
+  "module": "dist/react-collapsed.esm.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build": "rollup -c -o dist/collapse.min.js",
+    "build": "rm -rf dist/ && rollup -c",
     "dev": "yarn docz dev",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "lint": "yarn flow",
-    "validate": "yarn flow && yarn build && yarn test",
-    "setup": "yarn install && yarn validate",
-    "prepublish": "yarn jest && yarn build"
+    "test": "rogin-scripts test",
+    "test-watch": "yarn test --watch",
+    "test-coverage": "yarn test --coverage",
+    "lint": "rogin-scripts lint",
+    "format": "rogin-scripts format",
+    "validate": "yarn lint && yarn build && yarn test",
+    "prepublishOnly": "NODE_ENV=production yarn build"
   },
   "repository": {
     "type": "git",
@@ -30,51 +32,58 @@
     "animate",
     "height",
     "render",
-    "expand"
+    "expand",
+    "hooks",
+    "auto"
   ],
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "license": "MIT",
   "homepage": "https://react-collapsed.netlify.com/",
   "peerDependencies": {
-    "react": "15 || 16"
+    "react": "^16.8.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.5",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.5",
-    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
-    "babel-plugin-react-flow-props-to-prop-types": "^0.15.0",
     "docz": "^0.13.7",
     "docz-plugin-css": "^0.11.0",
     "docz-theme-default": "^0.13.7",
-    "eslint": "^5.9.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.83.0",
+    "eslint-plugin-react-hooks": "^1.4.0",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.0",
-    "react": "^16.6.1",
-    "react-dom": "^16.6.1",
+    "prettier": "^1.16.4",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-hooks-testing-library": "^0.3.3",
     "react-testing-library": "^5.2.3",
     "regenerator-runtime": "^0.12.1",
+    "rogin-scripts": "^0.0.6-development",
     "rollup": "^0.67.1",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-size-snapshot": "^0.8.0",
+    "rollup-plugin-terser": "^4.0.4"
   },
   "dependencies": {
+    "@babel/runtime": "^7.3.1",
     "raf": "^3.4.0"
+  },
+  "resolutions": {
+    "docz-core": "^0.13.7"
   },
   "eslintIgnore": [
     "node_modules",
     "dist",
-    ".docz"
+    ".docz",
+    "coverage"
   ]
 }

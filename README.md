@@ -1,13 +1,13 @@
-# React-Collapsed
+# React-Collapsed (useCollapse) 🙈
 
-A small (< 2.5kb), headless component for creating flexible and accessible expand/collapse components.
+A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse components in React.
 
 ## Features
 
 - Handles the height of animations of your elements, `auto` included!
-- You control the UI - with prop-getters, you give ReactCollapsed's logic to your elements
+- You control the UI - `useCollapse` provides the necessary props, you control everything else.
 - Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-- Small footprint (< 2.5kb gzipped)
+- Small footprint (< 2kb gzipped)
 - No animation framework required! Simply powered by CSS animations
 
 ## Demo
@@ -26,65 +26,81 @@ $ npm i react-collapsed
 
 ### Simple Usage
 
-You can let ReactCollapsed handle the expanding and closing for you:
-
 ```js
-import Collapse from 'react-collapsed';
+import React from 'react';
+import useCollapse from 'react-collapsed';
 
-<Collapse>
-  {({getCollapseProps, getTogglerProps, isOpen}) => (
-    <React.Fragment>
-      <button {...getTogglerProps()}>Toggle Collapse</button>
-      <div {...getCollapseProps()}>
-        {isOpen ? `I'm visible!` : `You can't see me!`}
-      </div>
-    </React.Fragment>
-  )}
-</Collapse>;
+function Demo() {
+  const {getCollapseProps, getToggleProps, isOpen} = useCollapse();
+
+  return (
+    <Fragment>
+      <button {...getToggleProps()}>{isOpen ? 'Collapse' : 'Expand'}</button>
+      <section {...getCollapseProps()}>Collapsed content 🙈</section>
+    </Fragment>
+  );
+}
 ```
 
 ### Control it yourself
 
 ```js
-import Collapse from 'react-collapsed';
+import React, {useState} from 'react';
+import useCollapse from 'react-collapsed';
 
-class ControlledDemo extends React.Component {
-  state = {
-    isOpen: false
-  };
+function Demo() {
+  const [isOpen, setOpen] = useState(false);
+  const {getCollapseProps, getToggleProps} = useCollapse({isOpen});
 
-  handleClick = () => this.setState(({isOpen}) => ({isOpen: !isOpen}));
-
-  render() {
-    return (
-      <Collapse isOpen={this.state.isOpen}>
-        {({getCollapseProps, getTogglerProps}) => (
-          <React.Fragment>
-            <button {...getTogglerProps({onClick: this.handleClick})}>
-              Toggle Collapse
-            </button>
-            <div {...getCollapseProps()}>
-              {this.state.isOpen ? `I'm visible!` : `You can't see me!`}
-            </div>
-          </React.Fragment>
-        )}
-      </Collapse>
-    );
-  }
+  return (
+    <Fragment>
+      <button
+        {...getToggleProps({
+          onClick: () => setOpen(oldOpen => !oldOpen),
+        })}
+      >
+        {isOpen ? 'Collapse' : 'Expand'}
+      </button>
+      <section {...getCollapseProps()}>Collapsed content 🙈</section>
+    </Fragment>
+  );
 }
 ```
 
 ## API
 
-| Prop        | Type             | Default                                    | Description                                     |
-| ----------- | ---------------- | ------------------------------------------ | ----------------------------------------------- |
-| children    | func             |                                            | Render prop to create the Collapse UI           |
-| isOpen      | bool             | `null`                                     | If true, the Collapse is expanded               |
-| defaultOpen | bool             | `false`                                    | If true, the Collapse will be expanded on mount |
-| duration    | number \| object | `500`                                      | Length of animation (in MS)                     |
-| easing      | number \| object | `cubic-bezier(0.250, 0.460, 0.450, 0.940)` | CSS timing function for animation               |
-| delay       | number \| object | `0`                                        | Animation delay (in MS)                         |
+```js
+const {
+  getCollapseProps,
+  getToggleProps,
+  isOpen,
+  toggleOpen,
+  mountChildren,
+} = useCollapse({
+  isOpen: boolean,
+  defaultOpen: boolean,
+  expandStyles: {},
+  collapseStyles: {},
+});
+```
 
-## Acknowledgments
+### `useCollapse` Config
 
-Received lots of inspiration for implementation from [react-show](https://github.com/react-tools/react-show). If you need a more generalized API for CSS animations, check it out!
+The following are optional properties passed into `useCollapse({ })`:
+
+| Prop           | Type    | Default                                                                                              | Description                                                  |
+| -------------- | ------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| isOpen         | boolean | `undefined`                                                                                          | If true, the Collapse is expanded                            |
+| defaultOpen    | boolean | `false`                                                                                              | If true, the Collapse will be expanded when mounted          |
+| expandStyles   | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it expands   |
+| collapseStyles | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it collapses |
+
+### What you get
+
+| Name             | Description                                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| getCollapseProps | Function that returns a prop object, which should be spread onto the collapse element                       |
+| getToggleProps   | Function that returns a prop object, which should be spread onto an element that toggles the collapse panel |
+| isOpen           | Whether or not the collapse is open (if not controlled)                                                     |
+| toggleOpen       | Function that will toggle the state of the collapse panel                                                   |
+| mountChildren    | Whether or not the collapse panel content should be visible                                                 |

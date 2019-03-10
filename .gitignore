@@ -2,3 +2,5 @@ node_modules
 dist
 .docz/
 .vscode/
+coverage
+.eslintcache

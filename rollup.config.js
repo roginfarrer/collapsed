@@ -1,28 +1,85 @@
-import {uglify} from 'rollup-plugin-uglify';
+import {terser} from 'rollup-plugin-terser';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
+import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 
-// `npm run build` -> `production` is true
-// `npm run dev` -> `production` is false
-const production = !process.env.ROLLUP_WATCH;
+import pkg from './package.json';
 
-export default {
-  input: 'src/Collapse.js',
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProd = NODE_ENV === 'production';
+
+const baseConfig = {
+  input: 'src/react-collapsed.js',
   external: ['react', 'raf'],
-  plugins: [
-    babel({
-      exclude: 'node_modules/**'
-    }),
-    commonjs(),
-    production && uglify()
-  ],
   output: {
-    format: 'umd',
     name: 'ReactCollapsed',
     sourcemap: true,
     globals: {
       react: 'React',
-      raf: 'RAF'
-    }
-  }
+      raf: 'raf',
+    },
+  },
 };
+
+const cjsConfig = {
+  ...baseConfig,
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
+    commonjs(),
+    sizeSnapshot(),
+    isProd && terser(),
+  ],
+  output: {
+    ...baseConfig.output,
+    format: 'cjs',
+    file: pkg.main,
+  },
+};
+
+const esmConfig = {
+  ...baseConfig,
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
+    // sizeSnapshot(), this errors for some reason?
+    isProd && terser(),
+  ],
+  output: {
+    ...baseConfig.output,
+    format: 'es',
+    file: pkg.module,
+  },
+};
+
+const umdConfig = {
+  ...baseConfig,
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
+    peerDepsExternal(),
+    resolve(),
+    babel({exclude: 'node_modules/**'}),
+    sizeSnapshot(),
+    isProd && terser(),
+  ],
+  output: {
+    ...esmConfig.output,
+    format: 'umd',
+    file: 'dist/react-collapsed.umd.js',
+  },
+};
+
+export default [cjsConfig, esmConfig, umdConfig];
