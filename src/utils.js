@@ -4,7 +4,7 @@ export function getElementHeight(el) {
   if (!el || !el.current) {
     return 'auto';
   }
-  return `${el.current.scrollHeight}px`;
+  return el.current.scrollHeight;
 }
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
@@ -28,6 +28,7 @@ function joinStyles(string) {
 export function makeTransitionStyles({
   expandStyles = defaultTransitionStyles,
   collapseStyles = defaultTransitionStyles,
+  restingStyles = defaultTransitionStyles,
 }) {
   return {
     expandStyles: {
@@ -37,6 +38,10 @@ export function makeTransitionStyles({
     collapseStyles: {
       ...collapseStyles,
       transitionProperty: joinStyles(collapseStyles.transitionProperty),
+    },
+    restingStyles: {
+      ...restingStyles,
+      transitionProperty: joinStyles(restingStyles.transitionProperty),
     },
   };
 }

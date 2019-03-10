@@ -7,7 +7,7 @@ const mockRef = {
 };
 
 test('returns scrollHeight', () => {
-  expect(getElementHeight(mockRef)).toBe('400px');
+  expect(getElementHeight(mockRef)).toBe(400);
 });
 
 test('returns auto when no ref provided', () => {

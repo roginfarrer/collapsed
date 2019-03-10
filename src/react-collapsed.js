@@ -8,16 +8,15 @@ export default function useCollapse(initialConfig = {}) {
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
-  const [heightAtTransition, setHeightAtTransition] = useState('0');
+  const [heightAtTransition, setHeightAtTransition] = useState(0);
+  const {expandStyles, collapseStyles, restingStyles} = useMemo(
+    () => makeTransitionStyles(initialConfig),
+    [initialConfig]
+  );
   const [styles, setStyles] = useState(
-    isOpen ? null : {display: 'none', height: '0px'}
+    isOpen ? restingStyles : {display: 'none', height: '0px'}
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
-
-  const {expandStyles, collapseStyles} = useMemo(
-    () => makeTransitionStyles(initialConfig),
-    [initialConfig.expandStyles, initialConfig.collapseStyles]
-  );
 
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
@@ -56,7 +55,14 @@ export default function useCollapse(initialConfig = {}) {
     }
   }, [shouldAnimateOpen]);
 
-  const handleTransitionEnd = () => {
+  const handleTransitionEnd = e => {
+    // Sometimes onTransitionEnd is triggered by another transition,
+    // such as a nested collapse panel transitioning. But we only
+    // want to handle this if this component's element is transitioning
+    if (e.target !== el.current) {
+      return;
+    }
+
     const height = getElementHeight(el);
     if (isOpen && height !== heightAtTransition) {
       setHeightAtTransition(height);
@@ -65,7 +71,7 @@ export default function useCollapse(initialConfig = {}) {
     }
 
     if (isOpen) {
-      setStyles(null);
+      setStyles(restingStyles);
     } else {
       setMountChildren(false);
       setStyles({

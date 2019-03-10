@@ -10,6 +10,11 @@ const collapseStyles = {
   transitionTimingFunction: 'ease-out',
 };
 
+const restingStyles = {
+  transitionDuration: '200ms',
+  transitionTimingFunction: 'linear',
+};
+
 test('preserves height in transition property when provided additional properties', () => {
   const result = makeTransitionStyles({
     expandStyles: {...expandStyles, transitionProperty: 'width, opacity'},
@@ -26,7 +31,11 @@ test('preserves height in transition property when provided additional propertie
 });
 
 test('creates styles', () => {
-  const result = makeTransitionStyles({expandStyles, collapseStyles});
+  const result = makeTransitionStyles({
+    expandStyles,
+    collapseStyles,
+    restingStyles,
+  });
   expect(result).toEqual({
     expandStyles: {
       ...expandStyles,
@@ -34,6 +43,10 @@ test('creates styles', () => {
     },
     collapseStyles: {
       ...collapseStyles,
+      transitionProperty: 'height',
+    },
+    restingStyles: {
+      ...restingStyles,
       transitionProperty: 'height',
     },
   });

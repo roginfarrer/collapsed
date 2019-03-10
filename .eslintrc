@@ -11,6 +11,7 @@
     "no-negated-condition": [0],
     "consistent-return": [0],
     "jest/no-disabled-tests": [0],
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "jest/prefer-called-with": "off"
   }
 }
