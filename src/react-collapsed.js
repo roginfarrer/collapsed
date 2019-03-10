@@ -1,6 +1,13 @@
 import {useState, useRef, useCallback, useMemo} from 'react';
 import raf from 'raf';
-import {callAll, noop, getElementHeight, makeTransitionStyles} from './utils';
+import {
+  callAll,
+  noop,
+  getElementHeight,
+  makeTransitionStyles,
+  joinTransitionProperties,
+  defaultTransitionStyles,
+} from './utils';
 import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
 
 export default function useCollapse(initialConfig = {}) {
@@ -9,12 +16,12 @@ export default function useCollapse(initialConfig = {}) {
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState(0);
-  const {expandStyles, collapseStyles, restingStyles} = useMemo(
+  const {expandStyles, collapseStyles} = useMemo(
     () => makeTransitionStyles(initialConfig),
     [initialConfig]
   );
   const [styles, setStyles] = useState(
-    isOpen ? restingStyles : {display: 'none', height: '0px'}
+    isOpen ? null : {display: 'none', height: '0px'}
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
 
@@ -71,7 +78,7 @@ export default function useCollapse(initialConfig = {}) {
     }
 
     if (isOpen) {
-      setStyles(restingStyles);
+      setStyles();
     } else {
       setMountChildren(false);
       setStyles({
@@ -109,9 +116,16 @@ export default function useCollapse(initialConfig = {}) {
         ref: el,
         onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
         style: {
-          // style from argument
+          // Default transition duration and timing function, so height will transition
+          // when resting and the height of the collapse changes
+          ...defaultTransitionStyles,
+          // additional styles passed, e.g. getCollapseProps({style: {}})
           ...style,
-          // styles from state
+          // combine any additional transition properties with height
+          transitionProperty: joinTransitionProperties(
+            style.transitionProperty
+          ),
+          // style overrides from state
           ...styles,
         },
       };

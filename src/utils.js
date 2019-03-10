@@ -11,12 +11,12 @@ export function getElementHeight(el) {
 export const callAll = (...fns) => (...args) =>
   fns.forEach(fn => fn && fn(...args));
 
-const defaultTransitionStyles = {
+export const defaultTransitionStyles = {
   transitionDuration: '500ms',
   transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
 };
 
-function joinStyles(string) {
+export function joinTransitionProperties(string) {
   if (string) {
     const styles = ['height'];
     styles.push(...string.split(', '));
@@ -28,20 +28,19 @@ function joinStyles(string) {
 export function makeTransitionStyles({
   expandStyles = defaultTransitionStyles,
   collapseStyles = defaultTransitionStyles,
-  restingStyles = defaultTransitionStyles,
 }) {
   return {
     expandStyles: {
       ...expandStyles,
-      transitionProperty: joinStyles(expandStyles.transitionProperty),
+      transitionProperty: joinTransitionProperties(
+        expandStyles.transitionProperty
+      ),
     },
     collapseStyles: {
       ...collapseStyles,
-      transitionProperty: joinStyles(collapseStyles.transitionProperty),
-    },
-    restingStyles: {
-      ...restingStyles,
-      transitionProperty: joinStyles(restingStyles.transitionProperty),
+      transitionProperty: joinTransitionProperties(
+        collapseStyles.transitionProperty
+      ),
     },
   };
 }

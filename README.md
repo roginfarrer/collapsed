@@ -7,7 +7,7 @@ A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse 
 - Handles the height of animations of your elements, `auto` included!
 - You control the UI - `useCollapse` provides the necessary props, you control everything else.
 - Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-- Small footprint (< 2.5kb gzipped)
+- Small footprint (< 2kb gzipped)
 - No animation framework required! Simply powered by CSS animations
 
 ## Demo
@@ -88,12 +88,13 @@ const {
 
 The following are optional properties passed into `useCollapse({ })`:
 
-| Prop           | Type    | Default                                                                                              | Description                                                  |
-| -------------- | ------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| isOpen         | boolean | `undefined`                                                                                          | If true, the Collapse is expanded                            |
-| defaultOpen    | boolean | `false`                                                                                              | If true, the Collapse will be expanded when mounted          |
-| expandStyles   | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it expands   |
-| collapseStyles | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it collapses |
+| Prop           | Type    | Default                                                                                              | Description                                                       |
+| -------------- | ------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| isOpen         | boolean | `undefined`                                                                                          | If true, the Collapse is expanded                                 |
+| defaultOpen    | boolean | `false`                                                                                              | If true, the Collapse will be expanded when mounted               |
+| expandStyles   | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it expands        |
+| collapseStyles | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it collapses      |
+| restingStyles  | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when not in transition |
 
 ### What you get
 

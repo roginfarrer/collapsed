@@ -45,9 +45,5 @@ test('creates styles', () => {
       ...collapseStyles,
       transitionProperty: 'height',
     },
-    restingStyles: {
-      ...restingStyles,
-      transitionProperty: 'height',
-    },
   });
 });
