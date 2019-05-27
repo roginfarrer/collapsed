@@ -1,12 +1,12 @@
 {
   "dist/react-collapsed.cjs.js": {
-    "bundled": 10790,
-    "minified": 5688,
-    "gzipped": 1928
+    "bundled": 11298,
+    "minified": 5790,
+    "gzipped": 1956
   },
   "dist/react-collapsed.umd.js": {
-    "bundled": 11664,
-    "minified": 4702,
-    "gzipped": 1841
+    "bundled": 12190,
+    "minified": 4715,
+    "gzipped": 1846
   }
 }
