@@ -81,6 +81,7 @@ const {
   defaultOpen: boolean,
   expandStyles: {},
   collapseStyles: {},
+  collapsedHeight: 0
 });
 ```
 
@@ -94,6 +95,7 @@ The following are optional properties passed into `useCollapse({ })`:
 | defaultOpen    | boolean | `false`                                                                                              | If true, the Collapse will be expanded when mounted          |
 | expandStyles   | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it expands   |
 | collapseStyles | object  | `{transitionDuration: '500ms' transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'}` | Style object applied to the collapse panel when it collapses |
+| collapsedHeight| number  | `0`                                                                                                ` | The  height of the content when collapsed                    |
 
 ### What you get
 
