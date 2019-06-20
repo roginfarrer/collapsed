@@ -16,12 +16,13 @@ export default function useCollapse(initialConfig = {}) {
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
   const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
   const [heightAtTransition, setHeightAtTransition] = useState(0);
+  const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
   const {expandStyles, collapseStyles} = useMemo(
     () => makeTransitionStyles(initialConfig),
     [initialConfig]
   );
   const [styles, setStyles] = useState(
-    isOpen ? null : {display: 'none', height: '0px'}
+    isOpen ? null : {display: collapsedHeight === '0px' ? 'none' : 'block', height: collapsedHeight, overflow: 'hidden'}
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
 
@@ -55,7 +56,7 @@ export default function useCollapse(initialConfig = {}) {
       raf(() => {
         setStyles(oldStyles => ({
           ...oldStyles,
-          height: '0px',
+          height: collapsedHeight,
           overflow: 'hidden',
         }));
         setHeightAtTransition(height);
@@ -83,8 +84,9 @@ export default function useCollapse(initialConfig = {}) {
     } else {
       setMountChildren(false);
       setStyles({
-        display: 'none',
-        height: '0px',
+        overflow: 'hidden',
+        display: collapsedHeight === '0px' ? 'none' : 'block',
+        height: collapsedHeight,
       });
     }
   };
