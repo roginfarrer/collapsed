@@ -1,4 +1,3 @@
-/* tslint:disable */
 import {useState, useRef, useCallback, useMemo} from 'react';
 import raf from 'raf';
 import {
@@ -113,7 +112,6 @@ export default function useCollapse(initialConfig = {}) {
         onClick: noop,
       }
     ) {
-    	console.log(displayToggleButtonStyles(el.current));
       return {
         type: 'button',
         role: 'button',
@@ -129,26 +127,25 @@ export default function useCollapse(initialConfig = {}) {
     getCollapseProps(
       {style, onTransitionEnd, ...rest} = {style: {}, onTransitionEnd: noop}
     ) {
-    	const contentStyles = {
-				// Default transition duration and timing function, so height will transition
-				// when resting and the height of the collapse changes
-				...defaultTransitionStyles,
-				// additional styles passed, e.g. getCollapseProps({style: {}})
-				...style,
-				// combine any additional transition properties with height
-				transitionProperty: joinTransitionProperties(
-					style.transitionProperty
-				),
-				// style overrides from state
-				...styles,
-			};
       return {
         id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': isOpen ? null : 'true',
         ...rest,
         ref: el,
         onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
-        style: contentStyles,
+        style: {
+					// Default transition duration and timing function, so height will transition
+					// when resting and the height of the collapse changes
+					...defaultTransitionStyles,
+					// additional styles passed, e.g. getCollapseProps({style: {}})
+					...style,
+					// combine any additional transition properties with height
+					transitionProperty: joinTransitionProperties(
+						style.transitionProperty
+					),
+					// style overrides from state
+					...styles,
+				},
       };
     },
     isOpen,
