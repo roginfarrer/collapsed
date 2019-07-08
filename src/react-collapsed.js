@@ -21,8 +21,8 @@ export default function useCollapse(initialConfig = {}) {
     [initialConfig]
   );
   const getCollapsedHeightStyle = () => {
-  	return initialConfig.collapsedHeight + 'px';
-	};
+    return initialConfig.collapsedHeight + 'px';
+  };
   const [styles, setStyles] = useState(
     isOpen ? null : {display: getCollapsedHeightStyle() === '0px' ? 'none' : 'block', height: getCollapsedHeightStyle(), overflow: 'hidden'}
   );
@@ -86,7 +86,7 @@ export default function useCollapse(initialConfig = {}) {
     } else {
       setMountChildren(false);
       setStyles({
-				overflow: 'hidden',
+        overflow: 'hidden',
         display: getCollapsedHeightStyle() === '0px' ? 'none' : 'block',
         height: getCollapsedHeightStyle(),
       });
@@ -94,16 +94,16 @@ export default function useCollapse(initialConfig = {}) {
   };
 
   const displayToggleButtonStyles = (el) => {
-		if (el) {
-			const contentFitsInsideContainer = el.children[0].getBoundingClientRect().height < el.getBoundingClientRect().height;
-			if (contentFitsInsideContainer) {
-				return {display: 'none'};
-			}
-			return {};
-		} else {
-			return {};
-		}
-	};
+    if (el) {
+      const contentFitsInsideContainer = el.children[0].getBoundingClientRect().height < el.getBoundingClientRect().height;
+      if (contentFitsInsideContainer) {
+        return {display: 'none'};
+      }
+      return {};
+    } else {
+      return {};
+    }
+  };
 
   return {
     getToggleProps(
@@ -119,7 +119,7 @@ export default function useCollapse(initialConfig = {}) {
         'aria-controls': `react-collapsed-panel-${uniqueId}`,
         'aria-expanded': isOpen ? 'true' : 'false',
         tabIndex: 0,
-				style: displayToggleButtonStyles(el.current),
+        style: displayToggleButtonStyles(el.current),
         ...rest,
         onClick: disabled ? noop : callAll(onClick, toggleOpen),
       };
@@ -134,18 +134,18 @@ export default function useCollapse(initialConfig = {}) {
         ref: el,
         onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
         style: {
-					// Default transition duration and timing function, so height will transition
-					// when resting and the height of the collapse changes
-					...defaultTransitionStyles,
-					// additional styles passed, e.g. getCollapseProps({style: {}})
-					...style,
-					// combine any additional transition properties with height
-					transitionProperty: joinTransitionProperties(
-						style.transitionProperty
-					),
-					// style overrides from state
-					...styles,
-				},
+          // Default transition duration and timing function, so height will transition
+          // when resting and the height of the collapse changes
+          ...defaultTransitionStyles,
+          // additional styles passed, e.g. getCollapseProps({style: {}})
+          ...style,
+          // combine any additional transition properties with height
+          transitionProperty: joinTransitionProperties(
+            style.transitionProperty
+          ),
+          // style overrides from state
+          ...styles,
+        },
       };
     },
     isOpen,
