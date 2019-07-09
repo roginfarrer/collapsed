@@ -1,4 +1,4 @@
-import {useState, useRef, useCallback, useMemo} from 'react';
+import {useState, useRef, useCallback, useMemo, useEffect} from 'react';
 import raf from 'raf';
 import {
   callAll,
@@ -27,6 +27,7 @@ export default function useCollapse(initialConfig = {}) {
     isOpen ? null : {display: getCollapsedHeightStyle() === '0px' ? 'none' : 'block', height: getCollapsedHeightStyle(), overflow: 'hidden'}
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
+  const [buttonVisible, setButtonVisible] = useState(true);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
@@ -46,7 +47,7 @@ export default function useCollapse(initialConfig = {}) {
       setStyles(oldStyles => ({...oldStyles, ...collapseStyles, height}));
       setShouldAnimateOpen(false);
     }
-  }, [isOpen, initialConfig.collapsedHeight]);
+  }, [isOpen, initialConfig.collapsedHeight, el]);
 
   useLayoutEffectAfterMount(() => {
     const height = getElementHeight(el);
@@ -64,7 +65,24 @@ export default function useCollapse(initialConfig = {}) {
         setHeightAtTransition(height);
       });
     }
-  }, [shouldAnimateOpen, initialConfig.collapsedHeight]);
+  }, [shouldAnimateOpen, initialConfig.collapsedHeight, el]);
+
+  /**
+   * Show/hide button if content fits in collapsedHeight
+   */
+  useEffect(() => {
+    if (el && !isOpen) {
+      // We assume the children are always wrapped in a single html element for easy height calculation
+      const contentFitsInsideContainer = el.current.children[0].getBoundingClientRect().height < initialConfig.collapsedHeight;
+      if (contentFitsInsideContainer) {
+        setButtonVisible(false);
+      } else {
+        setButtonVisible(true);
+      }
+    } else {
+      setButtonVisible(true);
+    }
+  }, [el]);
 
   const handleTransitionEnd = e => {
     // Sometimes onTransitionEnd is triggered by another transition,
@@ -93,18 +111,6 @@ export default function useCollapse(initialConfig = {}) {
     }
   };
 
-  const displayToggleButtonStyles = (el) => {
-    if (el) {
-      const contentFitsInsideContainer = el.children[0].getBoundingClientRect().height < el.getBoundingClientRect().height;
-      if (contentFitsInsideContainer) {
-        return {display: 'none'};
-      }
-      return {};
-    } else {
-      return {};
-    }
-  };
-
   return {
     getToggleProps(
       {disabled, onClick, ...rest} = {
@@ -119,7 +125,7 @@ export default function useCollapse(initialConfig = {}) {
         'aria-controls': `react-collapsed-panel-${uniqueId}`,
         'aria-expanded': isOpen ? 'true' : 'false',
         tabIndex: 0,
-        style: displayToggleButtonStyles(el.current),
+        style: buttonVisible ? {} : {display: 'none'},
         ...rest,
         onClick: disabled ? noop : callAll(onClick, toggleOpen),
       };
