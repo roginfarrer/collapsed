@@ -96,12 +96,8 @@ export default function useCollapse(initialConfig = {}) {
   };
 
   return {
-    getToggleProps(
-      {disabled, onClick, ...rest} = {
-        disabled: false,
-        onClick: noop,
-      }
-    ) {
+    getToggleProps(props = {}) {
+      const {disabled = false, onClick = noop, ...rest} = props;
       return {
         type: 'button',
         role: 'button',
@@ -113,14 +109,18 @@ export default function useCollapse(initialConfig = {}) {
         onClick: disabled ? noop : callAll(onClick, toggleOpen),
       };
     },
-    getCollapseProps(
-      {style, onTransitionEnd, ...rest} = {style: {}, onTransitionEnd: noop}
-    ) {
+    getCollapseProps(props = {}) {
+      const {
+        style = {},
+        onTransitionEnd = noop,
+        refKey = 'ref',
+        ...rest
+      } = props;
       return {
         id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': isOpen ? null : 'true',
         ...rest,
-        ref: el,
+        [refKey]: el,
         onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
         style: {
           // Default transition duration and timing function, so height will transition
