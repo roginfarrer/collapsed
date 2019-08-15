@@ -1,5 +1,5 @@
 import {renderHook, cleanup} from 'react-hooks-testing-library';
-import {useLayoutEffectAfterMount} from '../hooks';
+import {useEffectAfterMount} from '../hooks';
 // add custom jest matchers from jest-dom
 import 'jest-dom/extend-expect';
 
@@ -12,7 +12,7 @@ test('', () => {
   let x = 0;
   const {rerender} = renderHook(() => {
     x++;
-    return useLayoutEffectAfterMount(cb, [x]);
+    return useEffectAfterMount(cb, [x]);
   });
 
   expect(cb).not.toHaveBeenCalled();

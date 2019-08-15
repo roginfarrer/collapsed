@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect, useLayoutEffect, useMemo} from 'react';
+import {useState, useRef, useEffect, useMemo} from 'react';
 
 export function useStateOrProps({isOpen, defaultOpen}) {
   const [open, setOpen] = useState(defaultOpen || false);
@@ -6,9 +6,9 @@ export function useStateOrProps({isOpen, defaultOpen}) {
   return [definedOpen, setOpen];
 }
 
-export function useLayoutEffectAfterMount(cb, dependencies) {
+export function useEffectAfterMount(cb, dependencies) {
   const justMounted = useRef(true);
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!justMounted.current) {
       return cb();
     }

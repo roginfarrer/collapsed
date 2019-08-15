@@ -112,7 +112,7 @@ test('Re-render does not modify id', () => {
   expect(collapseId).toEqual(collapse.getAttribute('id'));
 });
 
-test('clicking the toggle expands the collapse', () => {
+test.skip('clicking the toggle expands the collapse', () => {
   // Mocked since ref element sizes = :( in jsdom
   utils.getElementHeight.mockReturnValue(400);
 
@@ -125,7 +125,7 @@ test('clicking the toggle expands the collapse', () => {
   expect(collapse.style.height).toBe('400px');
 });
 
-test('clicking the toggle closes the collapse', () => {
+test.skip('clicking the toggle closes the collapse', () => {
   // Mocked since ref element sizes = :( in jsdom
   utils.getElementHeight.mockReturnValue(0);
 
