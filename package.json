@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
   "main": "dist/react-collapsed.cjs.js",
   "module": "dist/react-collapsed.esm.js",
