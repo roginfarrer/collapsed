@@ -8,61 +8,66 @@ import {
   joinTransitionProperties,
   defaultTransitionStyles,
 } from './utils';
-import {useUniqueId, useLayoutEffectAfterMount, useStateOrProps} from './hooks';
+import {useUniqueId, useEffectAfterMount, useStateOrProps} from './hooks';
 
 export default function useCollapse(initialConfig = {}) {
   const uniqueId = useUniqueId();
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
-  const [shouldAnimateOpen, setShouldAnimateOpen] = useState(null);
-  const [heightAtTransition, setHeightAtTransition] = useState(0);
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
   const {expandStyles, collapseStyles} = useMemo(
     () => makeTransitionStyles(initialConfig),
     [initialConfig]
   );
   const [styles, setStyles] = useState(
-    isOpen ? null : {display: collapsedHeight === '0px' ? 'none' : 'block', height: collapsedHeight, overflow: 'hidden'}
+    isOpen
+      ? null
+      : {
+          display: collapsedHeight === '0px' ? 'none' : 'block',
+          height: collapsedHeight,
+          overflow: 'hidden',
+        }
   );
   const [mountChildren, setMountChildren] = useState(isOpen);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
-  useLayoutEffectAfterMount(() => {
+  useEffectAfterMount(() => {
     if (isOpen) {
-      setMountChildren(true);
-      setStyles(oldStyles => ({
-        ...oldStyles,
-        ...expandStyles,
-        display: 'block',
-        overflow: 'hidden',
-      }));
-      setShouldAnimateOpen(true);
-    } else {
-      const height = getElementHeight(el);
-      setStyles(oldStyles => ({...oldStyles, ...collapseStyles, height}));
-      setShouldAnimateOpen(false);
-    }
-  }, [isOpen]);
-
-  useLayoutEffectAfterMount(() => {
-    const height = getElementHeight(el);
-    if (shouldAnimateOpen) {
-      setStyles(oldStyles => ({...oldStyles, height}));
-      setHeightAtTransition(height);
-    } else {
-      // requstAnimationFrame required to transition, otherwise will flash closed
       raf(() => {
+        setMountChildren(true);
         setStyles(oldStyles => ({
           ...oldStyles,
-          height: collapsedHeight,
+          ...expandStyles,
+          willChange: 'height',
+          display: 'block',
           overflow: 'hidden',
         }));
-        setHeightAtTransition(height);
+        raf(() => {
+          const height = getElementHeight(el);
+          setStyles(oldStyles => ({...oldStyles, height}));
+        });
+      });
+    } else {
+      raf(() => {
+        const height = getElementHeight(el);
+        setStyles(oldStyles => ({
+          ...oldStyles,
+          ...collapseStyles,
+          willChange: 'height',
+          height,
+        }));
+        raf(() => {
+          setStyles(oldStyles => ({
+            ...oldStyles,
+            height: collapsedHeight,
+            overflow: 'hidden',
+          }));
+        });
       });
     }
-  }, [shouldAnimateOpen]);
+  }, [isOpen]);
 
   const handleTransitionEnd = e => {
     // Sometimes onTransitionEnd is triggered by another transition,
@@ -72,18 +77,22 @@ export default function useCollapse(initialConfig = {}) {
       return;
     }
 
-    const height = getElementHeight(el);
-    if (isOpen && height !== heightAtTransition) {
-      setHeightAtTransition(height);
-      setStyles(oldStyles => ({...oldStyles, height}));
-      return;
-    }
-
+    // The height comparisons below are a final check before completing the transition
+    // Sometimes this callback is run even though we've already begun transitioning the other direction
+    // The conditions give us the opportunity to bail out, which will prevent the collapsed content from flashing on the screen
     if (isOpen) {
-      setStyles();
-    } else {
+      const height = getElementHeight(el);
+      // If the height at the end of the transition matches the height we're animating to,
+      // it's safe to clear all style overrides
+      if (height === styles.height) {
+        setStyles({});
+      }
+      // If the height we should be animating to matches the collapsed height,
+      // it's safe to apply the collapsed overrides
+    } else if (styles.height === collapsedHeight) {
       setMountChildren(false);
       setStyles({
+        willChange: '',
         overflow: 'hidden',
         display: collapsedHeight === '0px' ? 'none' : 'block',
         height: collapsedHeight,
