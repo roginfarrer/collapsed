@@ -15,19 +15,19 @@ export default function useCollapse(initialConfig = {}) {
   const el = useRef(null);
   const [isOpen, setOpen] = useStateOrProps(initialConfig);
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
+  const collapsedStyles = useMemo(
+    () => ({
+      display: collapsedHeight === '0px' ? 'none' : 'block',
+      height: collapsedHeight,
+      overflow: 'hidden',
+    }),
+    [collapsedHeight]
+  );
   const {expandStyles, collapseStyles} = useMemo(
     () => makeTransitionStyles(initialConfig),
     [initialConfig]
   );
-  const [styles, setStyles] = useState(
-    isOpen
-      ? null
-      : {
-          display: collapsedHeight === '0px' ? 'none' : 'block',
-          height: collapsedHeight,
-          overflow: 'hidden',
-        }
-  );
+  const [styles, setStyles] = useState(isOpen ? {} : collapsedStyles);
   const [mountChildren, setMountChildren] = useState(isOpen);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,12 +91,7 @@ export default function useCollapse(initialConfig = {}) {
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {
       setMountChildren(false);
-      setStyles({
-        willChange: '',
-        overflow: 'hidden',
-        display: collapsedHeight === '0px' ? 'none' : 'block',
-        height: collapsedHeight,
-      });
+      setStyles(collapsedStyles);
     }
   };
 
