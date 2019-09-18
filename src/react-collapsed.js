@@ -86,6 +86,8 @@ export default function useCollapse(initialConfig = {}) {
       // it's safe to clear all style overrides
       if (height === styles.height) {
         setStyles({});
+      } else {
+        setStyles({height});
       }
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
