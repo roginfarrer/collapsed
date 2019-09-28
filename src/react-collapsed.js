@@ -86,6 +86,10 @@ export default function useCollapse(initialConfig = {}) {
       // it's safe to clear all style overrides
       if (height === styles.height) {
         setStyles({});
+      } else {
+      // If the heights don't match, this could be due the height of the content changing mid-transition
+      // If that's the case, re-trigger the animation to animate to the new height
+        setStyles(oldStyles => ({...oldStyles, height}));
       }
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
