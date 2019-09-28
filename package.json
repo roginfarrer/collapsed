@@ -1,11 +1,12 @@
 {
   "name": "react-collapsed",
-  "version": "2.2.1",
-  "description":
-    "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
+  "version": "2.2.2",
+  "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
   "main": "dist/react-collapsed.cjs.js",
   "module": "dist/react-collapsed.esm.js",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "rm -rf dist/ && rollup -c",
     "dev": "yarn docz dev",
@@ -79,5 +80,10 @@
   "resolutions": {
     "docz-core": "^0.13.7"
   },
-  "eslintIgnore": ["node_modules", "dist", ".docz", "coverage"]
+  "eslintIgnore": [
+    "node_modules",
+    "dist",
+    ".docz",
+    "coverage"
+  ]
 }
