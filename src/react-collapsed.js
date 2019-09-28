@@ -33,41 +33,44 @@ export default function useCollapse(initialConfig = {}) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const toggleOpen = useCallback(() => setOpen(oldOpen => !oldOpen), []);
 
-  useEffectAfterMount(() => {
-    if (isOpen) {
-      raf(() => {
-        setMountChildren(true);
-        setStyles(oldStyles => ({
-          ...oldStyles,
-          ...expandStyles,
-          willChange: 'height',
-          display: 'block',
-          overflow: 'hidden',
-        }));
+  useEffectAfterMount(
+    () => {
+      if (isOpen) {
         raf(() => {
-          const height = getElementHeight(el);
-          setStyles(oldStyles => ({...oldStyles, height}));
-        });
-      });
-    } else {
-      raf(() => {
-        const height = getElementHeight(el);
-        setStyles(oldStyles => ({
-          ...oldStyles,
-          ...collapseStyles,
-          willChange: 'height',
-          height,
-        }));
-        raf(() => {
+          setMountChildren(true);
           setStyles(oldStyles => ({
             ...oldStyles,
-            height: collapsedHeight,
+            ...expandStyles,
+            willChange: 'height',
+            display: 'block',
             overflow: 'hidden',
           }));
+          raf(() => {
+            const height = getElementHeight(el);
+            setStyles(oldStyles => ({...oldStyles, height}));
+          });
         });
-      });
-    }
-  }, [isOpen]);
+      } else {
+        raf(() => {
+          const height = getElementHeight(el);
+          setStyles(oldStyles => ({
+            ...oldStyles,
+            ...collapseStyles,
+            willChange: 'height',
+            height,
+          }));
+          raf(() => {
+            setStyles(oldStyles => ({
+              ...oldStyles,
+              height: collapsedHeight,
+              overflow: 'hidden',
+            }));
+          });
+        });
+      }
+    },
+    [isOpen]
+  );
 
   const handleTransitionEnd = e => {
     // Sometimes onTransitionEnd is triggered by another transition,
@@ -87,8 +90,8 @@ export default function useCollapse(initialConfig = {}) {
       if (height === styles.height) {
         setStyles({});
       } else {
-      // If the heights don't match, this could be due the height of the content changing mid-transition
-      // If that's the case, re-trigger the animation to animate to the new height
+        // If the heights don't match, this could be due the height of the content changing mid-transition
+        // If that's the case, re-trigger the animation to animate to the new height
         setStyles(oldStyles => ({...oldStyles, height}));
       }
       // If the height we should be animating to matches the collapsed height,
