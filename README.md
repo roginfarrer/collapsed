@@ -4,11 +4,11 @@ A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse 
 
 ## Features
 
-* Handles the height of animations of your elements, `auto` included!
-* You control the UI - `useCollapse` provides the necessary props, you control everything else.
-* Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-* Small footprint (< 2kb gzipped)
-* No animation framework required! Simply powered by CSS animations
+- Handles the height of animations of your elements, `auto` included!
+- You control the UI - `useCollapse` provides the necessary props, you control everything else.
+- Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
+- Small footprint (< 2kb gzipped)
+- No animation framework required! Simply powered by CSS animations
 
 ## Demo
 
@@ -106,3 +106,13 @@ The following are optional properties passed into `useCollapse({ })`:
 | isOpen           | Whether or not the collapse is open (if not controlled)                                                     |
 | toggleOpen       | Function that will toggle the state of the collapse panel                                                   |
 | mountChildren    | Whether or not the collapse panel content should be visible                                                 |
+
+## Alternative Solutions
+
+- [react-spring](https://www.react-spring.io/) - JavaScript animation based library that can potentially have smoother animations.
+
+## Possible Issues
+
+- Applying padding to the collapse block (the element receiving `getCollapseProps`) can lead to infinite animations and state updates. [14](https://github.com/roginfarrer/react-collapsed/issues/14)
+
+  **Solution:** Apply the padding to a child element instead.
