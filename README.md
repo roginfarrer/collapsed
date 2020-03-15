@@ -31,7 +31,7 @@ import React from 'react';
 import useCollapse from 'react-collapsed';
 
 function Demo() {
-  const {getCollapseProps, getToggleProps, isOpen} = useCollapse();
+  const { getCollapseProps, getToggleProps, isOpen } = useCollapse();
 
   return (
     <Fragment>
@@ -45,12 +45,12 @@ function Demo() {
 ### Control it yourself
 
 ```js
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import useCollapse from 'react-collapsed';
 
 function Demo() {
   const [isOpen, setOpen] = useState(false);
-  const {getCollapseProps, getToggleProps} = useCollapse({isOpen});
+  const { getCollapseProps, getToggleProps } = useCollapse({ isOpen });
 
   return (
     <Fragment>
