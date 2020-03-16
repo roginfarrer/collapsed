@@ -20,7 +20,7 @@ export function Nested() {
     <React.Fragment>
       <Toggle {...outerToggleProps()}>{outerOpen ? 'Close' : 'Expand'}</Toggle>
       <section {...outerCollapseProps()}>
-        <Collapse>
+        <Collapse style={{ display: 'inline-block' }}>
           <p style={{ margin: 0 }}>
             Friends, Romans, countrymen, lend me your ears;
             <br />

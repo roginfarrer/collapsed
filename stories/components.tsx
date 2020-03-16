@@ -2,31 +2,34 @@ import React from 'react';
 import styled from 'styled-components';
 
 export const Toggle = styled.button`
-  background: #1484e8;
-  box-shadow: -1px 3px 4px #88aed0;
-  border-radius: 8px;
+  background: white;
+  display: inline-block;
+  // box-shadow: -1px 3px 4px #88aed0;
+  box-shadow: 5px 5px 0 black;
+  border: 1px solid black;
+  color: black;
   cursor: pointer;
-  padding: 8px 24px;
+  padding: 12px 24px;
   font-family: Helvetica;
-  color: white;
-  border: 0;
   font-size: 16px;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  transition-timing-function: ease;
+  transition-duration: 150ms;
+  transition-property: all;
+  min-width: 150px;
 
   &:hover,
   &:focus {
-    background: #178ffb;
+    background: rgba(225, 225, 225, 0.8);
   }
   &:active {
-    background: #3782c6;
+    background: black;
+    color: white;
     box-shadow: none;
   }
 `;
 
 export const Content = styled.div`
-  background: #eef0f7;
-  border-radius: 8px;
-  border: 2px solid lightgray;
+  border: 2px solid black;
   color: #212121;
   font-family: Helvetica;
   padding: 12px;
@@ -38,8 +41,13 @@ const CollapseContainer = styled.div`
   margin-top: 8px;
 `;
 
+type CollapseProps = {
+  children: React.ReactNode;
+  style?: {};
+};
+
 export const Collapse = React.forwardRef(
-  (props, ref: React.Ref<HTMLDivElement>) => (
+  (props: CollapseProps, ref?: React.Ref<HTMLDivElement>) => (
     <CollapseContainer {...props} ref={ref}>
       <Content>{props.children}</Content>
     </CollapseContainer>
