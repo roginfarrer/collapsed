@@ -21,6 +21,7 @@ jobs:
     needs: job1
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - uses: borales/actions-yarn@v2.0.0
         with:
           # will run `yarn test` command
@@ -30,6 +31,7 @@ jobs:
     needs: job1
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - uses: borales/actions-yarn@v2.0.0
         with:
           # will run `yarn test` command
