@@ -6,8 +6,10 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "module": "dist/react-collapsed.esm.js",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "start": "tsdx watch",
@@ -33,7 +35,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "module": "dist/collapse-tsdx.esm.js",
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@storybook/addon-a11y": "^5.3.17",
@@ -90,16 +91,6 @@
       }
     }
   },
-  "release": {
-    "branches": [
-      "master",
-      "next",
-      {
-        "name": "beta",
-        "prerelease": true
-      }
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/roginfarrer/react-collapsed.git"
@@ -117,5 +108,8 @@
     "expand",
     "hooks",
     "auto"
-  ]
+  ],
+  "engines": {
+    "node": ">=10"
+  }
 }

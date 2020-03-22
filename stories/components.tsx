@@ -53,4 +53,3 @@ export const Collapse = React.forwardRef(
     </CollapseContainer>
   )
 );
-
