@@ -1,6 +1,7 @@
 # react-collapsed (useCollapse)
 
-![](https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg)
+[![CI](https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg)](https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status)](https://app.netlify.com/sites/react-collapsed-next/deploys)
 
 A custom hook for creating flexible and accessible expand/collapse components in React.
 
