@@ -1,13 +1,16 @@
-# React-Collapsed (useCollapse) 🙈
+# react-collapsed (useCollapse)
 
-A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse components in React.
+A custom hook for creating flexible and accessible expand/collapse components in React.
+
+## v3
+
+This master branch now reflects the development of the next major release of this library. If you're looking for the latest stable source code, [head over to the v2 branch](https://github.com/roginfarrer/react-collapsed/tree/v2).
 
 ## Features
 
 - Handles the height of animations of your elements, `auto` included!
 - You control the UI - `useCollapse` provides the necessary props, you control everything else.
 - Built with accessibility in mind - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
-- Small footprint (< 2kb gzipped)
 - No animation framework required! Simply powered by CSS animations
 
 ## Demo
@@ -17,9 +20,9 @@ A tiny (< 2kb) custom hook for creating flexible and accessible expand/collapse 
 ## Installation
 
 ```bash
-$ yarn add react-collapsed
+$ yarn add react-collapsed@next
 # or
-$ npm i react-collapsed
+$ npm i react-collapsed@next
 ```
 
 ## Usage
