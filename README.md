@@ -1,5 +1,7 @@
 # react-collapsed (useCollapse)
 
+![](https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg)
+
 A custom hook for creating flexible and accessible expand/collapse components in React.
 
 ## v3
