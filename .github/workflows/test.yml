@@ -3,8 +3,8 @@ name: CI
 on: [push]
 
 jobs:
-  build:
-    name: Test
+  job1:
+    name: Install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -16,7 +16,21 @@ jobs:
         with:
           # will run `yarn build` command
           cmd: build
+  job2:
+    name: Test
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
       - uses: borales/actions-yarn@v2.0.0
         with:
           # will run `yarn test` command
           cmd: test
+  job3:
+    name: Lint
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          # will run `yarn test` command
+          cmd: lint
