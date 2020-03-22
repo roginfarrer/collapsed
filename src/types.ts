@@ -7,17 +7,6 @@ export type StateSetter = Dispatch<SetStateAction<boolean>>;
 type ButtonType = 'submit' | 'reset' | 'button';
 type AriaBoolean = boolean | 'true' | 'false';
 
-export interface TransitionStyles {
-  transitionDuration?: string;
-  transitionTimingFunction?: string;
-  transitionProperty?: string;
-}
-
-export interface TransitionConfig {
-  expandStyles: TransitionStyles;
-  collapseStyles: TransitionStyles;
-}
-
 export interface CollapseConfig {
   isOpen?: boolean;
   defaultOpen?: boolean;
@@ -25,6 +14,7 @@ export interface CollapseConfig {
   expandStyles?: {};
   collapseStyles?: {};
   transitionTimingFunction?: string | { expand?: string; collapse?: string };
+  transitionDuration?: number | string;
 }
 
 export interface GetTogglePropsAPI {

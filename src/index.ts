@@ -22,6 +22,7 @@ export default function useCollapse(
   initialConfig: CollapseConfig = {}
 ): CollapseAPI {
   const {
+    transitionDuration = null,
     transitionTimingFunction = easeInOut,
     collapseStyles = {},
     expandStyles = {},
@@ -47,7 +48,7 @@ export default function useCollapse(
     height: number | string,
     state: 'expand' | 'collapse'
   ): { transition: string } {
-    const duration = getAutoHeightDuration(height);
+    const duration = transitionDuration || getAutoHeightDuration(height);
     let curve = transitionTimingFunction;
     if (typeof transitionTimingFunction !== 'string') {
       if (transitionTimingFunction.expand && state === 'expand') {

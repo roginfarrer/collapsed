@@ -1,5 +1,4 @@
 import { RefObject } from 'react';
-import { TransitionStyles } from './types';
 import warning from 'warning';
 
 type AnyFunction = (...args: any[]) => unknown;
@@ -21,9 +20,9 @@ export function getElementHeight(
 export const callAll = (...fns: AnyFunction[]) => (...args: any[]): void =>
   fns.forEach(fn => fn && fn(...args));
 
-export const defaultTransitionStyles: TransitionStyles = {
-  transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
-};
+// export const defaultTransitionStyles: TransitionStyles = {
+//   transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
+// };
 
 export function joinTransitionProperties(string?: string): string {
   if (string) {
@@ -33,28 +32,6 @@ export function joinTransitionProperties(string?: string): string {
   }
   return 'height';
 }
-
-// export function makeTransitionStyles({
-//   expandStyles = defaultTransitionStyles,
-//   collapseStyles = defaultTransitionStyles,
-// }: CollapseConfig): TransitionConfig {
-//   return {
-//     expandStyles: {
-//       ...defaultTransitionStyles,
-//       ...expandStyles,
-//       transitionProperty: joinTransitionProperties(
-//         expandStyles.transitionProperty
-//       ),
-//     },
-//     collapseStyles: {
-//       ...defaultTransitionStyles,
-//       ...collapseStyles,
-//       transitionProperty: joinTransitionProperties(
-//         collapseStyles.transitionProperty
-//       ),
-//     },
-//   };
-// }
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
 export function getAutoHeightDuration(height: number | string): number {
