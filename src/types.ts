@@ -1,7 +1,5 @@
 import { CSSProperties, TransitionEvent, MouseEvent } from 'react';
 
-declare var __DEV__: boolean;
-
 type Dispatch<A> = (value: A) => void;
 type SetStateAction<S> = S | ((prevState: S) => S);
 export type StateSetter = Dispatch<SetStateAction<boolean>>;
