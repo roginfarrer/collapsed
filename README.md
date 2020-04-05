@@ -1,5 +1,6 @@
 # react-collapsed (useCollapse)
 
+[![npm version](http://img.shields.io/npm/v/react-collapsed.svg?style=flat)](https://npmjs.org/package/react-collapsed "View this project on npm")
 [![CI](https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg)](https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status)](https://app.netlify.com/sites/react-collapsed-next/deploys)
 
