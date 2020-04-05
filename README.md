@@ -1,8 +1,9 @@
 # react-collapsed (useCollapse)
 
-[![npm version](http://img.shields.io/npm/v/react-collapsed.svg?style=flat)](https://npmjs.org/package/react-collapsed "View this project on npm")
-[![CI](https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg)](https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status)](https://app.netlify.com/sites/react-collapsed-next/deploys)
+[![CI][ci-badge]][ci]
+![npm bundle size (version)][minzipped-badge]
+[![npm version][npm-badge]][npm-version]
+[![Documentation Netlify Status][netlify-badge]][netlify]
 
 A custom hook for creating flexible and accessible expand/collapse components in React.
 
@@ -123,3 +124,14 @@ The following are optional properties passed into `useCollapse({ })`:
 - Applying padding to the collapse block (the element receiving `getCollapseProps`) can lead to infinite animations and state updates. [14](https://github.com/roginfarrer/react-collapsed/issues/14)
 
   **Solution:** Apply the padding to a child element instead.
+
+[minzipped-badge]: https://img.shields.io/bundlephobia/minzip/react-collapsed/latest
+
+[npm-badge]: http://img.shields.io/npm/v/react-collapsed.svg?style=flat
+[npm-version]: https://npmjs.org/package/react-collapsed "View this project on npm"
+
+[ci-badge]: https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg
+[ci]: https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster
+
+[netlify]: https://app.netlify.com/sites/react-collapsed-next/deploys
+[netlify-badge]: https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status
