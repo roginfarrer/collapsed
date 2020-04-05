@@ -5,8 +5,9 @@ import {
   callAll,
   getElementHeight,
   getAutoHeightDuration,
+  warnPadding,
 } from './utils';
-import { useUniqueId, useEffectAfterMount, useStateOrProps } from './hooks';
+import { useUniqueId, useEffectAfterMount, useControlledState } from './hooks';
 import {
   CollapseConfig,
   CollapseAPI,
@@ -29,13 +30,14 @@ export default function useCollapse(
   } = initialConfig;
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
+  const rafRef = useRef<number>(0);
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
   const collapsedStyles = {
     display: collapsedHeight === '0px' ? 'none' : 'block',
     height: collapsedHeight,
     overflow: 'hidden',
   };
-  const [isOpen, toggleOpen] = useStateOrProps(initialConfig);
+  const [isOpen, toggleOpen] = useControlledState(initialConfig);
   const [styles, setStyles] = useState<CSSProperties>(
     isOpen ? {} : collapsedStyles
   );
@@ -43,6 +45,8 @@ export default function useCollapse(
   const mergeStyles = (newStyles: {}): void => {
     setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
   };
+
+  warnPadding(el);
 
   function getTransitionStyles(
     height: number | string,
@@ -64,7 +68,7 @@ export default function useCollapse(
 
   useEffectAfterMount(() => {
     if (isOpen) {
-      raf(() => {
+      rafRef.current = raf(() => {
         setMountChildren(true);
         mergeStyles({
           ...expandStyles,
@@ -72,16 +76,14 @@ export default function useCollapse(
           display: 'block',
           overflow: 'hidden',
         });
-        raf(() => {
-          const height = getElementHeight(el);
-          mergeStyles({
-            ...getTransitionStyles(height, 'expand'),
-            height,
-          });
+        const height = getElementHeight(el);
+        mergeStyles({
+          ...getTransitionStyles(height, 'expand'),
+          height,
         });
       });
     } else {
-      raf(() => {
+      rafRef.current = raf(() => {
         const height = getElementHeight(el);
         mergeStyles({
           ...collapseStyles,
@@ -89,14 +91,15 @@ export default function useCollapse(
           willChange: 'height',
           height,
         });
-        raf(() => {
-          mergeStyles({
-            height: collapsedHeight,
-            overflow: 'hidden',
-          });
+        mergeStyles({
+          height: collapsedHeight,
+          overflow: 'hidden',
         });
       });
     }
+    return () => {
+      raf.cancel(rafRef.current);
+    };
   }, [isOpen]);
 
   const handleTransitionEnd = (e: TransitionEvent): void => {
@@ -111,16 +114,18 @@ export default function useCollapse(
     // Sometimes this callback is run even though we've already begun transitioning the other direction
     // The conditions give us the opportunity to bail out, which will prevent the collapsed content from flashing on the screen
     if (isOpen) {
-      const height = getElementHeight(el);
-      // If the height at the end of the transition matches the height we're animating to,
-      // it's safe to clear all style overrides
-      if (height === styles.height) {
-        setStyles({});
-      } else {
-        // If the heights don't match, this could be due the height of the content changing mid-transition
-        // If that's the case, re-trigger the animation to animate to the new height
-        mergeStyles({ height });
-      }
+      raf(() => {
+        const height = getElementHeight(el);
+        // If the height at the end of the transition matches the height we're animating to,
+        // it's safe to clear all style overrides
+        if (height === styles.height) {
+          setStyles({});
+        } else {
+          // If the heights don't match, this could be due the height of the content changing mid-transition
+          // If that's the case, re-trigger the animation to animate to the new height
+          mergeStyles({ height });
+        }
+      });
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {

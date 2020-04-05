@@ -1,6 +1,12 @@
 import React from 'react';
 import useCollapse from '../src';
 import { Toggle, Collapse } from './components';
+import { withA11y } from '@storybook/addon-a11y';
+
+export default {
+  title: 'Unmount content on collapse',
+  decorators: [withA11y],
+};
 
 export function Unmount() {
   const {
