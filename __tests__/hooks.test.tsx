@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { render } from '@testing-library/react';
-import { useEffectAfterMount, useControlledState } from '../hooks';
+import { useEffectAfterMount, useControlledState } from '../src/hooks';
 
 describe('useEffectAfterMount', () => {
   it('does not run callback on first render', () => {

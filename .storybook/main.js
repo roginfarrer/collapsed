@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   stories: ['../stories/**/*.stories.(ts|tsx)'],
   addons: [
@@ -23,6 +25,11 @@ module.exports = {
     });
 
     config.resolve.extensions.push('.ts', '.tsx');
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __DEV__: JSON.stringify(process.env.NODE_ENV),
+      })
+    );
 
     return config;
   },

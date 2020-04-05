@@ -71,7 +71,8 @@
     "ts-loader": "^6.2.1",
     "tsdx": "^0.12.3",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "webpack": "^4.42.1"
   },
   "dependencies": {
     "raf": "^3.4.1",
@@ -80,7 +81,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/src/__tests__/setupTests.ts"
+      "<rootDir>/__tests__/setupTests.ts"
     ],
     "globals": {
       "__DEV__": true

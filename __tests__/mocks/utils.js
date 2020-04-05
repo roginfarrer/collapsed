@@ -1,4 +1,4 @@
-const actualUtils = require.requireActual('../../utils');
+const actualUtils = require.requireActual('../../src/utils.ts');
 
 Object.defineProperty(window, 'getComputedStyle', {
   value: jest.fn(),
