@@ -1,11 +1,11 @@
 import { useState, useRef, TransitionEvent, CSSProperties } from 'react';
-import raf from 'raf';
 import {
   noop,
   callAll,
   getElementHeight,
   getAutoHeightDuration,
   warnPadding,
+  rAF,
 } from './utils';
 import { useUniqueId, useEffectAfterMount, useControlledState } from './hooks';
 import {
@@ -23,8 +23,8 @@ export default function useCollapse(
   initialConfig: CollapseConfig = {}
 ): CollapseAPI {
   const {
-    transitionDuration = null,
-    transitionTimingFunction = easeInOut,
+    duration = null,
+    easing = easeInOut,
     collapseStyles = {},
     expandStyles = {},
   } = initialConfig;
@@ -52,23 +52,23 @@ export default function useCollapse(
     height: number | string,
     state: 'expand' | 'collapse'
   ): { transition: string } {
-    const duration = transitionDuration || getAutoHeightDuration(height);
-    let curve = transitionTimingFunction;
-    if (typeof transitionTimingFunction !== 'string') {
-      if (transitionTimingFunction.expand && state === 'expand') {
-        curve = transitionTimingFunction.expand;
-      } else if (transitionTimingFunction.collapse && state === 'collapse') {
-        curve = transitionTimingFunction.collapse;
+    const _duration = duration || getAutoHeightDuration(height);
+    let _easing = easing;
+    if (typeof easing !== 'string') {
+      if (easing.expand && state === 'expand') {
+        _easing = easing.expand;
+      } else if (easing.collapse && state === 'collapse') {
+        _easing = easing.collapse;
       }
     }
     return {
-      transition: `height ${duration}ms ${curve}`,
+      transition: `height ${_duration}ms ${_easing}`,
     };
   }
 
   useEffectAfterMount(() => {
     if (isOpen) {
-      rafRef.current = raf(() => {
+      rafRef.current = rAF(() => {
         setMountChildren(true);
         mergeStyles({
           ...expandStyles,
@@ -83,7 +83,7 @@ export default function useCollapse(
         });
       });
     } else {
-      rafRef.current = raf(() => {
+      rafRef.current = rAF(() => {
         const height = getElementHeight(el);
         mergeStyles({
           ...collapseStyles,
@@ -98,7 +98,7 @@ export default function useCollapse(
       });
     }
     return () => {
-      raf.cancel(rafRef.current);
+      rAF.cancel(rafRef.current);
     };
   }, [isOpen]);
 
@@ -114,18 +114,14 @@ export default function useCollapse(
     // Sometimes this callback is run even though we've already begun transitioning the other direction
     // The conditions give us the opportunity to bail out, which will prevent the collapsed content from flashing on the screen
     if (isOpen) {
-      raf(() => {
-        const height = getElementHeight(el);
-        // If the height at the end of the transition matches the height we're animating to,
-        // it's safe to clear all style overrides
-        if (height === styles.height) {
-          setStyles({});
-        } else {
-          // If the heights don't match, this could be due the height of the content changing mid-transition
-          // If that's the case, re-trigger the animation to animate to the new height
-          mergeStyles({ height });
-        }
-      });
+      const height = getElementHeight(el);
+      // If the height at the end of the transition matches the height we're animating to,
+      if (height === styles.height) {
+        setStyles({});
+      } else {
+        // If the heights don't match, this could be due the height of the content changing mid-transition
+        mergeStyles({ height });
+      }
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {

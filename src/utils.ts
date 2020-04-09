@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 import warning from 'tiny-warning';
+import raf from 'raf';
 
 type AnyFunction = (...args: any[]) => unknown;
 
@@ -69,3 +70,8 @@ if (__DEV__) {
 }
 
 export { warnPadding };
+
+export function rAF(cb: () => void) {
+  return raf(() => raf(cb));
+}
+rAF.cancel = raf.cancel;

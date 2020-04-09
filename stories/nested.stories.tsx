@@ -38,11 +38,6 @@ function InnerCollapse() {
         <br />
         Come I to speak in Caesar’s funeral.
       </p>
-      {!isOpen && (
-        <Toggle {...getToggleProps({ style: { display: 'block' } })}>
-          Read more?
-        </Toggle>
-      )}
       <p {...getCollapseProps({ style: { margin: 0 } })}>
         He was my friend, faithful and just to me:
         <br />
@@ -60,11 +55,11 @@ function InnerCollapse() {
         <br />
         Ambition should be made of sterner stuff:
       </p>
-      {isOpen && (
-        <Toggle {...getToggleProps({ style: { display: 'block' } })}>
-          Click to collapse
-        </Toggle>
-      )}
+      <Toggle
+        {...getToggleProps({ style: { display: 'block', marginTop: 8 } })}
+      >
+        {isOpen ? 'Click to collapse' : 'Read more?'}
+      </Toggle>
     </>
   );
 }
