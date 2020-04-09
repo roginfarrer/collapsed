@@ -3,12 +3,12 @@ import { render, fireEvent } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { mocked } from 'ts-jest/utils';
 import useCollapse from '../';
-import { getElementHeight } from '../src/utils';
+import { getElementHeight } from '../utils';
 import {
   GetTogglePropsShape,
   GetCollapsePropsShape,
   CollapseConfig,
-} from '../src/types';
+} from '../types';
 
 const mockedGetElementHeight = mocked(getElementHeight, true);
 
