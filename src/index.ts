@@ -30,7 +30,7 @@ export default function useCollapse(
   } = initialConfig;
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
-  const rafRef = useRef<number>(0);
+  const request = useRef<number>(0);
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
   const collapsedStyles = {
     display: collapsedHeight === '0px' ? 'none' : 'block',
@@ -68,7 +68,7 @@ export default function useCollapse(
 
   useEffectAfterMount(() => {
     if (isOpen) {
-      rafRef.current = rAF(() => {
+      request.current = rAF(() => {
         setMountChildren(true);
         mergeStyles({
           ...expandStyles,
@@ -83,7 +83,7 @@ export default function useCollapse(
         });
       });
     } else {
-      rafRef.current = rAF(() => {
+      request.current = rAF(() => {
         const height = getElementHeight(el);
         mergeStyles({
           ...collapseStyles,
@@ -98,7 +98,7 @@ export default function useCollapse(
       });
     }
     return () => {
-      rAF.cancel(rafRef.current);
+      rAF.cancel(request.current);
     };
   }, [isOpen]);
 

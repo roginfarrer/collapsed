@@ -80,7 +80,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/__tests__/setupTests.ts"
+      "<rootDir>/src/__tests__/setupTests.ts"
     ],
     "globals": {
       "__DEV__": true
