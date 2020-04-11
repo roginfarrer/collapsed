@@ -1,4 +1,4 @@
-import { getElementHeight, callAll } from '../src/utils';
+import { getElementHeight, callAll } from '../utils';
 
 const mockRef = {
   current: {

@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
-import warning from 'warning';
+import warning from 'tiny-warning';
+import raf from 'raf';
 
 type AnyFunction = (...args: any[]) => unknown;
 
@@ -10,7 +11,12 @@ export function getElementHeight(
   el: RefObject<HTMLElement> | { current?: { scrollHeight: number } }
 ): string | number {
   if (!el?.current) {
-    warning(true, 'hey a ref is missing');
+    warning(
+      true,
+      `useCollapse was not able to find a ref to the collapse element via \`getCollapseProps\`. Ensure that the element exposes its \`ref\` prop. If it exposes the ref prop under a different name (like \`innerRef\`), use the \`refKey\` property to change it. Example:
+
+{...getCollapseProps({refKey: 'innerRef'})}`
+    );
     return 'auto';
   }
   return el.current.scrollHeight;
@@ -19,10 +25,6 @@ export function getElementHeight(
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
 export const callAll = (...fns: AnyFunction[]) => (...args: any[]): void =>
   fns.forEach(fn => fn && fn(...args));
-
-// export const defaultTransitionStyles: TransitionStyles = {
-//   transitionTimingFunction: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
-// };
 
 export function joinTransitionProperties(string?: string): string {
   if (string) {
@@ -44,3 +46,32 @@ export function getAutoHeightDuration(height: number | string): number {
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10);
 }
+
+type WarnElement = RefObject<HTMLElement> | { current?: HTMLElement };
+// @ts-ignore
+let warnPadding = (element: WarnElement): void => {};
+if (__DEV__) {
+  warnPadding = (element: WarnElement): void => {
+    if (!element.current) {
+      return;
+    }
+    const { paddingTop, paddingBottom } = window.getComputedStyle(
+      element.current
+    );
+    if (
+      (paddingTop && paddingTop !== '0px') ||
+      (paddingBottom && paddingBottom !== '0px')
+    ) {
+      throw new Error(
+        'Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+      );
+    }
+  };
+}
+
+export { warnPadding };
+
+export function rAF(cb: () => void) {
+  return raf(() => raf(cb));
+}
+rAF.cancel = raf.cancel;

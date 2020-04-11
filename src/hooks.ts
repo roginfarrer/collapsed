@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import warning from 'warning';
+import warning from 'tiny-warning';
 
-export function useStateOrProps({
+export function useControlledState({
   isOpen,
   defaultOpen,
 }: {
@@ -9,22 +9,24 @@ export function useStateOrProps({
   defaultOpen?: boolean;
 }): [boolean, () => void] {
   const [stateIsOpen, setStateIsOpen] = useState<boolean>(defaultOpen || false);
-  const { current: isControlled } = useRef(typeof isOpen !== 'undefined');
-  const open = isControlled ? isOpen || false : stateIsOpen;
+  const initiallyControlled = useRef<boolean>(isOpen != null);
+  const open = initiallyControlled.current ? isOpen || false : stateIsOpen;
   const toggleOpen = useCallback(() => {
-    if (!isControlled) {
+    if (!initiallyControlled.current) {
       setStateIsOpen(oldOpen => !oldOpen);
     }
-  }, [isControlled]);
+  }, []);
 
-  warning(
-    !(isControlled && isOpen == null),
-    'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop being passed in.'
-  );
-  warning(
-    !(!isControlled && isOpen != null),
-    'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop being passed in.'
-  );
+  useEffect(() => {
+    warning(
+      !(initiallyControlled.current && isOpen == null),
+      'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop.'
+    );
+    warning(
+      !(!initiallyControlled.current && isOpen != null),
+      'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop.'
+    );
+  }, [isOpen]);
 
   return [open, toggleOpen];
 }

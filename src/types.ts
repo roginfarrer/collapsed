@@ -13,8 +13,8 @@ export interface CollapseConfig {
   collapsedHeight?: number;
   expandStyles?: {};
   collapseStyles?: {};
-  transitionTimingFunction?: string | { expand?: string; collapse?: string };
-  transitionDuration?: number | string;
+  easing?: string | { expand?: string; collapse?: string };
+  duration?: number | string;
 }
 
 export interface GetTogglePropsAPI {

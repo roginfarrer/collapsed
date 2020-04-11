@@ -46,7 +46,7 @@
     "@storybook/addon-storysource": "^5.3.17",
     "@storybook/addons": "^5.3.12",
     "@storybook/react": "^5.3.12",
-    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^9.4.0",
     "@testing-library/react-hooks": "^3.2.1",
     "@types/jest": "^25.1.2",
@@ -54,7 +54,6 @@
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
     "@types/styled-components": "^5.0.1",
-    "@types/warning": "^3.0.0",
     "babel-loader": "^8.0.6",
     "cypress": "^4.2.0",
     "cypress-storybook": "^0.1.1",
@@ -72,16 +71,20 @@
     "ts-loader": "^6.2.1",
     "tsdx": "^0.12.3",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "webpack": "^4.42.1"
   },
   "dependencies": {
     "raf": "^3.4.1",
-    "warning": "^4.0.3"
+    "tiny-warning": "^1.0.3"
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/tests/jest.setup.ts"
-    ]
+      "<rootDir>/src/__tests__/setupTests.ts"
+    ],
+    "globals": {
+      "__DEV__": true
+    }
   },
   "eslintConfig": {
     "extends": [
