@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { RefObject, useState, useRef, useEffect, useCallback } from 'react';
 import warning from 'tiny-warning';
 
 export function useControlledState({
@@ -59,4 +59,30 @@ export function useUniqueId(): number {
   const [id, setId] = useState(0);
   useEffect(() => setId(genId()), []);
   return id;
+}
+
+export function usePaddingWarning(element: RefObject<HTMLElement>): void {
+  // @ts-ignore
+  let warn = (el?: RefObject<HTMLElement>): void => {};
+
+  if (__DEV__) {
+    warn = el => {
+      if (!el?.current) {
+        return;
+      }
+      const { paddingTop, paddingBottom } = window.getComputedStyle(el.current);
+      const shouldWarn =
+        (paddingTop && paddingTop !== '0px') ||
+        (paddingBottom && paddingBottom !== '0px');
+
+      warning(
+        !shouldWarn,
+        'Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+      );
+    };
+  }
+
+  useEffect(() => {
+    warn(element);
+  }, [element]);
 }

@@ -4,10 +4,14 @@ import {
   callAll,
   getElementHeight,
   getAutoHeightDuration,
-  warnPadding,
   rAF,
 } from './utils';
-import { useUniqueId, useEffectAfterMount, useControlledState } from './hooks';
+import {
+  usePaddingWarning,
+  useUniqueId,
+  useEffectAfterMount,
+  useControlledState,
+} from './hooks';
 import {
   CollapseConfig,
   CollapseAPI,
@@ -30,7 +34,9 @@ export default function useCollapse(
   } = initialConfig;
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
+  usePaddingWarning(el);
   const request = useRef<number>(0);
+  const durationRef = useRef<number>(0);
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`;
   const collapsedStyles = {
     display: collapsedHeight === '0px' ? 'none' : 'block',
@@ -46,13 +52,13 @@ export default function useCollapse(
     setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
   };
 
-  warnPadding(el);
+  // warnPadding(el);
 
   function getTransitionStyles(
     height: number | string,
     state: 'expand' | 'collapse'
   ): { transition: string } {
-    const _duration = duration || getAutoHeightDuration(height);
+    durationRef.current = Number(duration || getAutoHeightDuration(height));
     let _easing = easing;
     if (typeof easing !== 'string') {
       if (easing.expand && state === 'expand') {
@@ -62,7 +68,7 @@ export default function useCollapse(
       }
     }
     return {
-      transition: `height ${_duration}ms ${_easing}`,
+      transition: `height ${durationRef.current}ms ${_easing}`,
     };
   }
 
@@ -91,22 +97,56 @@ export default function useCollapse(
           willChange: 'height',
           height,
         });
-        mergeStyles({
-          height: collapsedHeight,
-          overflow: 'hidden',
+        rAF(() => {
+          mergeStyles({
+            height: collapsedHeight,
+            overflow: 'hidden',
+          });
         });
       });
     }
+
     return () => {
       rAF.cancel(request.current);
     };
   }, [isOpen]);
 
+  // useEffectAfterMount(() => {
+  //   console.log('this hits');
+  //   const timer = setTimeout(() => {
+  //     // The height comparisons below are a final check before completing the transition
+  //     // Sometimes this callback is run even though we've already begun transitioning the other direction
+  //     // The conditions give us the opportunity to bail out, which will prevent the collapsed content from flashing on the screen
+  //     console.log({ collapsedHeight, ref: heightRef.current });
+  //     if (isOpen) {
+  //       const height = getElementHeight(el);
+  //       // If the height at the end of the transition matches the height we're animating to,
+  //       console.log(height, heightRef.current);
+  //       if (height === heightRef.current) {
+  //         setStyles({});
+  //       } else {
+  //         // If the heights don't match, this could be due the height of the content changing mid-transition
+  //         mergeStyles({ height });
+  //       }
+  //       // If the height we should be animating to matches the collapsed height,
+  //       // it's safe to apply the collapsed overrides
+  //     } else if (collapsedHeight === heightRef.current) {
+  //       setMountChildren(false);
+  //       setStyles(collapsedStyles);
+  //     }
+  //     setIsAnimating(false);
+  //   }, durationRef.current);
+
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [isAnimating]);
+
   const handleTransitionEnd = (e: TransitionEvent): void => {
     // Sometimes onTransitionEnd is triggered by another transition,
     // such as a nested collapse panel transitioning. But we only
     // want to handle this if this component's element is transitioning
-    if (e.target !== el.current) {
+    if (e.target !== el.current || e.propertyName !== 'height') {
       return;
     }
 
@@ -120,6 +160,7 @@ export default function useCollapse(
         setStyles({});
       } else {
         // If the heights don't match, this could be due the height of the content changing mid-transition
+        rAF.cancel(request.current);
         mergeStyles({ height });
       }
       // If the height we should be animating to matches the collapsed height,
@@ -161,6 +202,7 @@ export default function useCollapse(
       [refKey]: el,
       onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
       style: {
+        boxSizing: 'border-box',
         // additional styles passed, e.g. getCollapseProps({style: {}})
         ...style,
         // style overrides from state

@@ -47,30 +47,6 @@ export function getAutoHeightDuration(height: number | string): number {
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10);
 }
 
-type WarnElement = RefObject<HTMLElement> | { current?: HTMLElement };
-// @ts-ignore
-let warnPadding = (element: WarnElement): void => {};
-if (__DEV__) {
-  warnPadding = (element: WarnElement): void => {
-    if (!element.current) {
-      return;
-    }
-    const { paddingTop, paddingBottom } = window.getComputedStyle(
-      element.current
-    );
-    if (
-      (paddingTop && paddingTop !== '0px') ||
-      (paddingBottom && paddingBottom !== '0px')
-    ) {
-      throw new Error(
-        'Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element.'
-      );
-    }
-  };
-}
-
-export { warnPadding };
-
 export function rAF(cb: () => void) {
   return raf(() => raf(cb));
 }

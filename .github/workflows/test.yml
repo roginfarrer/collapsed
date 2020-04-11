@@ -1,31 +1,41 @@
 name: CI
 on: [push]
-
 jobs:
-  job1:
-    name: Test
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v1
-      - uses: borales/actions-yarn@v2.0.0
+      - name: Begin CI...
+        uses: actions/checkout@v2
+
+      - name: Use Node 12
+        uses: actions/setup-node@v1
         with:
-          # will run `yarn install` command
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
+          node-version: 12.x
+
+      - name: Use cached node_modules
+        uses: actions/cache@v1
         with:
-          # will run `yarn test` command
-          cmd: test
-  job2:
-    name: Lint
-    needs: job1
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn install` command
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn test` command
-          cmd: lint
+          path: node_modules
+          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            nodeModules-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        env:
+          CI: true
+
+      - name: Lint
+        run: yarn lint
+        env:
+          CI: true
+
+      - name: Test
+        run: yarn test --ci --coverage --maxWorkers=2
+        env:
+          CI: true
+
+      - name: Build
+        run: yarn build
+        env:
+          CI: true
