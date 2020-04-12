@@ -189,3 +189,9 @@ test('warns if using padding on collapse', () => {
 
   console.warn = originalWarn;
 });
+
+test('permits access to the collapse ref', () => {
+  let cb = jest.fn();
+  const { queryByTestId } = render(<Collapse collapseProps={{ ref: cb }} />);
+  expect(cb).toHaveBeenCalledWith(queryByTestId('collapse'));
+});

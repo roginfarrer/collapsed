@@ -4,6 +4,7 @@ import {
   callAll,
   getElementHeight,
   getAutoHeightDuration,
+  mergeRefs,
 } from './utils';
 import {
   usePaddingWarning,
@@ -153,11 +154,12 @@ export default function useCollapse({
     refKey = 'ref',
     ...rest
   }: GetCollapsePropsInput = {}): GetCollapsePropsOutput {
+    const theirRef: any = rest[refKey];
     return {
       id: `react-collapsed-panel-${uniqueId}`,
       'aria-hidden': !isExpanded,
       ...rest,
-      [refKey]: el,
+      [refKey]: mergeRefs(el, theirRef),
       onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
       style: {
         boxSizing: 'border-box',

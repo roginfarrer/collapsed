@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 import warning from 'tiny-warning';
+import { AssignableRef } from './types';
 
 type AnyFunction = (...args: any[]) => unknown;
 
@@ -35,4 +36,40 @@ export function getAutoHeightDuration(height: number | string): number {
 
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10);
+}
+
+export function assignRef<RefValueType = any>(
+  ref: AssignableRef<RefValueType> | null | undefined,
+  value: any
+) {
+  if (ref == null) return;
+  if (typeof ref === 'function') {
+    ref(value);
+  } else {
+    try {
+      ref.current = value;
+    } catch (error) {
+      throw new Error(`Cannot assign value "${value}" to ref "${ref}"`);
+    }
+  }
+}
+
+/**
+ * Passes or assigns a value to multiple refs (typically a DOM node). Useful for
+ * dealing with components that need an explicit ref for DOM calculations but
+ * also forwards refs assigned by an app.
+ *
+ * @param refs Refs to fork
+ */
+export function mergeRefs<RefValueType = any>(
+  ...refs: (AssignableRef<RefValueType> | null | undefined)[]
+) {
+  if (refs.every(ref => ref == null)) {
+    return null;
+  }
+  return (node: any) => {
+    refs.forEach(ref => {
+      assignRef(ref, node);
+    });
+  };
 }
