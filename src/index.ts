@@ -102,18 +102,25 @@ export default function useCollapse({
       return;
     }
 
-    // The height comparisons below are a final check before completing the transition
-    // Sometimes this callback is run even though we've already begun transitioning the other direction
-    // The conditions give us the opportunity to bail out, which will prevent the collapsed content from flashing on the screen
+    // The height comparisons below are a final check before
+    // completing the transition
+    // Sometimes this callback is run even though we've already begun
+    // transitioning the other direction
+    // The conditions give us the opportunity to bail out,
+    // which will prevent the collapsed content from flashing on the screen
     if (isOpen) {
       const height = getElementHeight(el);
-      // If the height at the end of the transition matches the height we're animating to,
+
+      // If the height at the end of the transition
+      // matches the height we're animating to,
       if (height === styles.height) {
         setStyles({});
       } else {
-        // If the heights don't match, this could be due the height of the content changing mid-transition
+        // If the heights don't match, this could be due the height
+        // of the content changing mid-transition
         mergeStyles({ height });
       }
+
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {
@@ -127,7 +134,6 @@ export default function useCollapse({
     onClick = noop,
     ...rest
   }: GetTogglePropsShape = {}): GetTogglePropsAPI {
-    // const { disabled = false, onClick = noop, ...rest } = props;
     return {
       type: 'button',
       role: 'button',
@@ -147,12 +153,6 @@ export default function useCollapse({
     refKey = 'ref',
     ...rest
   }: GetCollapsePropsShape = {}): GetCollapsePropsAPI {
-    // const {
-    //   style = {},
-    //   onTransitionEnd = noop,
-    //   refKey = 'ref',
-    //   ...rest
-    // } = props;
     return {
       id: `react-collapsed-panel-${uniqueId}`,
       'aria-hidden': !isOpen,
