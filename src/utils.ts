@@ -1,6 +1,5 @@
 import { RefObject } from 'react';
 import warning from 'tiny-warning';
-import raf from 'raf';
 
 type AnyFunction = (...args: any[]) => unknown;
 
@@ -46,8 +45,3 @@ export function getAutoHeightDuration(height: number | string): number {
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10);
 }
-
-export function rAF(cb: () => void) {
-  return raf(() => raf(cb));
-}
-rAF.cancel = raf.cancel;

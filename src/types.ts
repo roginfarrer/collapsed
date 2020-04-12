@@ -14,7 +14,7 @@ export interface CollapseConfig {
   expandStyles?: {};
   collapseStyles?: {};
   easing?: string | { expand?: string; collapse?: string };
-  duration?: number | string;
+  duration?: number;
 }
 
 export interface GetTogglePropsAPI {
