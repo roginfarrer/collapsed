@@ -6,15 +6,15 @@ import useCollapse from '../src';
 const collapseStyles = { background: 'blue', color: 'white' };
 
 export const Uncontrolled = () => {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
-    defaultOpen: true,
-    isOpen: false,
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+    defaultExpanded: true,
+    isExpanded: false,
   });
 
   return (
     <div>
       <button {...getToggleProps({ style: { marginRight: 4 } })}>
-        {isOpen ? 'Close' : 'Open'}
+        {isExpanded ? 'Close' : 'Open'}
       </button>
       <div
         {...getCollapseProps({

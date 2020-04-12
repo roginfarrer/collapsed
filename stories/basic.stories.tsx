@@ -4,30 +4,28 @@ import { Toggle, Collapse, excerpt } from './components';
 import { withA11y } from '@storybook/addon-a11y';
 
 export const Uncontrolled = () => {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
-    defaultOpen: true,
-    duration: 1000,
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+    defaultExpanded: true,
   });
 
   return (
     <div>
-      <Toggle {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</Toggle>
+      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
-      <p>adding something here</p>
     </div>
   );
 };
 
 export const Controlled = () => {
-  const [isOpen, setOpen] = React.useState<boolean>(true);
+  const [isExpanded, setOpen] = React.useState<boolean>(true);
   const { getCollapseProps, getToggleProps } = useCollapse({
-    isOpen,
+    isExpanded,
   });
 
   return (
     <div>
       <Toggle {...getToggleProps({ onClick: () => setOpen(old => !old) })}>
-        {isOpen ? 'Close' : 'Open'}
+        {isExpanded ? 'Close' : 'Open'}
       </Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
     </div>

@@ -9,14 +9,14 @@ export default {
 };
 
 export const Div = () => {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
-    defaultOpen: true,
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+    defaultExpanded: true,
   });
 
   return (
     <div>
       <Toggle as="div" {...getToggleProps()}>
-        {isOpen ? 'Close' : 'Open'}
+        {isExpanded ? 'Close' : 'Open'}
       </Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
     </div>

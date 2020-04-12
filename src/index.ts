@@ -4,6 +4,7 @@ import {
   callAll,
   getElementHeight,
   getAutoHeightDuration,
+  mergeRefs,
 } from './utils';
 import {
   usePaddingWarning,
@@ -12,12 +13,12 @@ import {
   useControlledState,
 } from './hooks';
 import {
-  CollapseConfig,
-  CollapseAPI,
-  GetCollapsePropsAPI,
-  GetCollapsePropsShape,
-  GetTogglePropsAPI,
-  GetTogglePropsShape,
+  UseCollapseInput,
+  UseCollapseOutput,
+  GetCollapsePropsOutput,
+  GetCollapsePropsInput,
+  GetTogglePropsOutput,
+  GetTogglePropsInput,
 } from './types';
 import raf from 'raf';
 
@@ -29,8 +30,8 @@ export default function useCollapse({
   collapseStyles = {},
   expandStyles = {},
   ...initialConfig
-}: CollapseConfig = {}): CollapseAPI {
-  const [isOpen, toggleOpen] = useControlledState(initialConfig);
+}: UseCollapseInput = {}): UseCollapseOutput {
+  const [isExpanded, toggleExpanded] = useControlledState(initialConfig);
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
   usePaddingWarning(el);
@@ -41,9 +42,9 @@ export default function useCollapse({
     overflow: 'hidden',
   };
   const [styles, setStyles] = useState<CSSProperties>(
-    isOpen ? {} : collapsedStyles
+    isExpanded ? {} : collapsedStyles
   );
-  const [mountChildren, setMountChildren] = useState<boolean>(isOpen);
+  const [mountChildren, setMountChildren] = useState<boolean>(isExpanded);
   const mergeStyles = (newStyles: {}): void => {
     setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
   };
@@ -58,7 +59,7 @@ export default function useCollapse({
   }
 
   useEffectAfterMount(() => {
-    if (isOpen) {
+    if (isExpanded) {
       raf(() => {
         setMountChildren(true);
         mergeStyles({
@@ -92,7 +93,7 @@ export default function useCollapse({
         });
       });
     }
-  }, [isOpen]);
+  }, [isExpanded]);
 
   const handleTransitionEnd = (e: TransitionEvent): void => {
     // Sometimes onTransitionEnd is triggered by another transition,
@@ -108,7 +109,7 @@ export default function useCollapse({
     // transitioning the other direction
     // The conditions give us the opportunity to bail out,
     // which will prevent the collapsed content from flashing on the screen
-    if (isOpen) {
+    if (isExpanded) {
       const height = getElementHeight(el);
 
       // If the height at the end of the transition
@@ -133,17 +134,17 @@ export default function useCollapse({
     disabled = false,
     onClick = noop,
     ...rest
-  }: GetTogglePropsShape = {}): GetTogglePropsAPI {
+  }: GetTogglePropsInput = {}): GetTogglePropsOutput {
     return {
       type: 'button',
       role: 'button',
       id: `react-collapsed-toggle-${uniqueId}`,
       'aria-controls': `react-collapsed-panel-${uniqueId}`,
-      'aria-expanded': isOpen,
+      'aria-expanded': isExpanded,
       tabIndex: 0,
       disabled,
       ...rest,
-      onClick: disabled ? noop : callAll(onClick, toggleOpen),
+      onClick: disabled ? noop : callAll(onClick, toggleExpanded),
     };
   }
 
@@ -152,12 +153,13 @@ export default function useCollapse({
     onTransitionEnd = noop,
     refKey = 'ref',
     ...rest
-  }: GetCollapsePropsShape = {}): GetCollapsePropsAPI {
+  }: GetCollapsePropsInput = {}): GetCollapsePropsOutput {
+    const theirRef: any = rest[refKey];
     return {
       id: `react-collapsed-panel-${uniqueId}`,
-      'aria-hidden': !isOpen,
+      'aria-hidden': !isExpanded,
       ...rest,
-      [refKey]: el,
+      [refKey]: mergeRefs(el, theirRef),
       onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
       style: {
         boxSizing: 'border-box',
@@ -172,8 +174,8 @@ export default function useCollapse({
   return {
     getToggleProps,
     getCollapseProps,
-    isOpen,
-    toggleOpen,
+    isExpanded,
+    toggleExpanded,
     mountChildren,
   };
 }
