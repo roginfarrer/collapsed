@@ -71,13 +71,13 @@ export function usePaddingWarning(element: RefObject<HTMLElement>): void {
         return;
       }
       const { paddingTop, paddingBottom } = window.getComputedStyle(el.current);
-      const shouldWarn =
+      const hasPadding =
         (paddingTop && paddingTop !== '0px') ||
         (paddingBottom && paddingBottom !== '0px');
 
       warning(
-        !shouldWarn,
-        'Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+        !hasPadding,
+        'react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
       );
     };
   }

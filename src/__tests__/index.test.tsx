@@ -178,7 +178,7 @@ test('warns if using padding on collapse', () => {
   );
 
   expect(consoleOutput).toMatchInlineSnapshot(
-    `"Warning: Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element."`
+    `"Warning: react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element."`
   );
 
   console.warn = originalWarn;
