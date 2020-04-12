@@ -87,7 +87,7 @@ describe('useControlledState', () => {
       rerender(<Foo isExpanded />);
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
-        `"Warning: useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isOpen\` prop."`
+        `"Warning: useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
       );
       expect(consoleOutput.length).toBe(1);
     });
@@ -99,7 +99,7 @@ describe('useControlledState', () => {
       rerender(<Foo isExpanded={undefined} />);
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
-        `"Warning: useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isOpen\` prop."`
+        `"Warning: useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
       );
       expect(consoleOutput.length).toBe(1);
     });
