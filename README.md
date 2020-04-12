@@ -131,7 +131,6 @@ The following are optional properties passed into `useCollapse({ })`:
 
 <details>
 <summary>When I apply vertical `padding` to the component that gets `getCollapseProps`, the animation is janky and it doesn't collapse all the way. What gives?
-</details>
 
 The collapse works by manipulating the `height` property. If an element has vertical padding, that padding expandes the size of the element, even if it has `height: 0; overflow: hidden`.
 
@@ -150,6 +149,8 @@ To avoid this, simply move that padding from the element to an element directly 
   </div>
 </div>
 ```
+
+</details>
 
 [minzipped-badge]: https://img.shields.io/bundlephobia/minzip/react-collapsed/latest
 [npm-badge]: http://img.shields.io/npm/v/react-collapsed.svg?style=flat
