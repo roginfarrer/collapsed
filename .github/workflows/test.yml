@@ -1,41 +1,33 @@
 name: CI
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Begin CI...
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Use Node 12
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
 
-      - name: Use cached node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            nodeModules-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        env:
-          CI: true
+    - name: Install Dependencies
+      run: yarn install
 
-      - name: Lint
-        run: yarn lint
-        env:
-          CI: true
+    - name: Build
+      run: yarn build
 
-      - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
-        env:
-          CI: true
+    - name: Test
+      run: yarn test
 
-      - name: Build
-        run: yarn build
-        env:
-          CI: true
+    - name: Build
+      run: yarn build
