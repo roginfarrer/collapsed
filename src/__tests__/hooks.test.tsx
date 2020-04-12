@@ -1,61 +1,67 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { useEffectAfterMount, useControlledState } from '../hooks';
 
 describe('useEffectAfterMount', () => {
   it('does not run callback on first render', () => {
-    const cb = jest.fn();
-
     // Provide a dependency that changes, so it re-renders
     let x = 0;
-    const { rerender } = renderHook(() => {
+    const cb = jest.fn();
+
+    function UseEffectAfterMount() {
       x++;
-      return useEffectAfterMount(cb, [x]);
-    });
+      useEffectAfterMount(cb, [x]);
+      return null;
+    }
+
+    const { rerender } = render(<UseEffectAfterMount />);
 
     expect(cb).not.toHaveBeenCalled();
-    rerender();
+    rerender(<UseEffectAfterMount />);
     expect(cb).toHaveBeenCalled();
   });
 });
 
 describe('useControlledState', () => {
-  it('should match default snapshot', () => {
-    const {
-      result: { current },
-    } = renderHook(() => useControlledState({}));
+  let hookReturn: [boolean, () => void];
 
-    expect(current).toMatchInlineSnapshot(`
-      Array [
-        false,
-        [Function],
-      ]
-    `);
+  function UseControlledState({
+    defaultOpen,
+    isOpen,
+  }: {
+    defaultOpen?: boolean;
+    isOpen?: boolean;
+  }) {
+    const result = useControlledState({ defaultOpen, isOpen });
+
+    hookReturn = result;
+
+    return null;
+  }
+
+  it('returns a boolean and a function', () => {
+    render(<UseControlledState />);
+
+    expect(hookReturn[0]).toBe(false);
+    expect(typeof hookReturn[1]).toBe('function');
   });
 
   it('returns the defaultValue value', () => {
-    const { result } = renderHook(() =>
-      useControlledState({ defaultOpen: true })
-    );
+    render(<UseControlledState defaultOpen />);
 
-    const [value] = result.current;
-
-    expect(value).toBe(true);
+    expect(hookReturn[0]).toBe(true);
   });
 
   it('setter toggles the value', () => {
-    const { result } = renderHook(() =>
-      useControlledState({ defaultOpen: true })
-    );
+    render(<UseControlledState defaultOpen />);
 
-    expect(result.current[0]).toBe(true);
+    expect(hookReturn[0]).toBe(true);
 
     act(() => {
-      result.current[1]();
+      hookReturn[1]();
     });
 
-    expect(result.current[0]).toBe(false);
+    expect(hookReturn[0]).toBe(false);
   });
 
   describe('dev feedback', () => {
@@ -64,7 +70,6 @@ describe('useControlledState', () => {
     const originalWarn = console.warn;
     let consoleOutput: string[] = [];
     const mockWarn = (output: any) => consoleOutput.push(output);
-    console.warn = jest.fn(mockWarn);
 
     beforeEach(() => (console.warn = mockWarn));
     afterEach(() => {

@@ -6,12 +6,14 @@ import { withA11y } from '@storybook/addon-a11y';
 export const Uncontrolled = () => {
   const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
     defaultOpen: true,
+    duration: 1000,
   });
 
   return (
     <div>
       <Toggle {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+      <p>adding something here</p>
     </div>
   );
 };

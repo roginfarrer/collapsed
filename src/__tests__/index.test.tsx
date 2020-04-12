@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { mocked } from 'ts-jest/utils';
 import useCollapse from '../';
 import { getElementHeight } from '../utils';
@@ -42,27 +42,12 @@ test('does not throw', () => {
 
 test('returns expected constants', () => {
   const { result } = renderHook(useCollapse);
-  const {
-    isOpen,
-    getToggleProps,
-    getCollapseProps,
-    toggleOpen,
-  } = result.current;
 
-  expect(typeof isOpen).toBe('boolean');
-  expect(typeof toggleOpen).toBe('function');
-  expect(typeof getToggleProps()).toBe('object');
-  expect(typeof getCollapseProps()).toBe('object');
-});
-
-test('toggleOpen toggles isOpen', () => {
-  const { result } = renderHook(useCollapse);
-  const { toggleOpen } = result.current;
-  act(() => {
-    toggleOpen();
-  });
-  const { isOpen } = result.current;
-  expect(isOpen).toBe(true);
+  expect(result.current.isOpen).toStrictEqual(false);
+  expect(result.current.mountChildren).toStrictEqual(false);
+  expect(typeof result.current.toggleOpen).toBe('function');
+  expect(typeof result.current.getToggleProps()).toBe('object');
+  expect(typeof result.current.getCollapseProps()).toBe('object');
 });
 
 test('Toggle has expected props when closed (default)', () => {
@@ -178,23 +163,23 @@ describe('mountChildren', () => {
 });
 
 test('warns if using padding on collapse', () => {
-  // Even though the error is caught, it still gets printed to the console
-  // so we mock that out to avoid the wall of red text.
-  jest.spyOn(console, 'error');
-  // @ts-ignore
-  console.error.mockImplementation(() => {});
+  // Mocking console.warn so it does not log to the console,
+  // but we can still intercept the message
+  const originalWarn = console.warn;
+  let consoleOutput: string = '';
+  const mockWarn = (output: any) => (consoleOutput = output);
+  console.warn = jest.fn(mockWarn);
 
-  expect(() =>
-    render(
-      <Collapse
-        props={{ defaultOpen: true }}
-        collapseProps={{ style: { padding: 20 } }}
-      />
-    )
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Padding applied to the collapse element in react-collapsed will cause the animation to break, and never end. To fix, apply equivalent padding to the direct descendent of the collapse element."`
+  render(
+    <Collapse
+      props={{ defaultOpen: true }}
+      collapseProps={{ style: { padding: 20 } }}
+    />
   );
 
-  // @ts-ignore
-  console.error.mockRestore();
+  expect(consoleOutput).toMatchInlineSnapshot(
+    `"Warning: react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element."`
+  );
+
+  console.warn = originalWarn;
 });

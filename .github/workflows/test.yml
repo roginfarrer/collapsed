@@ -2,30 +2,32 @@ name: CI
 on: [push]
 
 jobs:
-  job1:
-    name: Test
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v1
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn install` command
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn test` command
-          cmd: test
-  job2:
-    name: Lint
-    needs: job1
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn install` command
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          # will run `yarn test` command
-          cmd: lint
+    - uses: actions/checkout@v2
+
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install Dependencies
+      run: yarn install
+
+    - name: Build
+      run: yarn build
+
+    - name: Test
+      run: yarn test
+
+    - name: Lint
+      run: yarn lint
