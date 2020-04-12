@@ -9,17 +9,10 @@ export default {
 };
 
 function InnerCollapse() {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
-    duration: 1000,
-  });
+  const { getCollapseProps, getToggleProps, isOpen } = useCollapse();
 
   return (
     <>
-      <Toggle
-        {...getToggleProps({ style: { display: 'block', marginTop: 8 } })}
-      >
-        {isOpen ? 'Click to collapse' : 'Read more?'}
-      </Toggle>
       <p style={{ margin: 0 }}>
         Friends, Romans, countrymen, lend me your ears;
         <br />
@@ -62,6 +55,11 @@ function InnerCollapse() {
         <br />
         Ambition should be made of sterner stuff:
       </p>
+      <Toggle
+        {...getToggleProps({ style: { display: 'block', marginTop: 8 } })}
+      >
+        {isOpen ? 'Click to collapse' : 'Read more?'}
+      </Toggle>
     </>
   );
 }
@@ -69,7 +67,6 @@ function InnerCollapse() {
 export function Nested() {
   const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
     defaultOpen: true,
-    duration: 1000,
   });
 
   return (

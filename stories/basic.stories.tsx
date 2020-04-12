@@ -12,9 +12,7 @@ export const Uncontrolled = () => {
   return (
     <div>
       <Toggle {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</Toggle>
-      <Collapse {...getCollapseProps({ style: { padding: 20 } })}>
-        {excerpt}
-      </Collapse>
+      <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
       <p>adding something here</p>
     </div>
   );
