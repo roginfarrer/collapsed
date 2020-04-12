@@ -12,15 +12,15 @@ export function Unmount() {
   const {
     getCollapseProps,
     getToggleProps,
-    isOpen,
+    isExpanded,
     mountChildren,
   } = useCollapse({
-    defaultOpen: true,
+    defaultExpanded: true,
   });
 
   return (
     <React.Fragment>
-      <Toggle {...getToggleProps()}>{isOpen ? 'Close' : 'Open'}</Toggle>
+      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
       <div {...getCollapseProps()}>
         {mountChildren && <Collapse>{excerpt}</Collapse>}
       </div>

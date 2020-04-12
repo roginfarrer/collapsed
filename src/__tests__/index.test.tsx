@@ -5,17 +5,17 @@ import { mocked } from 'ts-jest/utils';
 import useCollapse from '../';
 import { getElementHeight } from '../utils';
 import {
-  GetTogglePropsShape,
-  GetCollapsePropsShape,
-  CollapseConfig,
+  GetTogglePropsInput,
+  GetCollapsePropsInput,
+  UseCollapseInput,
 } from '../types';
 
 const mockedGetElementHeight = mocked(getElementHeight, true);
 
 const Collapse: React.FC<{
-  toggleProps?: GetTogglePropsShape;
-  collapseProps?: GetCollapsePropsShape;
-  props?: CollapseConfig;
+  toggleProps?: GetTogglePropsInput;
+  collapseProps?: GetCollapsePropsInput;
+  props?: UseCollapseInput;
   unmountChildren?: boolean;
 }> = ({ toggleProps, collapseProps, props, unmountChildren = false }) => {
   const { getCollapseProps, getToggleProps, mountChildren } = useCollapse(
@@ -43,9 +43,9 @@ test('does not throw', () => {
 test('returns expected constants', () => {
   const { result } = renderHook(useCollapse);
 
-  expect(result.current.isOpen).toStrictEqual(false);
+  expect(result.current.isExpanded).toStrictEqual(false);
   expect(result.current.mountChildren).toStrictEqual(false);
-  expect(typeof result.current.toggleOpen).toBe('function');
+  expect(typeof result.current.toggleExpanded).toBe('function');
   expect(typeof result.current.getToggleProps()).toBe('object');
   expect(typeof result.current.getCollapseProps()).toBe('object');
 });
@@ -60,7 +60,9 @@ test('Toggle has expected props when closed (default)', () => {
 });
 
 test('Toggle has expected props when collapse is open', () => {
-  const { getByTestId } = render(<Collapse props={{ defaultOpen: true }} />);
+  const { getByTestId } = render(
+    <Collapse props={{ defaultExpanded: true }} />
+  );
   const toggle = getByTestId('toggle');
   expect(toggle.getAttribute('aria-expanded')).toBe('true');
 });
@@ -79,7 +81,9 @@ test('Collapse has expected props when closed (default)', () => {
 });
 
 test('Collapse has expected props when open', () => {
-  const { getByTestId } = render(<Collapse props={{ defaultOpen: true }} />);
+  const { getByTestId } = render(
+    <Collapse props={{ defaultExpanded: true }} />
+  );
   const collapse = getByTestId('collapse');
   expect(collapse).toHaveAttribute('id');
   expect(collapse).toHaveAttribute('aria-hidden', 'false');
@@ -105,7 +109,7 @@ test('Re-render does not modify id', () => {
   const collapse = getByTestId('collapse');
   const collapseId = collapse.getAttribute('id');
 
-  rerender(<Collapse props={{ defaultOpen: true }} />);
+  rerender(<Collapse props={{ defaultExpanded: true }} />);
   expect(collapseId).toEqual(collapse.getAttribute('id'));
 });
 
@@ -126,7 +130,9 @@ test.skip('clicking the toggle closes the collapse', () => {
   // Mocked since ref element sizes = :( in jsdom
   mockedGetElementHeight.mockReturnValue(0);
 
-  const { getByTestId } = render(<Collapse props={{ defaultOpen: true }} />);
+  const { getByTestId } = render(
+    <Collapse props={{ defaultExpanded: true }} />
+  );
   const toggle = getByTestId('toggle');
   const collapse = getByTestId('collapse');
 
@@ -136,10 +142,10 @@ test.skip('clicking the toggle closes the collapse', () => {
   expect(collapse.style.height).toBe('0px');
 });
 
-test('toggle click calls onClick argument with isOpen', () => {
+test('toggle click calls onClick argument with isExpanded', () => {
   const onClick = jest.fn();
   const { getByTestId } = render(
-    <Collapse props={{ defaultOpen: true }} toggleProps={{ onClick }} />
+    <Collapse props={{ defaultExpanded: true }} toggleProps={{ onClick }} />
   );
   const toggle = getByTestId('toggle');
 
@@ -156,7 +162,7 @@ describe('mountChildren', () => {
 
   it('children rendered when mounted open', () => {
     const { queryByText } = render(
-      <Collapse props={{ defaultOpen: true }} unmountChildren />
+      <Collapse props={{ defaultExpanded: true }} unmountChildren />
     );
     expect(queryByText('content')).toBeInTheDocument();
   });
@@ -172,7 +178,7 @@ test('warns if using padding on collapse', () => {
 
   render(
     <Collapse
-      props={{ defaultOpen: true }}
+      props={{ defaultExpanded: true }}
       collapseProps={{ style: { padding: 20 } }}
     />
   );

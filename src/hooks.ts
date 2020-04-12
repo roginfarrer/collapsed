@@ -2,33 +2,37 @@ import { RefObject, useState, useRef, useEffect, useCallback } from 'react';
 import warning from 'tiny-warning';
 
 export function useControlledState({
-  isOpen,
-  defaultOpen,
+  isExpanded,
+  defaultExpanded,
 }: {
-  isOpen?: boolean;
-  defaultOpen?: boolean;
+  isExpanded?: boolean;
+  defaultExpanded?: boolean;
 }): [boolean, () => void] {
-  const [stateIsOpen, setStateIsOpen] = useState<boolean>(defaultOpen || false);
-  const initiallyControlled = useRef<boolean>(isOpen != null);
-  const open = initiallyControlled.current ? isOpen || false : stateIsOpen;
-  const toggleOpen = useCallback(() => {
+  const [stateExpanded, setStateExpanded] = useState<boolean>(
+    defaultExpanded || false
+  );
+  const initiallyControlled = useRef<boolean>(isExpanded != null);
+  const expanded = initiallyControlled.current
+    ? isExpanded || false
+    : stateExpanded;
+  const toggleExpanded = useCallback(() => {
     if (!initiallyControlled.current) {
-      setStateIsOpen(oldOpen => !oldOpen);
+      setStateExpanded(oldExpanded => !oldExpanded);
     }
   }, []);
 
   useEffect(() => {
     warning(
-      !(initiallyControlled.current && isOpen == null),
+      !(initiallyControlled.current && isExpanded == null),
       'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop.'
     );
     warning(
-      !(!initiallyControlled.current && isOpen != null),
+      !(!initiallyControlled.current && isExpanded != null),
       'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isOpen` prop.'
     );
-  }, [isOpen]);
+  }, [isExpanded]);
 
-  return [open, toggleOpen];
+  return [expanded, toggleExpanded];
 }
 
 export function useEffectAfterMount(

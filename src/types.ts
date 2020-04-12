@@ -7,17 +7,17 @@ export type StateSetter = Dispatch<SetStateAction<boolean>>;
 type ButtonType = 'submit' | 'reset' | 'button';
 type AriaBoolean = boolean | 'true' | 'false';
 
-export interface CollapseConfig {
-  isOpen?: boolean;
-  defaultOpen?: boolean;
+export interface UseCollapseInput {
+  isExpanded?: boolean;
+  defaultExpanded?: boolean;
   collapsedHeight?: number;
   expandStyles?: {};
   collapseStyles?: {};
-  easing?: string | { expand?: string; collapse?: string };
+  easing?: string;
   duration?: number;
 }
 
-export interface GetTogglePropsAPI {
+export interface GetTogglePropsOutput {
   disabled: boolean;
   type: ButtonType;
   role: string;
@@ -28,30 +28,30 @@ export interface GetTogglePropsAPI {
   onClick: (e: MouseEvent) => void;
 }
 
-export interface GetTogglePropsShape {
+export interface GetTogglePropsInput {
   [key: string]: unknown;
   disabled?: boolean;
   onClick?: (e: MouseEvent) => void;
 }
 
-export interface GetCollapsePropsAPI {
+export interface GetCollapsePropsOutput {
   id: string;
   onTransitionEnd: (e: TransitionEvent) => void;
   style: CSSProperties;
   'aria-hidden': AriaBoolean;
 }
 
-export interface GetCollapsePropsShape {
+export interface GetCollapsePropsInput {
   [key: string]: unknown;
   style?: CSSProperties;
   onTransitionEnd?: (e: TransitionEvent) => void;
   refKey?: string;
 }
 
-export interface CollapseAPI {
-  getCollapseProps: (config?: GetCollapsePropsShape) => GetCollapsePropsAPI;
-  getToggleProps: (config?: GetTogglePropsShape) => GetTogglePropsAPI;
-  isOpen: boolean;
+export interface UseCollapseOutput {
+  getCollapseProps: (config?: GetCollapsePropsInput) => GetCollapsePropsOutput;
+  getToggleProps: (config?: GetTogglePropsInput) => GetTogglePropsOutput;
+  isExpanded: boolean;
   mountChildren: boolean;
-  toggleOpen: () => void;
+  toggleExpanded: () => void;
 }

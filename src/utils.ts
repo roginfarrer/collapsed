@@ -25,15 +25,6 @@ export function getElementHeight(
 export const callAll = (...fns: AnyFunction[]) => (...args: any[]): void =>
   fns.forEach(fn => fn && fn(...args));
 
-export function joinTransitionProperties(string?: string): string {
-  if (string) {
-    const styles = ['height'];
-    styles.push(...string.split(', '));
-    return styles.join(', ');
-  }
-  return 'height';
-}
-
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
 export function getAutoHeightDuration(height: number | string): number {
   if (!height || typeof height === 'string') {

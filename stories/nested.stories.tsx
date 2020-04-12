@@ -9,7 +9,7 @@ export default {
 };
 
 function InnerCollapse() {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse();
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
     <>
@@ -58,20 +58,20 @@ function InnerCollapse() {
       <Toggle
         {...getToggleProps({ style: { display: 'block', marginTop: 8 } })}
       >
-        {isOpen ? 'Click to collapse' : 'Read more?'}
+        {isExpanded ? 'Click to collapse' : 'Read more?'}
       </Toggle>
     </>
   );
 }
 
 export function Nested() {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse({
-    defaultOpen: true,
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+    defaultExpanded: true,
   });
 
   return (
     <React.Fragment>
-      <Toggle {...getToggleProps()}>{isOpen ? 'Close' : 'Expand'}</Toggle>
+      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Expand'}</Toggle>
       <section {...getCollapseProps()}>
         <Collapse style={{ display: 'inline-block' }}>
           <InnerCollapse />

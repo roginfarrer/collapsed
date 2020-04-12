@@ -26,13 +26,13 @@ describe('useControlledState', () => {
   let hookReturn: [boolean, () => void];
 
   function UseControlledState({
-    defaultOpen,
-    isOpen,
+    defaultExpanded,
+    isExpanded,
   }: {
-    defaultOpen?: boolean;
-    isOpen?: boolean;
+    defaultExpanded?: boolean;
+    isExpanded?: boolean;
   }) {
-    const result = useControlledState({ defaultOpen, isOpen });
+    const result = useControlledState({ defaultExpanded, isExpanded });
 
     hookReturn = result;
 
@@ -47,13 +47,13 @@ describe('useControlledState', () => {
   });
 
   it('returns the defaultValue value', () => {
-    render(<UseControlledState defaultOpen />);
+    render(<UseControlledState defaultExpanded />);
 
     expect(hookReturn[0]).toBe(true);
   });
 
   it('setter toggles the value', () => {
-    render(<UseControlledState defaultOpen />);
+    render(<UseControlledState defaultExpanded />);
 
     expect(hookReturn[0]).toBe(true);
 
@@ -77,14 +77,14 @@ describe('useControlledState', () => {
       consoleOutput = [];
     });
 
-    function Foo({ isOpen }: { isOpen?: boolean }) {
-      useControlledState({ isOpen });
+    function Foo({ isExpanded }: { isExpanded?: boolean }) {
+      useControlledState({ isExpanded });
       return <div />;
     }
 
     it('warns about changing from uncontrolled to controlled', () => {
       const { rerender } = render(<Foo />);
-      rerender(<Foo isOpen />);
+      rerender(<Foo isExpanded />);
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
         `"Warning: useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isOpen\` prop."`
@@ -94,9 +94,9 @@ describe('useControlledState', () => {
 
     it('warns about changing from controlled to uncontrolled', () => {
       // Initially control the value
-      const { rerender } = render(<Foo isOpen={true} />);
+      const { rerender } = render(<Foo isExpanded={true} />);
       // Then re-render without controlling it
-      rerender(<Foo isOpen={undefined} />);
+      rerender(<Foo isExpanded={undefined} />);
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
         `"Warning: useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isOpen\` prop."`
