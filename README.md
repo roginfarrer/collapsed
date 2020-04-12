@@ -130,7 +130,7 @@ The following are optional properties passed into `useCollapse({ })`:
 ## FAQ
 
 <details>
-<summary>When I apply vertical `padding` to the component that gets `getCollapseProps`, the animation is janky and it doesn't collapse all the way. What gives?
+<summary>When I apply vertical `padding` to the component that gets `getCollapseProps`, the animation is janky and it doesn't collapse all the way. What gives?</summary>
 
 The collapse works by manipulating the `height` property. If an element has vertical padding, that padding expandes the size of the element, even if it has `height: 0; overflow: hidden`.
 
