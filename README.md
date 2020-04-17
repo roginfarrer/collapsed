@@ -67,7 +67,7 @@ function Demo() {
     <div>
       <button
         {...getToggleProps({
-          onClick: () => setOpen(oldOpen => !oldOpen),
+          onClick: () => setOpen((oldOpen) => !oldOpen),
         })}
       >
         {isExpanded ? 'Collapse' : 'Expand'}

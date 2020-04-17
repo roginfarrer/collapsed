@@ -30,10 +30,12 @@
     }
   },
   "prettier": {
+    "bracketSpacing": true,
     "printWidth": 80,
     "semi": true,
     "singleQuote": true,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "arrowParens": "always"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

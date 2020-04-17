@@ -24,7 +24,7 @@ export const Controlled = () => {
 
   return (
     <div>
-      <Toggle {...getToggleProps({ onClick: () => setOpen(old => !old) })}>
+      <Toggle {...getToggleProps({ onClick: () => setOpen((old) => !old) })}>
         {isExpanded ? 'Close' : 'Open'}
       </Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
