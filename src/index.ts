@@ -5,13 +5,11 @@ import {
   getElementHeight,
   getAutoHeightDuration,
   mergeRefs,
-} from './utils';
-import {
   usePaddingWarning,
   useUniqueId,
   useEffectAfterMount,
   useControlledState,
-} from './hooks';
+} from './utils';
 import {
   UseCollapseInput,
   UseCollapseOutput,
@@ -33,9 +31,14 @@ export default function useCollapse({
   onExpandEnd = noop,
   onCollapseStart = noop,
   onCollapseEnd = noop,
+  isExpanded: configIsExpanded,
+  defaultExpanded = false,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
-  const [isExpanded, toggleExpanded] = useControlledState(initialConfig);
+  const [isExpanded, toggleExpanded] = useControlledState(
+    configIsExpanded,
+    defaultExpanded
+  );
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
   usePaddingWarning(el);

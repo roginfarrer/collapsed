@@ -6,10 +6,6 @@ import {
   MutableRefObject,
 } from 'react';
 
-type Dispatch<A> = (value: A) => void;
-type SetStateAction<S> = S | ((prevState: S) => S);
-export type StateSetter = Dispatch<SetStateAction<boolean>>;
-
 type ButtonType = 'submit' | 'reset' | 'button';
 type AriaBoolean = boolean | 'true' | 'false';
 
@@ -75,5 +71,5 @@ export interface UseCollapseOutput {
   getCollapseProps: (config?: GetCollapsePropsInput) => GetCollapsePropsOutput;
   getToggleProps: (config?: GetTogglePropsInput) => GetTogglePropsOutput;
   isExpanded: boolean;
-  toggleExpanded: () => void;
+  toggleExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -1,6 +1,17 @@
 import React from 'react';
+import { useEffectAfterMount, useControlledState, callAll } from '../utils';
 import { render, act } from '@testing-library/react';
-import { useEffectAfterMount, useControlledState } from '../hooks';
+
+describe('callAll', () => {
+  it('it calls the two functions passed into it', () => {
+    const functionOne = jest.fn();
+    const functionTwo = jest.fn();
+    const theFunk = callAll(functionOne, functionTwo);
+    theFunk();
+    expect(functionOne).toHaveBeenCalled();
+    expect(functionTwo).toHaveBeenCalled();
+  });
+});
 
 describe('useEffectAfterMount', () => {
   it('does not run callback on first render', () => {
@@ -23,7 +34,7 @@ describe('useEffectAfterMount', () => {
 });
 
 describe('useControlledState', () => {
-  let hookReturn: [boolean, () => void];
+  let hookReturn: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 
   function UseControlledState({
     defaultExpanded,
@@ -32,7 +43,7 @@ describe('useControlledState', () => {
     defaultExpanded?: boolean;
     isExpanded?: boolean;
   }) {
-    const result = useControlledState({ defaultExpanded, isExpanded });
+    const result = useControlledState(isExpanded, defaultExpanded);
 
     hookReturn = result;
 
@@ -58,7 +69,7 @@ describe('useControlledState', () => {
     expect(hookReturn[0]).toBe(true);
 
     act(() => {
-      hookReturn[1]();
+      hookReturn[1]((n) => !n);
     });
 
     expect(hookReturn[0]).toBe(false);
@@ -78,7 +89,7 @@ describe('useControlledState', () => {
     });
 
     function Foo({ isExpanded }: { isExpanded?: boolean }) {
-      useControlledState({ isExpanded });
+      useControlledState(isExpanded);
       return <div />;
     }
 
