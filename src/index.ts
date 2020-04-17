@@ -46,7 +46,7 @@ export default function useCollapse({
   );
   const [mountChildren, setMountChildren] = useState<boolean>(isExpanded);
   const mergeStyles = (newStyles: {}): void => {
-    setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
+    setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }));
   };
 
   function getTransitionStyles(

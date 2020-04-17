@@ -17,7 +17,7 @@ export function useControlledState({
     : stateExpanded;
   const toggleExpanded = useCallback(() => {
     if (!initiallyControlled.current) {
-      setStateExpanded(oldExpanded => !oldExpanded);
+      setStateExpanded((oldExpanded) => !oldExpanded);
     }
   }, []);
 
@@ -70,7 +70,7 @@ export function usePaddingWarning(element: RefObject<HTMLElement>): void {
   let warn = (el?: RefObject<HTMLElement>): void => {};
 
   if (__DEV__) {
-    warn = el => {
+    warn = (el) => {
       if (!el?.current) {
         return;
       }
