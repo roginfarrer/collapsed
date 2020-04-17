@@ -49,7 +49,7 @@ export default function useCollapse({
     isExpanded ? {} : collapsedStyles
   );
   const mergeStyles = (newStyles: {}): void => {
-    setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
+    setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }));
   };
 
   function getTransitionStyles(

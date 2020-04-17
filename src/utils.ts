@@ -24,7 +24,7 @@ export function getElementHeight(
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
 export const callAll = (...fns: AnyFunction[]) => (...args: any[]): void =>
-  fns.forEach(fn => fn && fn(...args));
+  fns.forEach((fn) => fn && fn(...args));
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
 export function getAutoHeightDuration(height: number | string): number {
@@ -64,11 +64,11 @@ export function assignRef<RefValueType = any>(
 export function mergeRefs<RefValueType = any>(
   ...refs: (AssignableRef<RefValueType> | null | undefined)[]
 ) {
-  if (refs.every(ref => ref == null)) {
+  if (refs.every((ref) => ref == null)) {
     return null;
   }
   return (node: any) => {
-    refs.forEach(ref => {
+    refs.forEach((ref) => {
       assignRef(ref, node);
     });
   };
