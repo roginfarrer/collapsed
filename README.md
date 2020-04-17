@@ -23,6 +23,8 @@ This master branch now reflects the development of the next major release of thi
 
 [See the demo site!](https://react-collapsed.netlify.com/)
 
+[CodeSandbox demo](https://codesandbox.io/s/magical-browser-vibv2?file=/src/App.tsx)
+
 ## Installation
 
 ```bash
@@ -67,7 +69,7 @@ function Demo() {
     <div>
       <button
         {...getToggleProps({
-          onClick: () => setOpen(oldOpen => !oldOpen),
+          onClick: () => setOpen((oldOpen) => !oldOpen),
         })}
       >
         {isExpanded ? 'Collapse' : 'Expand'}

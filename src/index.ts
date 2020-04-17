@@ -29,6 +29,10 @@ export default function useCollapse({
   easing = easeInOut,
   collapseStyles = {},
   expandStyles = {},
+  onExpandStart = noop,
+  onExpandEnd = noop,
+  onCollapseStart = noop,
+  onCollapseEnd = noop,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
   const [isExpanded, toggleExpanded] = useControlledState(initialConfig);
@@ -44,7 +48,6 @@ export default function useCollapse({
   const [styles, setStyles] = useState<CSSProperties>(
     isExpanded ? {} : collapsedStyles
   );
-  const [mountChildren, setMountChildren] = useState<boolean>(isExpanded);
   const mergeStyles = (newStyles: {}): void => {
     setStyles(oldStyles => ({ ...oldStyles, ...newStyles }));
   };
@@ -61,7 +64,7 @@ export default function useCollapse({
   useEffectAfterMount(() => {
     if (isExpanded) {
       raf(() => {
-        setMountChildren(true);
+        onExpandStart();
         mergeStyles({
           ...expandStyles,
           willChange: 'height',
@@ -78,6 +81,7 @@ export default function useCollapse({
       });
     } else {
       raf(() => {
+        onCollapseStart();
         const height = getElementHeight(el);
         mergeStyles({
           ...collapseStyles,
@@ -122,11 +126,13 @@ export default function useCollapse({
         mergeStyles({ height });
       }
 
+      onExpandEnd();
+
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {
-      setMountChildren(false);
       setStyles(collapsedStyles);
+      onCollapseEnd();
     }
   };
 
@@ -176,6 +182,5 @@ export default function useCollapse({
     getCollapseProps,
     isExpanded,
     toggleExpanded,
-    mountChildren,
   };
 }

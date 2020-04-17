@@ -16,20 +16,15 @@ const Collapse: React.FC<{
   toggleProps?: GetTogglePropsInput;
   collapseProps?: GetCollapsePropsInput;
   props?: UseCollapseInput;
-  unmountChildren?: boolean;
-}> = ({ toggleProps, collapseProps, props, unmountChildren = false }) => {
-  const { getCollapseProps, getToggleProps, mountChildren } = useCollapse(
-    props
-  );
+}> = ({ toggleProps, collapseProps, props }) => {
+  const { getCollapseProps, getToggleProps } = useCollapse(props);
   return (
     <>
       <div {...getToggleProps(toggleProps)} data-testid="toggle">
         Toggle
       </div>
       <div {...getCollapseProps(collapseProps)} data-testid="collapse">
-        {unmountChildren && mountChildren && (
-          <div style={{ height: 400 }}>content</div>
-        )}
+        {<div style={{ height: 400 }}>content</div>}
       </div>
     </>
   );
@@ -44,7 +39,6 @@ test('returns expected constants', () => {
   const { result } = renderHook(useCollapse);
 
   expect(result.current.isExpanded).toStrictEqual(false);
-  expect(result.current.mountChildren).toStrictEqual(false);
   expect(typeof result.current.toggleExpanded).toBe('function');
   expect(typeof result.current.getToggleProps()).toBe('object');
   expect(typeof result.current.getCollapseProps()).toBe('object');
@@ -151,21 +145,6 @@ test('toggle click calls onClick argument with isExpanded', () => {
 
   fireEvent.click(toggle);
   expect(onClick).toHaveBeenCalled();
-});
-
-describe('mountChildren', () => {
-  it('children not rendered when mounted closed', () => {
-    const { getByTestId } = render(<Collapse unmountChildren />);
-    const collapse = getByTestId('collapse');
-    expect(collapse.textContent).toBe('');
-  });
-
-  it('children rendered when mounted open', () => {
-    const { queryByText } = render(
-      <Collapse props={{ defaultExpanded: true }} unmountChildren />
-    );
-    expect(queryByText('content')).toBeInTheDocument();
-  });
 });
 
 test('warns if using padding on collapse', () => {

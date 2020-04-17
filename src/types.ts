@@ -25,16 +25,6 @@ export type AssignableRef<ValueType> =
     }['bivarianceHack']
   | MutableRefObject<ValueType | null>;
 
-export interface UseCollapseInput {
-  isExpanded?: boolean;
-  defaultExpanded?: boolean;
-  collapsedHeight?: number;
-  expandStyles?: {};
-  collapseStyles?: {};
-  easing?: string;
-  duration?: number;
-}
-
 export interface GetTogglePropsOutput {
   disabled: boolean;
   type: ButtonType;
@@ -67,10 +57,23 @@ export interface GetCollapsePropsInput {
   ref?: (node: ReactNode) => void | null | undefined;
 }
 
+export interface UseCollapseInput {
+  isExpanded?: boolean;
+  defaultExpanded?: boolean;
+  collapsedHeight?: number;
+  expandStyles?: {};
+  collapseStyles?: {};
+  easing?: string;
+  duration?: number;
+  onCollapseStart?: () => void;
+  onCollapseEnd?: () => void;
+  onExpandStart?: () => void;
+  onExpandEnd?: () => void;
+}
+
 export interface UseCollapseOutput {
   getCollapseProps: (config?: GetCollapsePropsInput) => GetCollapsePropsOutput;
   getToggleProps: (config?: GetTogglePropsInput) => GetTogglePropsOutput;
   isExpanded: boolean;
-  mountChildren: boolean;
   toggleExpanded: () => void;
 }
