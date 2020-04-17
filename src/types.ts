@@ -71,5 +71,5 @@ export interface UseCollapseOutput {
   getCollapseProps: (config?: GetCollapsePropsInput) => GetCollapsePropsOutput;
   getToggleProps: (config?: GetTogglePropsInput) => GetTogglePropsOutput;
   isExpanded: boolean;
-  toggleExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -62,14 +62,14 @@ import React, { useState } from 'react';
 import useCollapse from 'react-collapsed';
 
 function Demo() {
-  const [isExpanded, setOpen] = useState(false);
+  const [isExpanded, setExpanded] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded });
 
   return (
     <div>
       <button
         {...getToggleProps({
-          onClick: () => setOpen((oldOpen) => !oldOpen),
+          onClick: () => setExpanded((prevExpanded) => !prevExpanded),
         })}
       >
         {isExpanded ? 'Collapse' : 'Expand'}
@@ -87,8 +87,7 @@ const {
   getCollapseProps,
   getToggleProps,
   isExpanded,
-  toggleOpen,
-  mountChildren,
+  setExpanded,
 } = useCollapse({
   isExpanded: boolean,
   defaultExpanded: boolean,
@@ -97,6 +96,10 @@ const {
   collapsedHeight: 0,
   easing: string,
   duration: number,
+  onCollapseStart: func,
+  onCollapseEnd: func,
+  onExpandStart: func,
+  onExpandEnd: func,
 });
 ```
 
@@ -104,15 +107,19 @@ const {
 
 The following are optional properties passed into `useCollapse({ })`:
 
-| Prop            | Type    | Default                        | Description                                                                                                                                         |
-| --------------- | ------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isExpanded      | boolean | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
-| defaultExpanded | boolean | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
-| expandStyles    | object  | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
-| collapseStyles  | object  | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
-| collapsedHeight | number  | `0`                            | The height of the content when collapsed                                                                                                            |
-| easing          | string  | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
-| duration        | number  | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| Prop            | Type     | Default                        | Description                                                                                                                                         |
+| --------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isExpanded      | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
+| defaultExpanded | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
+| expandStyles    | object   | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
+| collapseStyles  | object   | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
+| collapsedHeight | number   | `0`                            | The height of the content when collapsed                                                                                                            |
+| easing          | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
+| duration        | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| onCollapseStart | function | no-op                          | Handler called when the collapse animation begins                                                                                                   |
+| onCollapseEnd   | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
+| onExpandStart   | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
+| onExpandEnd     | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
 
 ### What you get
 
@@ -121,8 +128,7 @@ The following are optional properties passed into `useCollapse({ })`:
 | getCollapseProps | Function that returns a prop object, which should be spread onto the collapse element                       |
 | getToggleProps   | Function that returns a prop object, which should be spread onto an element that toggles the collapse panel |
 | isExpanded       | Whether or not the collapse is expanded (if not controlled)                                                 |
-| toggleExpanded   | Function that will toggle the expanded state of the collapse panel                                          |
-| mountChildren    | Whether or not the collapse panel content should be visible                                                 |
+| toggleExpanded   | Sets the hook's internal isExpanded state                                                                   |
 
 ## Alternative Solutions
 

@@ -83,7 +83,7 @@ export function useControlledState(
   const expanded = initiallyControlled.current
     ? (isExpanded as boolean)
     : stateExpanded;
-  const toggleExpanded = useCallback((n) => {
+  const setExpanded = useCallback((n) => {
     if (!initiallyControlled.current) {
       setStateExpanded(n);
     }
@@ -100,7 +100,7 @@ export function useControlledState(
     );
   }, [isExpanded]);
 
-  return [expanded, toggleExpanded];
+  return [expanded, setExpanded];
 }
 
 export function useEffectAfterMount(

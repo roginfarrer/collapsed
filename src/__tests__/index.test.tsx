@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import { mocked } from 'ts-jest/utils';
 import useCollapse from '../';
 import { getElementHeight } from '../utils';
@@ -33,15 +32,6 @@ const Collapse: React.FC<{
 test('does not throw', () => {
   const result = () => render(<Collapse />);
   expect(result).not.toThrow();
-});
-
-test('returns expected constants', () => {
-  const { result } = renderHook(useCollapse);
-
-  expect(result.current.isExpanded).toStrictEqual(false);
-  expect(typeof result.current.toggleExpanded).toBe('function');
-  expect(typeof result.current.getToggleProps()).toBe('object');
-  expect(typeof result.current.getCollapseProps()).toBe('object');
 });
 
 test('Toggle has expected props when closed (default)', () => {

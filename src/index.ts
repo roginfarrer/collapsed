@@ -1,4 +1,10 @@
-import { useState, useRef, TransitionEvent, CSSProperties } from 'react';
+import {
+  useState,
+  useRef,
+  useCallback,
+  TransitionEvent,
+  CSSProperties,
+} from 'react';
 import {
   noop,
   callAll,
@@ -35,7 +41,7 @@ export default function useCollapse({
   defaultExpanded = false,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
-  const [isExpanded, toggleExpanded] = useControlledState(
+  const [isExpanded, setExpanded] = useControlledState(
     configIsExpanded,
     defaultExpanded
   );
@@ -51,9 +57,9 @@ export default function useCollapse({
   const [styles, setStyles] = useState<CSSProperties>(
     isExpanded ? {} : collapsedStyles
   );
-  const mergeStyles = (newStyles: {}): void => {
+  const mergeStyles = useCallback((newStyles: {}): void => {
     setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }));
-  };
+  }, []);
 
   function getTransitionStyles(
     height: number | string
@@ -153,7 +159,7 @@ export default function useCollapse({
       tabIndex: 0,
       disabled,
       ...rest,
-      onClick: disabled ? noop : callAll(onClick, toggleExpanded),
+      onClick: disabled ? noop : callAll(onClick, () => setExpanded((n) => !n)),
     };
   }
 
@@ -184,6 +190,6 @@ export default function useCollapse({
     getToggleProps,
     getCollapseProps,
     isExpanded,
-    toggleExpanded,
+    setExpanded,
   };
 }
