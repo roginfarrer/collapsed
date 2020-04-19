@@ -128,7 +128,7 @@ The following are optional properties passed into `useCollapse({ })`:
 | getCollapseProps | Function that returns a prop object, which should be spread onto the collapse element                       |
 | getToggleProps   | Function that returns a prop object, which should be spread onto an element that toggles the collapse panel |
 | isExpanded       | Whether or not the collapse is expanded (if not controlled)                                                 |
-| toggleExpanded   | Sets the hook's internal isExpanded state                                                                   |
+| setExpanded      | Sets the hook's internal isExpanded state                                                                   |
 
 ## Alternative Solutions
 
