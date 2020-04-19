@@ -6,10 +6,6 @@ import {
   MutableRefObject,
 } from 'react';
 
-type Dispatch<A> = (value: A) => void;
-type SetStateAction<S> = S | ((prevState: S) => S);
-export type StateSetter = Dispatch<SetStateAction<boolean>>;
-
 type ButtonType = 'submit' | 'reset' | 'button';
 type AriaBoolean = boolean | 'true' | 'false';
 
@@ -24,16 +20,6 @@ export type AssignableRef<ValueType> =
       bivarianceHack(instance: ValueType | null): void;
     }['bivarianceHack']
   | MutableRefObject<ValueType | null>;
-
-export interface UseCollapseInput {
-  isExpanded?: boolean;
-  defaultExpanded?: boolean;
-  collapsedHeight?: number;
-  expandStyles?: {};
-  collapseStyles?: {};
-  easing?: string;
-  duration?: number;
-}
 
 export interface GetTogglePropsOutput {
   disabled: boolean;
@@ -67,10 +53,23 @@ export interface GetCollapsePropsInput {
   ref?: (node: ReactNode) => void | null | undefined;
 }
 
+export interface UseCollapseInput {
+  isExpanded?: boolean;
+  defaultExpanded?: boolean;
+  collapsedHeight?: number;
+  expandStyles?: {};
+  collapseStyles?: {};
+  easing?: string;
+  duration?: number;
+  onCollapseStart?: () => void;
+  onCollapseEnd?: () => void;
+  onExpandStart?: () => void;
+  onExpandEnd?: () => void;
+}
+
 export interface UseCollapseOutput {
   getCollapseProps: (config?: GetCollapsePropsInput) => GetCollapsePropsOutput;
   getToggleProps: (config?: GetTogglePropsInput) => GetTogglePropsOutput;
   isExpanded: boolean;
-  mountChildren: boolean;
-  toggleExpanded: () => void;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }

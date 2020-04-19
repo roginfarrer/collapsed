@@ -9,13 +9,15 @@ export default {
 };
 
 export function Unmount() {
-  const {
-    getCollapseProps,
-    getToggleProps,
-    isExpanded,
-    mountChildren,
-  } = useCollapse({
+  const [mountChildren, setMountChildren] = React.useState(true);
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
+    onExpandStart() {
+      setMountChildren(true);
+    },
+    onCollapseEnd() {
+      setMountChildren(false);
+    },
   });
 
   return (

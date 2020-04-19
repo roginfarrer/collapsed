@@ -8,7 +8,6 @@ const collapseStyles = { background: 'blue', color: 'white' };
 export const Uncontrolled = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-    isExpanded: false,
   });
 
   return (

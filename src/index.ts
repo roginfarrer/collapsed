@@ -1,17 +1,21 @@
-import { useState, useRef, TransitionEvent, CSSProperties } from 'react';
+import {
+  useState,
+  useRef,
+  useCallback,
+  TransitionEvent,
+  CSSProperties,
+} from 'react';
 import {
   noop,
   callAll,
   getElementHeight,
   getAutoHeightDuration,
   mergeRefs,
-} from './utils';
-import {
   usePaddingWarning,
   useUniqueId,
   useEffectAfterMount,
   useControlledState,
-} from './hooks';
+} from './utils';
 import {
   UseCollapseInput,
   UseCollapseOutput,
@@ -29,9 +33,18 @@ export default function useCollapse({
   easing = easeInOut,
   collapseStyles = {},
   expandStyles = {},
+  onExpandStart = noop,
+  onExpandEnd = noop,
+  onCollapseStart = noop,
+  onCollapseEnd = noop,
+  isExpanded: configIsExpanded,
+  defaultExpanded = false,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
-  const [isExpanded, toggleExpanded] = useControlledState(initialConfig);
+  const [isExpanded, setExpanded] = useControlledState(
+    configIsExpanded,
+    defaultExpanded
+  );
   const uniqueId = useUniqueId();
   const el = useRef<HTMLElement | null>(null);
   usePaddingWarning(el);
@@ -44,10 +57,9 @@ export default function useCollapse({
   const [styles, setStyles] = useState<CSSProperties>(
     isExpanded ? {} : collapsedStyles
   );
-  const [mountChildren, setMountChildren] = useState<boolean>(isExpanded);
-  const mergeStyles = (newStyles: {}): void => {
+  const mergeStyles = useCallback((newStyles: {}): void => {
     setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }));
-  };
+  }, []);
 
   function getTransitionStyles(
     height: number | string
@@ -61,7 +73,7 @@ export default function useCollapse({
   useEffectAfterMount(() => {
     if (isExpanded) {
       raf(() => {
-        setMountChildren(true);
+        onExpandStart();
         mergeStyles({
           ...expandStyles,
           willChange: 'height',
@@ -78,6 +90,7 @@ export default function useCollapse({
       });
     } else {
       raf(() => {
+        onCollapseStart();
         const height = getElementHeight(el);
         mergeStyles({
           ...collapseStyles,
@@ -122,11 +135,13 @@ export default function useCollapse({
         mergeStyles({ height });
       }
 
+      onExpandEnd();
+
       // If the height we should be animating to matches the collapsed height,
       // it's safe to apply the collapsed overrides
     } else if (styles.height === collapsedHeight) {
-      setMountChildren(false);
       setStyles(collapsedStyles);
+      onCollapseEnd();
     }
   };
 
@@ -144,7 +159,7 @@ export default function useCollapse({
       tabIndex: 0,
       disabled,
       ...rest,
-      onClick: disabled ? noop : callAll(onClick, toggleExpanded),
+      onClick: disabled ? noop : callAll(onClick, () => setExpanded((n) => !n)),
     };
   }
 
@@ -175,7 +190,6 @@ export default function useCollapse({
     getToggleProps,
     getCollapseProps,
     isExpanded,
-    toggleExpanded,
-    mountChildren,
+    setExpanded,
   };
 }
