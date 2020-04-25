@@ -7,10 +7,6 @@
 
 A custom hook for creating accessible expand/collapse components in React. Animates the height using CSS transitions from `0` to `auto`.
 
-## v3
-
-This master branch now reflects the development of the next major release of this library. If you're looking for the latest stable source code, [head over to the v2 branch](https://github.com/roginfarrer/react-collapsed/tree/v2).
-
 ## Features
 
 - Handles the height of animations of your elements, `auto` included!
@@ -21,16 +17,16 @@ This master branch now reflects the development of the next major release of thi
 
 ## Demo
 
-[See the demo site!](https://react-collapsed.netlify.com/)
+[See the demo site!](https://react-collapsed.netlify.app/)
 
 [CodeSandbox demo](https://codesandbox.io/s/magical-browser-vibv2?file=/src/App.tsx)
 
 ## Installation
 
 ```bash
-$ yarn add react-collapsed@next
+$ yarn add react-collapsed
 # or
-$ npm i react-collapsed@next
+$ npm i react-collapsed
 ```
 
 ## Usage
@@ -165,5 +161,5 @@ To avoid this, simply move that padding from the element to an element directly 
 [npm-version]: https://npmjs.org/package/react-collapsed 'View this project on npm'
 [ci-badge]: https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg
 [ci]: https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster
-[netlify]: https://app.netlify.com/sites/react-collapsed-next/deploys
+[netlify]: https://app.netlify.com/sites/react-collapsed/deploys
 [netlify-badge]: https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status
