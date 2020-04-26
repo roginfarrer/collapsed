@@ -3,7 +3,7 @@
 [![CI][ci-badge]][ci]
 ![npm bundle size (version)][minzipped-badge]
 [![npm version][npm-badge]][npm-version]
-[![Documentation Netlify Status][netlify-badge]][netlify]
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5a5b0e80-d15e-4983-976d-37fe6bdada7a/deploy-status)](https://app.netlify.com/sites/react-collapsed/deploys)
 
 A custom hook for creating accessible expand/collapse components in React. Animates the height using CSS transitions from `0` to `auto`.
 
