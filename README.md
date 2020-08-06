@@ -160,6 +160,6 @@ To avoid this, simply move that padding from the element to an element directly 
 [npm-badge]: http://img.shields.io/npm/v/react-collapsed.svg?style=flat
 [npm-version]: https://npmjs.org/package/react-collapsed 'View this project on npm'
 [ci-badge]: https://github.com/roginfarrer/react-collapsed/workflows/CI/badge.svg
-[ci]: https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amaster
+[ci]: https://github.com/roginfarrer/react-collapsed/actions?query=workflow%3ACI+branch%3Amain
 [netlify]: https://app.netlify.com/sites/react-collapsed/deploys
 [netlify-badge]: https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status
