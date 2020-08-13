@@ -142,7 +142,7 @@ const useIsomorphicLayoutEffect =
 let serverHandoffComplete = false;
 let id = 0;
 const genId = () => ++id;
-export const useUniqueId = (idFromProps?: string | null) => {
+export function useUniqueId(idFromProps?: string | null) {
   /*
    * If this instance isn't part of the initial render, we don't have to do the
    * double render/patch-up dance. We can just generate the ID and return it.
@@ -175,7 +175,7 @@ export const useUniqueId = (idFromProps?: string | null) => {
     }
   }, []);
   return id != null ? String(id) : undefined;
-};
+}
 
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {
   // @ts-ignore
