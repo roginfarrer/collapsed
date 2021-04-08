@@ -138,7 +138,7 @@ export function useEffectAfterMount(
  * @see Docs https://reach.tech/auto-id
  */
 const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useEffect : useLayoutEffect;
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 let serverHandoffComplete = false;
 let id = 0;
 const genId = () => ++id;
