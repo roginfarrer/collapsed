@@ -1,10 +1,5 @@
-import {
-  useState,
-  useRef,
-  useCallback,
-  TransitionEvent,
-  CSSProperties,
-} from 'react';
+import { useState, useRef, TransitionEvent, CSSProperties } from 'react';
+import { flushSync } from 'react-dom';
 import {
   noop,
   callAll,
@@ -54,12 +49,20 @@ export default function useCollapse({
     height: collapsedHeight,
     overflow: 'hidden',
   };
-  const [styles, setStyles] = useState<CSSProperties>(
+  const [styles, setStylesRaw] = useState<CSSProperties>(
     isExpanded ? {} : collapsedStyles
   );
-  const mergeStyles = useCallback((newStyles: {}): void => {
+  const setStyles = (newStyles: {} | ((oldStyles: {}) => {})): void => {
+    // We rely on reading information from layout
+    // at arbitrary times, so ensure all style changes
+    // happen before we might attempt to read them.
+    flushSync(() => {
+      setStylesRaw(newStyles);
+    });
+  };
+  const mergeStyles = (newStyles: {}): void => {
     setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }));
-  }, []);
+  };
 
   function getTransitionStyles(
     height: number | string
