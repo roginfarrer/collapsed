@@ -10,6 +10,7 @@
   "exports": "dist/react-collapsed.modern.js",
   "unpkg": "dist/react-collapsed.umd.js",
   "types": "dist/index.d.ts",
+  "files": ["src", "dist"],
   "scripts": {
     "watch": "microbundle watch",
     "build": "microbundle",
