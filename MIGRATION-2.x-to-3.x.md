@@ -76,15 +76,15 @@ Now, you must provide a boolean or a function that returns a boolean:
 
 ```javascript
 function Collapse() {
-  const [mountChildren, setMountChildren] = useState(false);
+  const [mountChildren, setMountChildren] = useState(false)
   const { getToggleProps, getCollapseProps } = useCollapse({
     onCollapseEnd() {
-      setMountChildren(false);
+      setMountChildren(false)
     },
     onExpandStart() {
-      setMountChildren(true);
+      setMountChildren(true)
     },
-  });
+  })
 
   return (
     <div>
@@ -93,7 +93,6 @@ function Collapse() {
         {mountChildren && <p>I will only render when expanded!</p>}
       </div>
     </div>
-  );
+  )
 }
 ```
-

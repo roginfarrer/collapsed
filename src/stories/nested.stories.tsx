@@ -1,15 +1,13 @@
-import React from 'react';
-import useCollapse from '../src';
-import { Toggle, Collapse } from './components';
-import { withA11y } from '@storybook/addon-a11y';
+import React from 'react'
+import useCollapse from '..'
+import { Toggle, Collapse } from './components'
 
 export default {
   title: 'Nested Collapses',
-  decorators: [withA11y],
-};
+}
 
 function InnerCollapse() {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
 
   return (
     <>
@@ -61,22 +59,22 @@ function InnerCollapse() {
         {isExpanded ? 'Click to collapse' : 'Read more?'}
       </Toggle>
     </>
-  );
+  )
 }
 
 export function Nested() {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-  });
+  })
 
   return (
-    <React.Fragment>
+    <>
       <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Expand'}</Toggle>
       <section {...getCollapseProps()}>
         <Collapse style={{ display: 'inline-block' }}>
           <InnerCollapse />
         </Collapse>
       </section>
-    </React.Fragment>
-  );
+    </>
+  )
 }

@@ -1,14 +1,14 @@
-import 'react-app-polyfill/ie11';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import useCollapse from '../src';
+import 'react-app-polyfill/ie11'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import useCollapse from '../src'
 
-const collapseStyles = { background: 'blue', color: 'white' };
+const collapseStyles = { background: 'blue', color: 'white' }
 
 export const Uncontrolled = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-  });
+  })
 
   return (
     <div>
@@ -30,15 +30,15 @@ export const Uncontrolled = () => {
         and people going to work.
       </div>
     </div>
-  );
-};
+  )
+}
 
 const App = () => {
   return (
     <div>
       <Uncontrolled />
     </div>
-  );
-};
+  )
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'))

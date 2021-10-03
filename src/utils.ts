@@ -5,14 +5,14 @@ import {
   useEffect,
   useCallback,
   useLayoutEffect,
-} from 'react';
-import warning from 'tiny-warning';
-import { AssignableRef } from './types';
+} from 'react'
+import warning from 'tiny-warning'
+import { AssignableRef } from './types'
 
-type AnyFunction = (...args: any[]) => unknown;
+type AnyFunction = (...args: any[]) => unknown
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const noop = (): void => {};
+export const noop = (): void => {}
 
 export function getElementHeight(
   el: RefObject<HTMLElement> | { current?: { scrollHeight: number } }
@@ -23,40 +23,42 @@ export function getElementHeight(
       `useCollapse was not able to find a ref to the collapse element via \`getCollapseProps\`. Ensure that the element exposes its \`ref\` prop. If it exposes the ref prop under a different name (like \`innerRef\`), use the \`refKey\` property to change it. Example:
 
 {...getCollapseProps({refKey: 'innerRef'})}`
-    );
-    return 'auto';
+    )
+    return 'auto'
   }
-  return el.current.scrollHeight;
+  return el.current.scrollHeight
 }
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
-export const callAll = (...fns: AnyFunction[]) => (...args: any[]): void =>
-  fns.forEach((fn) => fn && fn(...args));
+export const callAll =
+  (...fns: AnyFunction[]) =>
+  (...args: any[]): void =>
+    fns.forEach((fn) => fn && fn(...args))
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
 export function getAutoHeightDuration(height: number | string): number {
   if (!height || typeof height === 'string') {
-    return 0;
+    return 0
   }
 
-  const constant = height / 36;
+  const constant = height / 36
 
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
-  return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10);
+  return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10)
 }
 
 export function assignRef<RefValueType = any>(
   ref: AssignableRef<RefValueType> | null | undefined,
   value: any
 ) {
-  if (ref == null) return;
+  if (ref == null) return
   if (typeof ref === 'function') {
-    ref(value);
+    ref(value)
   } else {
     try {
-      ref.current = value;
+      ref.current = value
     } catch (error) {
-      throw new Error(`Cannot assign value "${value}" to ref "${ref}"`);
+      throw new Error(`Cannot assign value "${value}" to ref "${ref}"`)
     }
   }
 }
@@ -72,57 +74,57 @@ export function mergeRefs<RefValueType = any>(
   ...refs: (AssignableRef<RefValueType> | null | undefined)[]
 ) {
   if (refs.every((ref) => ref == null)) {
-    return null;
+    return null
   }
   return (node: any) => {
     refs.forEach((ref) => {
-      assignRef(ref, node);
-    });
-  };
+      assignRef(ref, node)
+    })
+  }
 }
 
 export function useControlledState(
   isExpanded?: boolean,
   defaultExpanded?: boolean
 ): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
-  const [stateExpanded, setStateExpanded] = useState(defaultExpanded || false);
-  const initiallyControlled = useRef(isExpanded != null);
+  const [stateExpanded, setStateExpanded] = useState(defaultExpanded || false)
+  const initiallyControlled = useRef(isExpanded != null)
   const expanded = initiallyControlled.current
     ? (isExpanded as boolean)
-    : stateExpanded;
+    : stateExpanded
   const setExpanded = useCallback((n) => {
     if (!initiallyControlled.current) {
-      setStateExpanded(n);
+      setStateExpanded(n)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     warning(
       !(initiallyControlled.current && isExpanded == null),
       'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
-    );
+    )
     warning(
       !(!initiallyControlled.current && isExpanded != null),
       'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
-    );
-  }, [isExpanded]);
+    )
+  }, [isExpanded])
 
-  return [expanded, setExpanded];
+  return [expanded, setExpanded]
 }
 
 export function useEffectAfterMount(
   cb: () => void,
   dependencies: unknown[]
 ): void {
-  const justMounted = useRef(true);
+  const justMounted = useRef(true)
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (!justMounted.current) {
-      return cb();
+      return cb()
     }
-    justMounted.current = false;
+    justMounted.current = false
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
+  }, dependencies)
 }
 
 /**
@@ -138,18 +140,18 @@ export function useEffectAfterMount(
  * @see Docs https://reach.tech/auto-id
  */
 const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-let serverHandoffComplete = false;
-let id = 0;
-const genId = () => ++id;
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+let serverHandoffComplete = false
+let id = 0
+const genId = () => ++id
 export function useUniqueId(idFromProps?: string | null) {
   /*
    * If this instance isn't part of the initial render, we don't have to do the
    * double render/patch-up dance. We can just generate the ID and return it.
    */
-  const initialId = idFromProps || (serverHandoffComplete ? genId() : null);
+  const initialId = idFromProps || (serverHandoffComplete ? genId() : null)
 
-  const [id, setId] = useState(initialId);
+  const [id, setId] = useState(initialId)
 
   useIsomorphicLayoutEffect(() => {
     if (id === null) {
@@ -159,10 +161,10 @@ export function useUniqueId(idFromProps?: string | null) {
        * to matter, but you're welcome to measure your app and let us know if
        * it's a problem).
        */
-      setId(genId());
+      setId(genId())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (serverHandoffComplete === false) {
@@ -171,34 +173,34 @@ export function useUniqueId(idFromProps?: string | null) {
        * `useEffect` because it goes after `useLayoutEffect`, ensuring we don't
        * accidentally bail out of the patch-up dance prematurely.
        */
-      serverHandoffComplete = true;
+      serverHandoffComplete = true
     }
-  }, []);
-  return id != null ? String(id) : undefined;
+  }, [])
+  return id != null ? String(id) : undefined
 }
 
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {
   // @ts-ignore
-  let warn = (el?: RefObject<HTMLElement>): void => {};
+  let warn = (el?: RefObject<HTMLElement>): void => {}
 
-  if (__DEV__) {
+  if (process.env.NODE_ENV !== 'production') {
     warn = (el) => {
       if (!el?.current) {
-        return;
+        return
       }
-      const { paddingTop, paddingBottom } = window.getComputedStyle(el.current);
+      const { paddingTop, paddingBottom } = window.getComputedStyle(el.current)
       const hasPadding =
         (paddingTop && paddingTop !== '0px') ||
-        (paddingBottom && paddingBottom !== '0px');
+        (paddingBottom && paddingBottom !== '0px')
 
       warning(
         !hasPadding,
         'react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
-      );
-    };
+      )
+    }
   }
 
   useEffect(() => {
-    warn(element);
-  }, [element]);
+    warn(element)
+  }, [element])
 }
