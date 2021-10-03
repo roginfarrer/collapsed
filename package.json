@@ -1,6 +1,6 @@
 {
   "name": "react-collapsed",
-  "version": "0.0.0-development",
+  "version": "3.2.0",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
@@ -10,7 +10,10 @@
   "exports": "dist/react-collapsed.modern.js",
   "unpkg": "dist/react-collapsed.umd.js",
   "types": "dist/index.d.ts",
-  "files": ["src", "dist"],
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "watch": "microbundle watch",
     "build": "microbundle",
