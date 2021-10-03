@@ -34,11 +34,11 @@ $ npm i react-collapsed
 ### Simple Usage
 
 ```js
-import React from 'react';
-import useCollapse from 'react-collapsed';
+import React from 'react'
+import useCollapse from 'react-collapsed'
 
 function Demo() {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
 
   return (
     <div>
@@ -47,19 +47,19 @@ function Demo() {
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  );
+  )
 }
 ```
 
 ### Control it yourself
 
 ```js
-import React, { useState } from 'react';
-import useCollapse from 'react-collapsed';
+import React, { useState } from 'react'
+import useCollapse from 'react-collapsed'
 
 function Demo() {
-  const [isExpanded, setExpanded] = useState(false);
-  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded });
+  const [isExpanded, setExpanded] = useState(false)
+  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
 
   return (
     <div>
@@ -72,31 +72,27 @@ function Demo() {
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  );
+  )
 }
 ```
 
 ## API
 
 ```js
-const {
-  getCollapseProps,
-  getToggleProps,
-  isExpanded,
-  setExpanded,
-} = useCollapse({
-  isExpanded: boolean,
-  defaultExpanded: boolean,
-  expandStyles: {},
-  collapseStyles: {},
-  collapsedHeight: 0,
-  easing: string,
-  duration: number,
-  onCollapseStart: func,
-  onCollapseEnd: func,
-  onExpandStart: func,
-  onExpandEnd: func,
-});
+const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
+  useCollapse({
+    isExpanded: boolean,
+    defaultExpanded: boolean,
+    expandStyles: {},
+    collapseStyles: {},
+    collapsedHeight: 0,
+    easing: string,
+    duration: number,
+    onCollapseStart: func,
+    onCollapseEnd: func,
+    onExpandStart: func,
+    onExpandEnd: func,
+  })
 ```
 
 ### `useCollapse` Config

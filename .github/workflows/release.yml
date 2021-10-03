@@ -1,0 +1,45 @@
+name: Release npm package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: 'CI'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: yarn build
+      - name: Lint
+        run: yarn lint
+      - name: Test
+        run: yarn test
+
+  release:
+    name: Publish to NPM
+    needs: test
+    # publish only when merged in master on original repo, not on PR
+    if: github.repository == 'roginfarrer/react-collapsed' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: yarn build
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
