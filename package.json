@@ -6,7 +6,7 @@
   "license": "MIT",
   "source": "src/index.ts",
   "module": "dist/react-collapsed.module.js",
-  "main": "dist/react-collapsed.cjs",
+  "main": "dist/react-collapsed.js",
   "exports": "dist/react-collapsed.modern.js",
   "unpkg": "dist/react-collapsed.umd.js",
   "types": "dist/index.d.ts",
