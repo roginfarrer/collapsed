@@ -5,9 +5,9 @@
   "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
   "source": "src/index.ts",
-  "module": "dist/react-collapsed.module.js",
-  "main": "dist/react-collapsed.cjs",
-  "exports": "dist/react-collapsed.modern.js",
+  "main": "dist/react-collapsed.js",
+  "module": "dist/react-collapsed.esm.js",
+  "umd:main": "dist/react-collapsed.umd.js",
   "unpkg": "dist/react-collapsed.umd.js",
   "types": "dist/index.d.ts",
   "files": [
