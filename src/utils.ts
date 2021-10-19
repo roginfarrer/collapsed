@@ -7,7 +7,7 @@ import {
   useLayoutEffect,
 } from 'react'
 import warning from 'tiny-warning'
-import { AssignableRef } from './types'
+import type { AssignableRef } from './types'
 
 type AnyFunction = (...args: any[]) => unknown
 

@@ -1,10 +1,11 @@
 {
+  "include": ["src"],
+  "exclude": ["src/__tests__/**/*", "src/stories/**/*"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["dom", "ESNext"],
     "importHelpers": true,
-    "declaration": true,
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
@@ -18,11 +19,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "@": ["./"],
-      "*": ["src/*", "node_modules/*"]
-    },
     "jsx": "react",
     "esModuleInterop": true,
     "skipLibCheck": true
