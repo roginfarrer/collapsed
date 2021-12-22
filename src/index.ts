@@ -34,6 +34,7 @@ export default function useCollapse({
   onCollapseEnd = noop,
   isExpanded: configIsExpanded,
   defaultExpanded = false,
+  hasDisabledAnimation = false,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
   const [isExpanded, setExpanded] = useControlledState(
@@ -64,9 +65,10 @@ export default function useCollapse({
     setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }))
   }
 
-  function getTransitionStyles(height: number | string): {
-    transition: string
-  } {
+  function getTransitionStyles(height: number | string): CSSProperties {
+    if (hasDisabledAnimation) {
+      return {}
+    }
     const _duration = duration || getAutoHeightDuration(height)
     return {
       transition: `height ${_duration}ms ${easing}`,
