@@ -65,6 +65,7 @@ export interface UseCollapseInput {
   onCollapseEnd?: () => void
   onExpandStart?: () => void
   onExpandEnd?: () => void
+  hasDisabledAnimation?: boolean
 }
 
 export interface UseCollapseOutput {
