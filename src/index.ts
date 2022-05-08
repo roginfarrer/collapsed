@@ -111,7 +111,7 @@ export default function useCollapse({
         })
       })
     }
-  }, [isExpanded])
+  }, [isExpanded, collapsedHeight])
 
   const handleTransitionEnd = (e: TransitionEvent): void => {
     // Sometimes onTransitionEnd is triggered by another transition,
