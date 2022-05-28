@@ -106,8 +106,5 @@
     "hooks",
     "auto"
   ],
-  "engines": {
-    "node": ">=12"
-  },
   "prettier": "eslint-config-rogin/prettier"
 }
