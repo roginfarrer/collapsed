@@ -131,26 +131,41 @@ test('toggle click calls onClick argument with isExpanded', () => {
   expect(onClick).toHaveBeenCalled()
 })
 
-test('warns if using padding on collapse', () => {
-  // Mocking console.warn so it does not log to the console,
-  // but we can still intercept the message
+describe('padding on collapse', () => {
   const originalWarn = console.warn
-  let consoleOutput = ''
-  const mockWarn = (output: any) => (consoleOutput = output)
-  console.warn = jest.fn(mockWarn)
+  let consoleOutput: string[] = []
+  const mockWarn = (output: any) => consoleOutput.push(output)
+  const { rerender } = render(<Collapse />)
 
-  render(
-    <Collapse
-      props={{ defaultExpanded: true }}
-      collapseProps={{ style: { padding: 20 } }}
-    />
-  )
+  beforeEach(() => (console.warn = mockWarn))
+  afterEach(() => {
+    console.warn = originalWarn
+    consoleOutput = []
+  })
 
-  expect(consoleOutput).toMatchInlineSnapshot(
-    `"Warning: react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element."`
-  )
+  it('warns if using padding on collapse', () => {
+    rerender(
+      <Collapse
+        props={{ defaultExpanded: true }}
+        collapseProps={{ style: { padding: 20 } }}
+      />
+    )
 
-  console.warn = originalWarn
+    expect(consoleOutput[0]).toMatchInlineSnapshot(
+      `"Warning: react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element."`
+    )
+  })
+
+  it('doesn`t warn if padding is 0 but in rem', () => {
+    rerender(
+      <Collapse
+        props={{ defaultExpanded: true }}
+        collapseProps={{ style: { padding: '0rem' } }}
+      />
+    )
+
+    expect(consoleOutput.length).toBe(0)
+  })
 })
 
 test('permits access to the collapse ref', () => {

@@ -190,8 +190,8 @@ export function usePaddingWarning(element: RefObject<HTMLElement>): void {
       }
       const { paddingTop, paddingBottom } = window.getComputedStyle(el.current)
       const hasPadding =
-        (paddingTop && paddingTop !== '0px') ||
-        (paddingBottom && paddingBottom !== '0px')
+        (paddingTop && paddingTop !== '0px' && paddingTop !== '0rem') ||
+        (paddingBottom && paddingBottom !== '0px' && paddingTop !== '0rem')
 
       warning(
         !hasPadding,
