@@ -1,4 +1,4 @@
-import { useState, useRef, TransitionEvent, CSSProperties } from 'react'
+import { useState, useId, useRef, TransitionEvent, CSSProperties } from 'react'
 import { flushSync } from 'react-dom'
 import raf from 'raf'
 import {
@@ -8,7 +8,6 @@ import {
   getAutoHeightDuration,
   mergeRefs,
   usePaddingWarning,
-  useUniqueId,
   useEffectAfterMount,
   useControlledState,
 } from './utils'
@@ -41,7 +40,7 @@ export default function useCollapse({
     configIsExpanded,
     defaultExpanded
   )
-  const uniqueId = useUniqueId()
+  const uniqueId = useId()
   const el = useRef<HTMLElement | null>(null)
   usePaddingWarning(el)
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`

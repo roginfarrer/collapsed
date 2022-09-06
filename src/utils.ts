@@ -1,11 +1,4 @@
-import {
-  RefObject,
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-} from 'react'
+import { RefObject, useState, useRef, useEffect, useCallback } from 'react'
 import warning from 'tiny-warning'
 import type { AssignableRef } from './types'
 
@@ -92,11 +85,14 @@ export function useControlledState(
   const expanded = initiallyControlled.current
     ? (isExpanded as boolean)
     : stateExpanded
-  const setExpanded = useCallback((n) => {
-    if (!initiallyControlled.current) {
-      setStateExpanded(n)
-    }
-  }, [])
+  const setExpanded = useCallback(
+    (n: boolean | ((prev: boolean) => boolean)) => {
+      if (!initiallyControlled.current) {
+        setStateExpanded(n)
+      }
+    },
+    []
+  )
 
   useEffect(() => {
     warning(
@@ -125,58 +121,6 @@ export function useEffectAfterMount(
     justMounted.current = false
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies)
-}
-
-/**
- * Taken from Reach
- * https://github.com/reach/reach-ui/blob/d2b88c50caf52f473a7d20a4493e39e3c5e95b7b/packages/auto-id
- *
- * Autogenerate IDs to facilitate WAI-ARIA and server rendering.
- *
- * Note: The returned ID will initially be `null` and will update after a
- * component mounts. Users may need to supply their own ID if they need
- * consistent values for SSR.
- *
- * @see Docs https://reach.tech/auto-id
- */
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
-let serverHandoffComplete = false
-let id = 0
-const genId = () => ++id
-export function useUniqueId(idFromProps?: string | null) {
-  /*
-   * If this instance isn't part of the initial render, we don't have to do the
-   * double render/patch-up dance. We can just generate the ID and return it.
-   */
-  const initialId = idFromProps || (serverHandoffComplete ? genId() : null)
-
-  const [id, setId] = useState(initialId)
-
-  useIsomorphicLayoutEffect(() => {
-    if (id === null) {
-      /*
-       * Patch the ID after render. We do this in `useLayoutEffect` to avoid any
-       * rendering flicker, though it'll make the first render slower (unlikely
-       * to matter, but you're welcome to measure your app and let us know if
-       * it's a problem).
-       */
-      setId(genId())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (serverHandoffComplete === false) {
-      /*
-       * Flag all future uses of `useId` to skip the update dance. This is in
-       * `useEffect` because it goes after `useLayoutEffect`, ensuring we don't
-       * accidentally bail out of the patch-up dance prematurely.
-       */
-      serverHandoffComplete = true
-    }
-  }, [])
-  return id != null ? String(id) : undefined
 }
 
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {
