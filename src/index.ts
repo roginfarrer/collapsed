@@ -1,4 +1,4 @@
-import { useState, useId, useRef, TransitionEvent, CSSProperties } from 'react'
+import { useState, useRef, TransitionEvent, CSSProperties } from 'react'
 import { flushSync } from 'react-dom'
 import raf from 'raf'
 import {
@@ -10,6 +10,7 @@ import {
   usePaddingWarning,
   useEffectAfterMount,
   useControlledState,
+  useId,
 } from './utils'
 import {
   UseCollapseInput,
