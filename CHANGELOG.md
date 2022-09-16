@@ -1,3 +1,7 @@
+Changelog has been moved to [the releases tab](https://github.com/roginfarrer/react-collapsed/releases).
+
+---
+
 # 2.0.0
 
 Complete rewrite using React hooks!
