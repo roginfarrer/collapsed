@@ -1,6 +1,5 @@
 import { useState, useRef, TransitionEvent, CSSProperties } from 'react'
 import { flushSync } from 'react-dom'
-import raf from 'raf'
 import {
   noop,
   callAll,
@@ -77,7 +76,7 @@ export default function useCollapse({
 
   useEffectAfterMount(() => {
     if (isExpanded) {
-      raf(() => {
+      requestAnimationFrame(() => {
         onExpandStart()
         mergeStyles({
           ...expandStyles,
@@ -85,7 +84,7 @@ export default function useCollapse({
           display: 'block',
           overflow: 'hidden',
         })
-        raf(() => {
+        requestAnimationFrame(() => {
           const height = getElementHeight(el)
           mergeStyles({
             ...getTransitionStyles(height),
@@ -94,7 +93,7 @@ export default function useCollapse({
         })
       })
     } else {
-      raf(() => {
+      requestAnimationFrame(() => {
         onCollapseStart()
         const height = getElementHeight(el)
         mergeStyles({
@@ -103,7 +102,7 @@ export default function useCollapse({
           willChange: 'height',
           height,
         })
-        raf(() => {
+        requestAnimationFrame(() => {
           mergeStyles({
             height: collapsedHeight,
             overflow: 'hidden',
