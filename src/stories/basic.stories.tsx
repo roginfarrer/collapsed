@@ -22,12 +22,10 @@ export const Uncontrolled = () => {
 }
 
 export const Controlled = () => {
-  const [isExpanded, setOpen] = React.useState<boolean>(false)
+  const [isExpanded, setOpen] = React.useState<boolean>(true)
   const { getToggleProps, getCollapseProps } = useCollapse({
     isExpanded,
   })
-
-  const p = getCollapseProps({ refKey: 'innerRef' })
 
   return (
     <div>

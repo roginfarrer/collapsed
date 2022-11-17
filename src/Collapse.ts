@@ -39,13 +39,15 @@ export interface CollapseParams {
 export class Collapse {
   isExpanded: boolean
   options!: CollapseParams
-  private collapseElement: HTMLElement | null | undefined = null
   private id!: string
+  private collapseElement: HTMLElement | null | undefined = null
+  private isMounted = false
 
   constructor(params: CollapseParams) {
     this.setOptions(params)
     this.isExpanded = Boolean(this.options.defaultExpanded)
     this.init()
+    this.isMounted = true
   }
 
   init = () => {
@@ -97,8 +99,10 @@ export class Collapse {
     }
     for (const property in styles) {
       const value = styles[property]
-      if (value && target) {
+      if (value) {
         target.style[property] = value
+      } else {
+        target.style.removeProperty(property)
       }
     }
   }
@@ -115,8 +119,7 @@ export class Collapse {
   }
 
   private handleTransitionEnd = (e: TransitionEvent) => {
-    const node = this.options.getCollapseElement()
-    if (e.target !== node || e.propertyName !== 'height') {
+    if (e.propertyName !== 'height') {
       return
     }
 
@@ -136,9 +139,8 @@ export class Collapse {
   }
 
   open = (): void => {
-    console.log('open')
     // don't repeat if already open
-    if (this.isExpanded) {
+    if (this.isExpanded || !this.isMounted) {
       return
     }
 
@@ -178,6 +180,10 @@ export class Collapse {
 
     if (!target) {
       return
+    }
+
+    if (!this.isMounted) {
+      this.init()
     }
 
     this.isExpanded = false
@@ -223,10 +229,9 @@ export class Collapse {
   getToggle = (
     { disabled }: { disabled?: boolean } = { disabled: false }
   ): ToggleProps => {
-    // const isButton = this.toggleElement
-    //   ? this.toggleElement.tagName === 'BUTTON'
-    //   : false
-    const isButton = true
+    const isButton = this.toggleElement
+      ? this.toggleElement.tagName === 'BUTTON'
+      : false
     const props: ToggleProps = {
       onClickHandler: disabled ? () => {} : this.toggle,
       id: `${this.id}-toggle`,

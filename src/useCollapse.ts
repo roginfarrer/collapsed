@@ -27,17 +27,11 @@ export function useCollapse(
 
   const id = useId()
   const collapseEl = useRef<HTMLElement | null>(null)
-  const [toggleEl, setToggleEl] = useState<HTMLElement | null>(null)
   const [isExpanded, setExpanded] = useControlledState(
     propExpanded,
     propDefaultExpanded,
     onExpandedChange
   )
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    isMounted.current = true
-  })
 
   const resolvedOptions: CollapseParams = {
     id,
@@ -47,24 +41,24 @@ export function useCollapse(
     onExpandedChange: setExpanded,
   }
 
-  const [instance] = useState<Collapse>(() => new Collapse(resolvedOptions))
+  const [instance] = useState(() => new Collapse(resolvedOptions))
 
   instance.setOptions(resolvedOptions)
 
   useLayoutEffect(() => {
-    if (isMounted.current) {
-      if (isExpanded) {
-        instance.open()
-      } else {
-        instance.close()
-      }
+    if (isExpanded) {
+      instance.open()
+    } else {
+      instance.close()
     }
   }, [isExpanded, instance])
 
   const assignRef = (node: HTMLElement | null) => {
-    if (node && collapseEl.current !== node) {
+    if (collapseEl.current !== node) {
       collapseEl.current = node
-      instance.init()
+      if (node) {
+        instance.init()
+      }
     }
   }
 
@@ -81,6 +75,7 @@ export function useCollapse(
       const { onTransitionEndHandler, ...props } = instance.getCollapse()
 
       return {
+        ...rest,
         ...props,
         [refKey]: mergeRefs(theirRef, assignRef),
         onTransitionEnd: onTransitionEndHandler,
@@ -89,7 +84,6 @@ export function useCollapse(
     getToggleProps({
       disabled,
       onClick = () => {},
-      refKey = 'ref',
       ...rest
     }: {
       disabled?: boolean
@@ -97,16 +91,12 @@ export function useCollapse(
       refKey?: string
       [k: string]: unknown
     } = {}) {
-      const theirRef: any = rest[refKey]
-      if (!instance) {
-        return { [refKey]: mergeRefs(theirRef, setToggleEl) }
-      }
       const { onClickHandler, ...props } = instance.getToggle({
         disabled,
       })
       return {
+        ...rest,
         ...props,
-        [refKey]: mergeRefs(theirRef, setToggleEl),
         onClick: callAll(onClickHandler, onClick),
       }
     },
