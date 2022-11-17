@@ -84,36 +84,54 @@ export function mergeRefs<RefValueType = any>(
   }
 }
 
-export function useControlledState(
-  isExpanded?: boolean,
-  defaultExpanded?: boolean
-): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
-  const [stateExpanded, setStateExpanded] = useState(defaultExpanded || false)
-  const initiallyControlled = useRef(isExpanded != null)
-  const expanded = initiallyControlled.current
-    ? (isExpanded as boolean)
-    : stateExpanded
-  const setExpanded = useCallback(
-    (n: boolean | ((prev: boolean) => boolean)) => {
+export function useEvent<T extends (...args: any[]) => any>(callback?: T) {
+  const ref = useRef<T | undefined>(callback)
+
+  useEffect(() => {
+    ref.current = callback
+  })
+
+  return useCallback(((...args: any) => ref.current?.(...args)) as T, [])
+}
+
+export function useControlledState<T>(
+  value?: T,
+  defaultValue?: T,
+  callback?: (value: T) => void
+): [T, (update: T | ((value: T) => T)) => void] {
+  const [state, setState] = useState<T>(defaultValue as T)
+  const initiallyControlled = useRef(value != null)
+  const effectiveValue = initiallyControlled.current ? value : state
+  const cb = useEvent(callback)
+
+  console.log({effectiveValue})
+
+  const onChange = useCallback(
+    (update: T | ((value: T) => T)) => {
+      const newValue =
+        typeof update === 'function' ? update(effectiveValue) : update
+
       if (!initiallyControlled.current) {
-        setStateExpanded(n)
+        setState(newValue)
       }
+
+      cb?.(newValue)
     },
-    []
+    [cb, effectiveValue]
   )
 
   useEffect(() => {
     warning(
-      !(initiallyControlled.current && isExpanded == null),
+      !(initiallyControlled.current && value == null),
       'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
     warning(
-      !(!initiallyControlled.current && isExpanded != null),
+      !(!initiallyControlled.current && value != null),
       'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
-  }, [isExpanded])
+  }, [value])
 
-  return [expanded, setExpanded]
+  return [effectiveValue as T, onChange]
 }
 
 export function useEffectAfterMount(
@@ -193,6 +211,22 @@ export function useId(idOverride?: string): string | undefined {
   return useUniqueId(idOverride)
 }
 
+export function paddingWarning(element: HTMLElement): void {
+  if (process.env.NODE_ENV !== 'production') {
+    if (window && 'getComputedStyle' in window) {
+      const { paddingTop, paddingBottom } = window.getComputedStyle(element)
+      const hasPadding =
+        (paddingTop && paddingTop !== '0px') ||
+        (paddingBottom && paddingBottom !== '0px')
+
+      warning(
+        !hasPadding,
+        'react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+      )
+    }
+  }
+}
+
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {
   // @ts-ignore
   let warn = (el?: RefObject<HTMLElement>): void => {}
@@ -218,3 +252,51 @@ export function usePaddingWarning(element: RefObject<HTMLElement>): void {
     warn(element)
   }, [element])
 }
+
+/**
+ * generates a UID factory
+ * @example
+ * const uid = generateUID();
+ * uid(object) = 1;
+ * uid(object) = 1;
+ * uid(anotherObject) = 2;
+ */
+export const generateUID = () => {
+  let counter = 1
+
+  const map = new WeakMap<any, number>()
+
+  /**
+   * @borrows {uid}
+   */
+  const uid = (item: any, index?: number): string => {
+    if (typeof item === 'number' || typeof item === 'string') {
+      return index ? `idx-${index}` : `val-${item}`
+    }
+
+    if (!map.has(item)) {
+      map.set(item, counter++)
+
+      return uid(item)
+    }
+
+    return 'uid' + map.get(item)
+  }
+
+  return uid
+}
+
+/**
+ * @name uid
+ * returns an UID associated with {item}
+ * @param {Object} item - object to generate UID for
+ * @param {Number} index, a fallback index
+ * @example
+ * uid(object) == 1;
+ * uid(object) == 1;
+ * uid(anotherObject) == 2;
+ * uid("not object", 42) == 42
+ *
+ * @see {@link useUID}
+ */
+export const uid = generateUID()

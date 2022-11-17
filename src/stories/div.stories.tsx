@@ -1,5 +1,5 @@
 import React from 'react'
-import useCollapse from '..'
+import { useCollapse } from '..'
 import { Toggle, Collapse, excerpt } from './components'
 
 export default {
@@ -7,16 +7,16 @@ export default {
 }
 
 export const Div = () => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+  const { collapse, toggle, isExpanded } = useCollapse({
     defaultExpanded: true,
   })
 
   return (
     <div>
-      <Toggle as="div" {...getToggleProps()}>
+      <Toggle as="div" ref={toggle}>
         {isExpanded ? 'Close' : 'Open'}
       </Toggle>
-      <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+      <Collapse ref={collapse}>{excerpt}</Collapse>
     </div>
   )
 }

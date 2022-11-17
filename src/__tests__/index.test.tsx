@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { mocked } from 'ts-jest/utils'
-import useCollapse from '..'
+import { useCollapse } from '..'
 import { getElementHeight } from '../utils'
 import {
   GetTogglePropsInput,
@@ -15,14 +15,14 @@ const Collapse: React.FC<{
   toggleProps?: GetTogglePropsInput
   collapseProps?: GetCollapsePropsInput
   props?: UseCollapseInput
-}> = ({ toggleProps, collapseProps, props }) => {
+}> = ({ props }) => {
   const { getCollapseProps, getToggleProps } = useCollapse(props)
   return (
     <>
-      <div {...getToggleProps(toggleProps)} data-testid="toggle">
+      <div {...getToggleProps()} data-testid="toggle">
         Toggle
       </div>
-      <div {...getCollapseProps(collapseProps)} data-testid="collapse">
+      <div {...getCollapseProps()} data-testid="collapse">
         <div style={{ height: 400 }}>content</div>
       </div>
     </>
