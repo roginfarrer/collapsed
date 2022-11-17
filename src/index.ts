@@ -16,6 +16,8 @@ import {
 } from './utils'
 import { CSSProperties } from 'styled-components'
 
+export { useCollapse } from './useCollapse'
+
 const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 const useLayoutEffect =
@@ -59,7 +61,7 @@ export interface UseCollapseOptions {
   onExpandedChange?: (state: 'expanding' | 'collapsing') => void
 }
 
-export function useCollapse({
+function useCollapse({
   duration,
   easing = easeInOut,
   isExpanded: configIsExpanded,

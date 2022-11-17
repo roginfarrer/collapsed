@@ -1,13 +1,6 @@
-import {
-  useId,
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  MouseEventHandler,
-} from 'react'
+import { useId, useState, useRef, MouseEventHandler } from 'react'
 import { Collapse, CollapseParams } from './Collapse'
-import { callAll, mergeRefs } from './utils'
+import { callAll, mergeRefs, useControlledState } from './utils'
 
 export interface UseCollapseParams
   extends Omit<CollapseParams, 'toggleElement' | 'collapseElement'> {
@@ -15,71 +8,50 @@ export interface UseCollapseParams
   defaultExpanded?: boolean
 }
 
-function useIsMounted() {
-  const ref = useRef(false)
-  useEffect(() => {
-    ref.current = true
-  }, [])
-  return ref
-}
-
-export function useCollapse(options: UseCollapseParams = {}) {
+export function useCollapse(
+  options: Omit<UseCollapseParams, 'getCollapseElement'> = {}
+) {
   const {
     isExpanded: propExpanded,
     defaultExpanded: propDefaultExpanded,
+    onExpandedChange,
     ...opts
   } = options
 
   const id = useId()
-  const [collapseEl, setCollapseEl] = useState<HTMLElement | null>(null)
+  const collapseEl = useRef<HTMLElement | null>(null)
   const [toggleEl, setToggleEl] = useState<HTMLElement | null>(null)
-  const [instance, setInstance] = useState<Collapse | undefined>()
-  const isControlledRef = useRef(typeof propExpanded !== 'undefined')
+  const [isExpanded, setExpanded] = useControlledState(
+    propExpanded,
+    propDefaultExpanded,
+    onExpandedChange
+  )
 
-  const [isExpanded, setExpanded] = useState(propDefaultExpanded)
+  const resolvedOptions: CollapseParams = {
+    id,
+    ...opts,
+    getCollapseElement: () => collapseEl.current,
+    defaultExpanded: isExpanded,
+    onExpandedChange: setExpanded,
+  }
 
-  const isMounted = useIsMounted()
+  const [instance] = useState<Collapse>(() => new Collapse(resolvedOptions))
 
-  /**
-   * Handle controlled updates
-   */
-  useLayoutEffect(() => {
-    if (!isMounted.current || !isControlledRef.current) {
-      return
+  instance.setOptions(resolvedOptions)
+
+  const assignRef = (node: HTMLElement | null) => {
+    if (node && collapseEl.current !== node) {
+      collapseEl.current = node
+      instance.init()
     }
-
-    if (propExpanded) {
-      instance?.open()
-    } else {
-      instance?.close()
+  }
+  const move: typeof setExpanded = (update) => {
+    const newValue = typeof update === 'function' ? update(isExpanded) : update
+    setExpanded(newValue)
+    if (newValue !== isExpanded) {
+      instance.toggle()
     }
-  }, [instance, propExpanded, isMounted])
-
-  useLayoutEffect(() => {
-    if (collapseEl) {
-      setInstance(
-        () =>
-          new Collapse(collapseEl, toggleEl ?? undefined, {
-            id,
-            ...opts,
-            defaultExpanded:
-              typeof propExpanded === 'undefined' ? isExpanded : propExpanded,
-          })
-      )
-    }
-  }, [collapseEl, toggleEl])
-
-  useEffect(() => {
-    instance?.setOptions((prev) => ({
-      id,
-      ...prev,
-      ...options,
-      onExpandedChange(state) {
-        setExpanded(state === 'expanding')
-        opts.onExpandedChange?.(state)
-      },
-    }))
-  })
+  }
 
   return {
     getCollapseProps({
@@ -88,14 +60,14 @@ export function useCollapse(options: UseCollapseParams = {}) {
     }: { refKey?: string; [k: string]: unknown } = {}) {
       const theirRef: any = rest[refKey]
       if (!instance) {
-        return { [refKey]: mergeRefs(theirRef, setCollapseEl) }
+        return { [refKey]: mergeRefs(theirRef, assignRef) }
       }
 
       const { onTransitionEndHandler, ...props } = instance.getCollapse()
 
       return {
         ...props,
-        [refKey]: mergeRefs(theirRef, setCollapseEl),
+        [refKey]: mergeRefs(theirRef, assignRef),
         onTransitionEnd: onTransitionEndHandler,
       }
     },
@@ -124,5 +96,6 @@ export function useCollapse(options: UseCollapseParams = {}) {
       }
     },
     isExpanded,
+    setExpanded: move,
   }
 }

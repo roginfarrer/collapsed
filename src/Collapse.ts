@@ -32,30 +32,29 @@ export interface CollapseParams {
   hasDisabledAnimation?: boolean
   /** Unique ID used for accessibility */
   id?: string
-  onExpandedChange?: (state: 'expanding' | 'collapsing') => void
+  onExpandedChange?: (state: boolean) => void
+  getCollapseElement: () => HTMLElement | null | undefined
 }
 
 export class Collapse {
   isExpanded: boolean
   options!: CollapseParams
-  private collapseElement!: HTMLElement
-  private id: string
-  private toggleElement: HTMLElement | undefined
+  private collapseElement: HTMLElement | null | undefined = null
+  private id!: string
 
-  constructor(
-    element: HTMLElement,
-    toggle: HTMLElement | undefined,
-    params: CollapseParams
-  ) {
+  constructor(params: CollapseParams) {
     this.setOptions(params)
-    this.collapseElement = element
-    this.toggleElement = toggle
-
-    this.id = this.options.id ?? `collapse-${uid(performance.now())}`
     this.isExpanded = Boolean(this.options.defaultExpanded)
+    this.init()
+  }
 
-    if (!this.isExpanded) {
-      this.setStyles(this.getCollapsedStyles())
+  init = () => {
+    const collapseElement = this.options.getCollapseElement()
+    if (this.collapseElement !== collapseElement) {
+      this.collapseElement = collapseElement
+      if (!this.isExpanded) {
+        this.setStyles(this.getCollapsedStyles())
+      }
     }
   }
 
@@ -87,13 +86,19 @@ export class Collapse {
       onExpandedChange() {},
       ...opts,
     }
+
+    this.id = this.options.id ?? `collapse-${uid(performance.now())}`
   }
 
   private setStyles = (styles: Style) => {
+    const target = this.options.getCollapseElement()
+    if (!target) {
+      return
+    }
     for (const property in styles) {
       const value = styles[property]
-      if (value) {
-        this.collapseElement.style[property] = value
+      if (value && target) {
+        target.style[property] = value
       }
     }
   }
@@ -110,7 +115,8 @@ export class Collapse {
   }
 
   private handleTransitionEnd = (e: TransitionEvent) => {
-    if (e.target !== this.collapseElement || e.propertyName !== 'height') {
+    const node = this.options.getCollapseElement()
+    if (e.target !== node || e.propertyName !== 'height') {
       return
     }
 
@@ -130,13 +136,20 @@ export class Collapse {
   }
 
   open = (): void => {
+    // don't repeat if already open
     if (this.isExpanded) {
       return
     }
 
+    const target = this.options.getCollapseElement()
+
+    if (!target) {
+      return
+    }
+
     this.isExpanded = true
-    this.options.onExpandedChange?.('expanding')
-    paddingWarning(this.collapseElement)
+    this.options.onExpandedChange?.(true)
+    paddingWarning(target)
     requestAnimationFrame(() => {
       this.setStyles({
         ...this.options.expandStyles,
@@ -145,24 +158,31 @@ export class Collapse {
         height: `${this.options.collapsedHeight}px`,
       })
       requestAnimationFrame(() => {
-        const height = this.collapseElement.scrollHeight
+        const height = target.scrollHeight
 
         // Order important! So setting properties directly
-        this.collapseElement.style.transition = this.getTransitionStyles(height)
-        this.collapseElement.style.height = `${height}px`
+        target.style.transition = this.getTransitionStyles(height)
+        target.style.height = `${height}px`
       })
     })
   }
 
   close = () => {
+    // don't repeat if already closed
     if (!this.isExpanded) {
       return
     }
 
+    const target = this.options.getCollapseElement()
+
+    if (!target) {
+      return
+    }
+
     this.isExpanded = false
-    this.options.onExpandedChange?.('collapsing')
+    this.options.onExpandedChange?.(false)
     requestAnimationFrame(() => {
-      const height = this.collapseElement.scrollHeight
+      const height = target.scrollHeight
       this.setStyles({
         ...this.options.collapseStyles,
         transition: this.getTransitionStyles(height),
@@ -186,7 +206,7 @@ export class Collapse {
   }
 
   getCollapse = () => {
-    const hasToggle = Boolean(this.toggleElement)
+    const hasToggle = false /* Boolean(this.toggleElement) */
     return {
       id: this.id,
       'aria-hidden': !this.isExpanded,
@@ -202,9 +222,10 @@ export class Collapse {
   getToggle = (
     { disabled }: { disabled?: boolean } = { disabled: false }
   ): ToggleProps => {
-    const isButton = this.toggleElement
-      ? this.toggleElement.tagName === 'BUTTON'
-      : false
+    // const isButton = this.toggleElement
+    //   ? this.toggleElement.tagName === 'BUTTON'
+    //   : false
+    const isButton = true
     const props: ToggleProps = {
       onClickHandler: disabled ? () => {} : this.toggle,
       id: `${this.id}-toggle`,

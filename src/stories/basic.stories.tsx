@@ -4,10 +4,11 @@ import { Toggle, Collapse, excerpt } from './components'
 
 export const Uncontrolled = () => {
   const [value, setValue] = React.useState('foo')
-  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
-    defaultExpanded: true,
-    id: value,
-  })
+  const { getToggleProps, getCollapseProps, isExpanded, setExpanded } =
+    useCollapse({
+      id: value,
+      defaultExpanded: true,
+    })
 
   return (
     <div>
@@ -19,7 +20,7 @@ export const Uncontrolled = () => {
 }
 
 export const Controlled = () => {
-  const [isExpanded, setOpen] = React.useState<boolean>(true)
+  const [isExpanded, setOpen] = React.useState<boolean>(false)
   const { getToggleProps, getCollapseProps } = useCollapse({
     isExpanded,
   })

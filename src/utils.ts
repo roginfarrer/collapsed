@@ -104,14 +104,13 @@ export function useControlledState<T>(
   const effectiveValue = initiallyControlled.current ? value : state
   const cb = useEvent(callback)
 
-  console.log({effectiveValue})
-
   const onChange = useCallback(
     (update: T | ((value: T) => T)) => {
       const newValue =
         typeof update === 'function' ? update(effectiveValue) : update
 
       if (!initiallyControlled.current) {
+        console.log('update state', newValue)
         setState(newValue)
       }
 
