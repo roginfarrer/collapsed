@@ -110,7 +110,6 @@ export function useControlledState<T>(
         typeof update === 'function' ? update(effectiveValue) : update
 
       if (!initiallyControlled.current) {
-        console.log('update state', newValue)
         setState(newValue)
       }
 

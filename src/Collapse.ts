@@ -136,6 +136,7 @@ export class Collapse {
   }
 
   open = (): void => {
+    console.log('open')
     // don't repeat if already open
     if (this.isExpanded) {
       return

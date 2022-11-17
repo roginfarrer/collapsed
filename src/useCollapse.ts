@@ -1,4 +1,11 @@
-import { useId, useState, useRef, MouseEventHandler } from 'react'
+import {
+  useId,
+  useState,
+  useRef,
+  MouseEventHandler,
+  useLayoutEffect,
+  useEffect,
+} from 'react'
 import { Collapse, CollapseParams } from './Collapse'
 import { callAll, mergeRefs, useControlledState } from './utils'
 
@@ -26,6 +33,11 @@ export function useCollapse(
     propDefaultExpanded,
     onExpandedChange
   )
+  const isMounted = useRef(false)
+
+  useEffect(() => {
+    isMounted.current = true
+  })
 
   const resolvedOptions: CollapseParams = {
     id,
@@ -39,17 +51,20 @@ export function useCollapse(
 
   instance.setOptions(resolvedOptions)
 
+  useLayoutEffect(() => {
+    if (isMounted.current) {
+      if (isExpanded) {
+        instance.open()
+      } else {
+        instance.close()
+      }
+    }
+  }, [isExpanded, instance])
+
   const assignRef = (node: HTMLElement | null) => {
     if (node && collapseEl.current !== node) {
       collapseEl.current = node
       instance.init()
-    }
-  }
-  const move: typeof setExpanded = (update) => {
-    const newValue = typeof update === 'function' ? update(isExpanded) : update
-    setExpanded(newValue)
-    if (newValue !== isExpanded) {
-      instance.toggle()
     }
   }
 
@@ -96,6 +111,6 @@ export function useCollapse(
       }
     },
     isExpanded,
-    setExpanded: move,
+    setExpanded,
   }
 }

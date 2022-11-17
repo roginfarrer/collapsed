@@ -13,7 +13,9 @@ export const Uncontrolled = () => {
   return (
     <div>
       <input value={value} onChange={(e) => setValue(e.target.value)} />
-      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
+      <Toggle onClick={() => setExpanded((x) => !x)}>
+        {isExpanded ? 'Close' : 'Open'}
+      </Toggle>
       <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
     </div>
   )
@@ -30,8 +32,8 @@ export const Controlled = () => {
   return (
     <div>
       <Toggle
-        // onClick={() => setOpen((prev) => !prev)}
-        {...getToggleProps({ onClick: () => setOpen((x) => !x) })}
+        onClick={() => setOpen((prev) => !prev)}
+        // {...getToggleProps({ onClick: () => setOpen((x) => !x) })}
       >
         {isExpanded ? 'Close' : 'Open'}
       </Toggle>
