@@ -51,6 +51,7 @@ const CollapseContainer = styled.div`
 type CollapseProps = {
   children: React.ReactNode
   style?: {}
+  [k: string]: unknown
 }
 
 export const Collapse = React.forwardRef(

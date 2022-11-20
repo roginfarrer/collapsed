@@ -1,34 +1,8 @@
 import * as React from 'react'
-import {
-  RefObject,
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-} from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import warning from 'tiny-warning'
-import type { AssignableRef } from './types'
 
 type AnyFunction = (...args: any[]) => unknown
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const noop = (): void => {}
-
-export function getElementHeight(
-  el: RefObject<HTMLElement> | { current?: { scrollHeight: number } }
-): string | number {
-  if (!el?.current) {
-    warning(
-      true,
-      `useCollapse was not able to find a ref to the collapse element via \`getCollapseProps\`. Ensure that the element exposes its \`ref\` prop. If it exposes the ref prop under a different name (like \`innerRef\`), use the \`refKey\` property to change it. Example:
-
-{...getCollapseProps({refKey: 'innerRef'})}`
-    )
-    return 'auto'
-  }
-  return el.current.scrollHeight
-}
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
 export const callAll =
@@ -47,6 +21,18 @@ export function getAutoHeightDuration(height: number | string): number {
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10)
 }
+
+/**
+ * React.Ref uses the readonly type `React.RefObject` instead of
+ * `React.MutableRefObject`, We pretty much always assume ref objects are
+ * mutable (at least when we create them), so this type is a workaround so some
+ * of the weird mechanics of using refs with TS.
+ */
+export type AssignableRef<ValueType> =
+  | {
+      bivarianceHack(instance: ValueType | null): void
+    }['bivarianceHack']
+  | React.MutableRefObject<ValueType | null>
 
 export function assignRef<RefValueType = any>(
   ref: AssignableRef<RefValueType> | null | undefined,
@@ -95,19 +81,20 @@ export function useEvent<T extends (...args: any[]) => any>(callback?: T) {
 }
 
 export function useControlledState<T>(
-  value?: T,
-  defaultValue?: T,
+  value: T | undefined,
+  defaultValue: T | undefined,
   callback?: (value: T) => void
 ): [T, (update: T | ((value: T) => T)) => void] {
   const [state, setState] = useState<T>(defaultValue as T)
-  const initiallyControlled = useRef(value != null)
+  const initiallyControlled = useRef(typeof value !== 'undefined')
   const effectiveValue = initiallyControlled.current ? value : state
   const cb = useEvent(callback)
 
   const onChange = useCallback(
-    (update: T | ((value: T) => T)) => {
+    (update: React.SetStateAction<T>) => {
+      const setter = update as (value?: T) => T
       const newValue =
-        typeof update === 'function' ? update(effectiveValue) : update
+        typeof update === 'function' ? setter(effectiveValue) : update
 
       if (!initiallyControlled.current) {
         setState(newValue)
@@ -121,93 +108,19 @@ export function useControlledState<T>(
   useEffect(() => {
     warning(
       !(initiallyControlled.current && value == null),
-      'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
+      'Collapse is changing from controlled to uncontrolled. Collapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component.'
     )
     warning(
       !(!initiallyControlled.current && value != null),
-      'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
+      'Collapse is changing from uncontrolled to controlled. Collapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component.'
     )
   }, [value])
 
   return [effectiveValue as T, onChange]
 }
 
-export function useEffectAfterMount(
-  cb: () => void,
-  dependencies: unknown[]
-): void {
-  const justMounted = useRef(true)
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (!justMounted.current) {
-      return cb()
-    }
-    justMounted.current = false
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies)
-}
-
-/**
- * Taken from Reach
- * https://github.com/reach/reach-ui/blob/d2b88c50caf52f473a7d20a4493e39e3c5e95b7b/packages/auto-id
- *
- * Autogenerate IDs to facilitate WAI-ARIA and server rendering.
- *
- * Note: The returned ID will initially be `null` and will update after a
- * component mounts. Users may need to supply their own ID if they need
- * consistent values for SSR.
- *
- * @see Docs https://reach.tech/auto-id
- */
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
-let serverHandoffComplete = false
-let id = 0
-const genId = () => ++id
-export function useUniqueId(idFromProps?: string | null) {
-  /*
-   * If this instance isn't part of the initial render, we don't have to do the
-   * double render/patch-up dance. We can just generate the ID and return it.
-   */
-  const initialId = idFromProps || (serverHandoffComplete ? genId() : null)
-
-  const [id, setId] = useState(initialId)
-
-  useIsomorphicLayoutEffect(() => {
-    if (id === null) {
-      /*
-       * Patch the ID after render. We do this in `useLayoutEffect` to avoid any
-       * rendering flicker, though it'll make the first render slower (unlikely
-       * to matter, but you're welcome to measure your app and let us know if
-       * it's a problem).
-       */
-      setId(genId())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (serverHandoffComplete === false) {
-      /*
-       * Flag all future uses of `useId` to skip the update dance. This is in
-       * `useEffect` because it goes after `useLayoutEffect`, ensuring we don't
-       * accidentally bail out of the patch-up dance prematurely.
-       */
-      serverHandoffComplete = true
-    }
-  }, [])
-  return id != null ? String(id) : undefined
-}
-
-// Workaround for https://github.com/webpack/webpack/issues/14814
-const maybeReactUseId: undefined | (() => string) = (React as any)['useId' + '']
-export function useId(idOverride?: string): string | undefined {
-  if (maybeReactUseId !== undefined) {
-    const reactId = maybeReactUseId()
-    return idOverride ?? reactId
-  }
-  return useUniqueId(idOverride)
-}
+export const useLayoutEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : useEffect
 
 export function paddingWarning(element: HTMLElement): void {
   if (process.env.NODE_ENV !== 'production') {
@@ -219,36 +132,10 @@ export function paddingWarning(element: HTMLElement): void {
 
       warning(
         !hasPadding,
-        'react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+        'Collapse: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
       )
     }
   }
-}
-
-export function usePaddingWarning(element: RefObject<HTMLElement>): void {
-  // @ts-ignore
-  let warn = (el?: RefObject<HTMLElement>): void => {}
-
-  if (process.env.NODE_ENV !== 'production') {
-    warn = (el) => {
-      if (!el?.current) {
-        return
-      }
-      const { paddingTop, paddingBottom } = window.getComputedStyle(el.current)
-      const hasPadding =
-        (paddingTop && paddingTop !== '0px') ||
-        (paddingBottom && paddingBottom !== '0px')
-
-      warning(
-        !hasPadding,
-        'react-collapsed: Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
-      )
-    }
-  }
-
-  useEffect(() => {
-    warn(element)
-  }, [element])
 }
 
 /**
@@ -294,7 +181,5 @@ export const generateUID = () => {
  * uid(object) == 1;
  * uid(anotherObject) == 2;
  * uid("not object", 42) == 42
- *
- * @see {@link useUID}
  */
 export const uid = generateUID()

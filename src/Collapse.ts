@@ -2,8 +2,6 @@ import { uid, getAutoHeightDuration, paddingWarning } from './utils'
 
 type Style = Partial<CSSStyleDeclaration>
 
-const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
-
 export interface CollapseParams {
   /** If true, the collapse element will initialize expanded */
   defaultExpanded?: boolean
@@ -20,20 +18,16 @@ export interface CollapseParams {
    * If 'auto', the duration will be calculated based on the height of the collapse element
    */
   duration?: number | 'auto'
-  /** Handler called when the collapse element begins the collapse transition */
-  onCollapseStart?: () => void
-  /** Handler called when the collapse element ends the collapse transition */
-  onCollapseEnd?: () => void
-  /** Handler called when the collapse element begins the expand transition */
-  onExpandStart?: () => void
-  /** Handler called when the collapse element ends the expand transition */
-  onExpandEnd?: () => void
   /** If true, the animation will be disabled. Useful for disabling if the user prefers reduced motion */
   hasDisabledAnimation?: boolean
   /** Unique ID used for accessibility */
   id?: string
+  /** Handler called when the expanded state changes */
   onExpandedChange?: (state: boolean) => void
+  /** Function that returns a reference to the element that expands and collapses */
   getCollapseElement: () => HTMLElement | null | undefined
+  /** Function that returns a reference to the toggle for the collapse region */
+  getToggleElement?: () => HTMLElement | null | undefined
 }
 
 export class Collapse {
@@ -60,9 +54,9 @@ export class Collapse {
     }
   }
 
-  private getCollapsedStyles = () => {
+  private getCollapsedStyles = (): Style => {
     return {
-      display: this.options.collapsedHeight === 0 ? 'block' : 'none',
+      display: this.options.collapsedHeight === 0 ? 'none' : 'block',
       height: `${this.options.collapsedHeight}px`,
       overflow: 'hidden',
     }
@@ -79,7 +73,7 @@ export class Collapse {
 
     this.options = {
       duration: 'auto',
-      easing: easeInOut,
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
       expandStyles: {},
       collapseStyles: {},
       hasDisabledAnimation: false,
@@ -89,7 +83,7 @@ export class Collapse {
       ...opts,
     }
 
-    this.id = this.options.id ?? `collapse-${uid(performance.now())}`
+    this.id = this.options.id ?? `collapse-${uid(this)}`
   }
 
   private setStyles = (styles: Style) => {
@@ -111,11 +105,11 @@ export class Collapse {
     if (this.options.hasDisabledAnimation) {
       return ''
     }
-    const _duration =
+    const duration =
       this.options.duration === 'auto'
         ? getAutoHeightDuration(height)
         : this.options.duration
-    return `height ${_duration}ms ${this.options.easing}`
+    return `height ${duration}ms ${this.options.easing}`
   }
 
   private handleTransitionEnd = (e: TransitionEvent) => {
@@ -145,7 +139,6 @@ export class Collapse {
     }
 
     const target = this.options.getCollapseElement()
-
     if (!target) {
       return
     }
@@ -177,13 +170,13 @@ export class Collapse {
     }
 
     const target = this.options.getCollapseElement()
-
     if (!target) {
       return
     }
 
     if (!this.isMounted) {
       this.init()
+      return
     }
 
     this.isExpanded = false
@@ -213,26 +206,35 @@ export class Collapse {
   }
 
   getCollapse = () => {
-    const hasToggle = false /* Boolean(this.toggleElement) */
+    const hasToggle = Boolean(this.options.getToggleElement?.())
     return {
       id: this.id,
-      'aria-hidden': !this.isExpanded,
+      'aria-hidden': this.isExpanded ? undefined : true,
       onTransitionEndHandler: this.handleTransitionEnd,
       style: {
-        boxSizing: 'border-box',
+        boxSizing: 'border-box' as const,
       },
       role: 'region',
       'aria-labelledby': hasToggle ? `${this.id}-toggle` : undefined,
-    } as const
+    }
   }
 
   getToggle = (
     { disabled }: { disabled?: boolean } = { disabled: false }
-  ): ToggleProps => {
-    const isButton = this.toggleElement
-      ? this.toggleElement.tagName === 'BUTTON'
-      : false
-    const props: ToggleProps = {
+  ): {
+    onClickHandler: () => void
+    id: string
+    'aria-controls': string
+    'aria-expanded': boolean
+    disabled?: boolean
+    type?: 'button'
+    'aria-disabled'?: boolean
+    role?: 'button'
+    tabIndex?: 0 | -1
+  } => {
+    const toggleElement = this.options.getToggleElement?.()
+    const isButton = toggleElement ? toggleElement.tagName === 'BUTTON' : false
+    const props: any = {
       onClickHandler: disabled ? () => {} : this.toggle,
       id: `${this.id}-toggle`,
       'aria-controls': this.id,
@@ -240,24 +242,12 @@ export class Collapse {
     }
     if (isButton) {
       props.type = 'button'
-      props.disabled = disabled
+      props.disabled = disabled ? true : undefined
     } else {
-      props['aria-disabled'] = disabled
+      props['aria-disabled'] = disabled ? true : undefined
       props.role = 'button'
       props.tabIndex = disabled ? -1 : 0
     }
     return props
   }
-}
-
-interface ToggleProps {
-  onClickHandler: () => void
-  id: string
-  'aria-controls': string
-  'aria-expanded': boolean
-  disabled?: boolean
-  type?: 'button'
-  'aria-disabled'?: boolean
-  role?: 'button'
-  tabIndex?: 0 | -1
 }
