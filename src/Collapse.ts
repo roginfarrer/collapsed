@@ -24,6 +24,14 @@ export interface CollapseParams {
   id?: string
   /** Handler called when the expanded state changes */
   onExpandedChange?: (state: boolean) => void
+  /** Handler called when the collapse transition starts */
+  onCollapseStart?: () => void
+  /** Handler called when the collapse transtion ends */
+  onCollapseEnd?: () => void
+  /** Handler called when the expand transition starts */
+  onExpandStart?: () => void
+  /** Handler called when the expand transition end */
+  onExpandEnd?: () => void
   /** Function that returns a reference to the element that expands and collapses */
   getCollapseElement: () => HTMLElement | null | undefined
   /** Function that returns a reference to the toggle for the collapse region */
@@ -124,11 +132,13 @@ export class Collapse {
         transition: '',
         display: '',
       })
+      this.options.onExpandEnd?.()
     } else {
       this.setStyles({
         ...this.getCollapsedStyles(),
         transition: '',
       })
+      this.options.onCollapseEnd?.()
     }
   }
 
@@ -145,6 +155,7 @@ export class Collapse {
 
     this.isExpanded = true
     this.options.onExpandedChange?.(true)
+    this.options.onExpandStart?.()
     paddingWarning(target)
     requestAnimationFrame(() => {
       this.setStyles({
@@ -181,6 +192,7 @@ export class Collapse {
 
     this.isExpanded = false
     this.options.onExpandedChange?.(false)
+    this.options.onCollapseStart?.()
     requestAnimationFrame(() => {
       const height = target.scrollHeight
       this.setStyles({
