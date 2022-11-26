@@ -41,7 +41,7 @@ jobs:
     name: Publish to NPM
     needs: main
     # publish only when merged in master on original repo, not on PR
-    if: github.repository == 'roginfarrer/react-collapsed' && github.ref == 'refs/heads/main'
+    if: github.repository == 'roginfarrer/react-collapsed' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next')
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
