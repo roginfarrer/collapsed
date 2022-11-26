@@ -7,11 +7,17 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  parserOptions: { project: ['./tsconfig.json'] },
-  plugins: ['@typescript-eslint', 'jsx-ally'],
+  plugins: ['@typescript-eslint', 'jsx-a11y'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'react/prop-types': 'off',
+    'prefer-const': 'off',
   },
 }
