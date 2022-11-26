@@ -31,6 +31,7 @@ jobs:
         uses: cypress-io/github-action@v4.2.1
         with:
           browser: chrome
+          component: true
 
   release:
     name: Publish to NPM
