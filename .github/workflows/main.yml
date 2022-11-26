@@ -1,0 +1,25 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  test:
+    name: 'CI'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: yarn build
+      - name: Lint
+        run: yarn lint
+      - name: Test
+        run: yarn test
+      - name: Cypress run
+        uses: cypress-io/github-action@v4.2.1
+        with:
+          browser: chrome

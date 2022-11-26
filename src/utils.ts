@@ -108,11 +108,11 @@ export function useControlledState<T>(
   useEffect(() => {
     warning(
       !(initiallyControlled.current && value == null),
-      'Collapse is changing from controlled to uncontrolled. Collapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component.'
+      'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
     warning(
       !(!initiallyControlled.current && value != null),
-      'Collapse is changing from uncontrolled to controlled. Collapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component.'
+      'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
   }, [value])
 

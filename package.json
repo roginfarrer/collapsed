@@ -36,12 +36,9 @@
     "@storybook/addon-a11y": "^6.5.11",
     "@storybook/addon-actions": "^6.5.11",
     "@storybook/addon-essentials": "^6.5.11",
-    "@storybook/addon-interactions": "^6.5.13",
     "@storybook/addon-links": "^6.5.11",
-    "@storybook/jest": "^0.0.10",
     "@storybook/react": "^6.5.11",
-    "@storybook/test-runner": "^0.9.0",
-    "@storybook/testing-library": "^0.0.13",
+    "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^25.1.2",
@@ -51,7 +48,9 @@
     "@types/styled-components": "^5.0.1",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
+    "@vitejs/plugin-react": "^2.2.0",
     "babel-loader": "^8.2.2",
+    "cypress": "^11.2.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^14.0.0",
@@ -63,7 +62,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "jest": "^27.1.0",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
     "microbundle": "^0.13.3",
     "np": "^6.4.0",
     "prettier": "^2.3.2",
@@ -72,24 +72,12 @@
     "react-dom": "^18.2.0",
     "semantic-release": "^18.0.0",
     "styled-components": "^5.2.0",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.2"
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.4.2",
+    "vite": "^3.2.4"
   },
   "dependencies": {
     "tiny-warning": "^1.0.3"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.ts"
-    ],
-    "globals": {
-      "__DEV__": true
-    },
-    "testMatch": [
-      "<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}"
-    ]
   },
   "repository": {
     "type": "git",

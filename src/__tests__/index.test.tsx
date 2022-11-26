@@ -131,21 +131,6 @@ test('toggle click calls onClick argument with isExpanded', () => {
   expect(onClick).toHaveBeenCalled()
 })
 
-test('warns if using padding on collapse', () => {
-  let consoleOutput = ''
-  const warn = jest.spyOn(console, 'warn').mockImplementation((message) => {
-    consoleOutput = message
-  })
-
-  render(
-    <Collapse defaultExpanded collapseProps={{ style: { padding: 20 } }} />
-  )
-
-  expect(consoleOutput).toMatchInlineSnapshot(`""`)
-
-  warn.mockRestore()
-})
-
 test('permits access to the collapse ref', () => {
   const cb = jest.fn()
   const { queryByTestId } = render(<Collapse collapseProps={{ ref: cb }} />)
