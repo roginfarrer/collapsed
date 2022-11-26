@@ -1,21 +1,26 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react'
+import * as React from 'react'
 import useCollapse from '../../src'
 
-const Collapse = (props: React.ComponentPropsWithoutRef<'div'>) => (
-  <div {...props} data-testid="collapse">
-    <div
-      style={{
-        height: 300,
-        border: '2px solid red',
-        backgroundColor: 'lightblue',
-      }}
-    >
-      helloooo
+const Collapse = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<'div'>
+>(function Collapse(props, ref) {
+  return (
+    <div {...props} ref={ref} data-testid="collapse">
+      <div
+        style={{
+          height: 300,
+          border: '2px solid red',
+          backgroundColor: 'lightblue',
+        }}
+      >
+        helloooo
+      </div>
     </div>
-  </div>
-)
+  )
+})
 
 const Uncontrolled = () => {
   const { getToggleProps, getCollapseProps, isExpanded, setExpanded } =

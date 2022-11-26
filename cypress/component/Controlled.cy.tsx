@@ -1,19 +1,24 @@
 import React from 'react'
 import useCollapse from '../../src'
 
-const Collapse = (props: React.ComponentPropsWithoutRef<'div'>) => (
-  <div {...props} data-testid="collapse">
-    <div
-      style={{
-        height: 300,
-        border: '2px solid red',
-        backgroundColor: 'lightblue',
-      }}
-    >
-      helloooo
+const Collapse = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<'div'>
+>(function Collapse(props, ref) {
+  return (
+    <div {...props} ref={ref} data-testid="collapse">
+      <div
+        style={{
+          height: 300,
+          border: '2px solid red',
+          backgroundColor: 'lightblue',
+        }}
+      >
+        helloooo
+      </div>
     </div>
-  </div>
-)
+  )
+})
 
 const Controlled = () => {
   const [isExpanded, setOpen] = React.useState<boolean>(true)
