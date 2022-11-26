@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   RefObject,
   useState,
@@ -93,14 +92,11 @@ export function useControlledState(
   const expanded = initiallyControlled.current
     ? (isExpanded as boolean)
     : stateExpanded
-  const setExpanded = useCallback(
-    (n: boolean | ((prev: boolean) => boolean)) => {
-      if (!initiallyControlled.current) {
-        setStateExpanded(n)
-      }
-    },
-    []
-  )
+  const setExpanded = useCallback((n) => {
+    if (!initiallyControlled.current) {
+      setStateExpanded(n)
+    }
+  }, [])
 
   useEffect(() => {
     warning(
@@ -181,16 +177,6 @@ export function useUniqueId(idFromProps?: string | null) {
     }
   }, [])
   return id != null ? String(id) : undefined
-}
-
-// Workaround for https://github.com/webpack/webpack/issues/14814
-const maybeReactUseId: undefined | (() => string) = (React as any)['useId' + '']
-export function useId(idOverride?: string): string | undefined {
-  if (maybeReactUseId !== undefined) {
-    const reactId = maybeReactUseId()
-    return idOverride ?? reactId
-  }
-  return useUniqueId(idOverride)
 }
 
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {

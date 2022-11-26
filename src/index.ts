@@ -7,9 +7,9 @@ import {
   getAutoHeightDuration,
   mergeRefs,
   usePaddingWarning,
+  useUniqueId,
   useEffectAfterMount,
   useControlledState,
-  useId,
 } from './utils'
 import {
   UseCollapseInput,
@@ -40,7 +40,7 @@ export default function useCollapse({
     configIsExpanded,
     defaultExpanded
   )
-  const uniqueId = useId()
+  const uniqueId = useUniqueId()
   const el = useRef<HTMLElement | null>(null)
   usePaddingWarning(el)
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`
