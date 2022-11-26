@@ -83,8 +83,7 @@ test('Toggle has expected props when disabled', () => {
 })
 
 test('Collapse has expected props when closed (default)', () => {
-  const { debug } = render(<Collapse />)
-  console.log(debug())
+  render(<Collapse />)
   const collapse = screen.getByTestId('collapse')
   expect(collapse).toHaveAttribute('id', 'test')
   expect(collapse.getAttribute('aria-hidden')).toBe('true')

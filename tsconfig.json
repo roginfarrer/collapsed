@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "jest-setup.ts"],
   "exclude": ["node_modules/**/*", "src/__tests__/**/*", "src/stories/**/*"],
   "compilerOptions": {
     "target": "ESNext",
@@ -22,6 +22,6 @@
     "jsx": "react",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["react", "jest", "tiny-warning", "node"]
+    "types": ["react", "jest", "tiny-warning", "node", "@testing-library/react"]
   }
 }

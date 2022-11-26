@@ -1,12 +1,11 @@
-import {
-  useId,
-  useState,
-  MouseEventHandler,
-  useLayoutEffect,
-  useRef,
-} from 'react'
+import { useId, useState, MouseEventHandler, useRef } from 'react'
 import { Collapse, CollapseParams } from './Collapse'
-import { callAll, mergeRefs, useControlledState } from './utils'
+import {
+  callAll,
+  mergeRefs,
+  useControlledState,
+  useLayoutEffect,
+} from './utils'
 
 export interface UseCollapseParams
   extends Omit<CollapseParams, 'getToggleElement' | 'getCollapseElement'> {
