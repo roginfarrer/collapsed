@@ -58,10 +58,7 @@ jobs:
         run: yarn build
 
       - name: 🚀 Release
-        uses: cycjimmy/semantic-release-action@v2
-        extra_plugins: |
-          @semantic-release/changelog@3.0.0
-          @semantic-release/git
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
