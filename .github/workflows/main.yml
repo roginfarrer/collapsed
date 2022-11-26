@@ -3,14 +3,22 @@ name: Tests
 on: [push]
 
 jobs:
-  test:
-    name: 'CI'
+  main:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16]
     steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⬇️ Checkout repo
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: ${{ matrix.node }}
       - name: Install Dependencies
         uses: bahmutov/npm-install@v1
       - name: Build
@@ -23,3 +31,24 @@ jobs:
         uses: cypress-io/github-action@v4.2.1
         with:
           browser: chrome
+
+  release:
+    name: Publish to NPM
+    needs: main
+    # publish only when merged in master on original repo, not on PR
+    if: github.repository == 'roginfarrer/react-collapsed' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+      - name: Build
+        run: yarn build
+      - name: 🚀 Release
+        uses: cycjimmy/semantic-release-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
