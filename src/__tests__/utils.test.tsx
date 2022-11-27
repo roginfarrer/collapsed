@@ -1,40 +1,6 @@
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import {
-  useEffectAfterMount,
-  useControlledState,
-  callAll,
-  useUniqueId,
-} from '../utils'
-
-describe('useUniqueId', () => {
-  it('should generate a unique ID value', () => {
-    function Comp() {
-      const justNull = null
-      const randId = useUniqueId(justNull)
-      const randId2 = useUniqueId()
-      return (
-        <div>
-          <div id={randId}>Wow</div>
-          <div id={randId2}>Ok</div>
-        </div>
-      )
-    }
-    const { getByText } = render(<Comp />)
-    const id1 = Number(getByText('Wow').id)
-    const id2 = Number(getByText('Ok').id)
-    expect(id2).not.toEqual(id1)
-  })
-
-  it('uses a fallback ID', () => {
-    function Comp() {
-      const newId = useUniqueId('awesome')
-      return <div id={newId}>Ok</div>
-    }
-    const { getByText } = render(<Comp />)
-    expect(getByText('Ok').id).toEqual('awesome')
-  })
-})
+import { useControlledState, callAll } from '../utils'
 
 describe('callAll', () => {
   it('it calls the two functions passed into it', () => {
@@ -47,31 +13,11 @@ describe('callAll', () => {
   })
 })
 
-describe('useEffectAfterMount', () => {
-  it('does not run callback on first render', () => {
-    // Provide a dependency that changes, so it re-renders
-    let x = 0
-    const cb = jest.fn()
-
-    function UseEffectAfterMount() {
-      x++
-      useEffectAfterMount(cb, [x])
-      return null
-    }
-
-    const { rerender } = render(<UseEffectAfterMount />)
-
-    expect(cb).not.toHaveBeenCalled()
-    rerender(<UseEffectAfterMount />)
-    expect(cb).toHaveBeenCalled()
-  })
-})
-
 describe('useControlledState', () => {
   let hookReturn: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 
   function UseControlledState({
-    defaultExpanded,
+    defaultExpanded = false,
     isExpanded,
   }: {
     defaultExpanded?: boolean
@@ -123,7 +69,7 @@ describe('useControlledState', () => {
     })
 
     function Foo({ isExpanded }: { isExpanded?: boolean }) {
-      useControlledState(isExpanded)
+      useControlledState(isExpanded, undefined)
       return <div />
     }
 

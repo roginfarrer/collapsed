@@ -3,9 +3,7 @@ import useCollapse from '..'
 import { Toggle, Collapse, excerpt } from './components'
 
 export const Uncontrolled = () => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
-    defaultExpanded: true,
-  })
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse()
 
   return (
     <div>
@@ -17,16 +15,16 @@ export const Uncontrolled = () => {
 
 export const Controlled = () => {
   const [isExpanded, setOpen] = React.useState<boolean>(true)
-  const { getCollapseProps, getToggleProps } = useCollapse({
+  const { getToggleProps, getCollapseProps } = useCollapse({
     isExpanded,
   })
 
   return (
     <div>
-      <Toggle {...getToggleProps({ onClick: () => setOpen((old) => !old) })}>
+      <Toggle {...getToggleProps({ onClick: () => setOpen((x) => !x) })}>
         {isExpanded ? 'Close' : 'Open'}
       </Toggle>
-      <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+      <Collapse {...getCollapseProps({})}>{excerpt}</Collapse>
     </div>
   )
 }
@@ -34,25 +32,25 @@ export const Controlled = () => {
 function useReduceMotion() {
   const [matches, setMatch] = React.useState(
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
+  )
   React.useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     const handleChange = () => {
-      setMatch(mq.matches);
-    };
-    handleChange();
-    mq.addEventListener('change', handleChange);
+      setMatch(mq.matches)
+    }
+    handleChange()
+    mq.addEventListener('change', handleChange)
     return () => {
-      mq.removeEventListener('change', handleChange);
-    };
-  }, []);
-  return matches;
+      mq.removeEventListener('change', handleChange)
+    }
+  }, [])
+  return matches
 }
 
 export const PrefersReducedMotion = () => {
   const reduceMotion = useReduceMotion()
   const [isExpanded, setOpen] = React.useState<boolean>(true)
-  const { getCollapseProps, getToggleProps } = useCollapse({
+  const { getToggleProps, getCollapseProps } = useCollapse({
     isExpanded,
     hasDisabledAnimation: reduceMotion,
   })

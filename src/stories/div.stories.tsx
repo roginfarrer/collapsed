@@ -7,7 +7,7 @@ export default {
 }
 
 export const Div = () => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
     defaultExpanded: true,
   })
 
