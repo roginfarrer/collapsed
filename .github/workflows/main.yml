@@ -56,4 +56,4 @@ jobs:
         with:
           browser: chrome
           component: true
-          project: ./packages/react
+          working-directory: ./packages/react
