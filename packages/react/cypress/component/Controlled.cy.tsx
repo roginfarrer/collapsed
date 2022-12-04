@@ -1,5 +1,5 @@
-import React from 'react'
-import { useCollapse } from '../../src'
+import * as React from 'react'
+import { useCollapse } from '../../src/useCollapse'
 
 const Collapse = React.forwardRef<
   HTMLDivElement,

@@ -1,7 +1,7 @@
-import React, { useState, Children, cloneElement, ReactNode } from 'react'
+import { useState, Children, cloneElement, ReactNode } from 'react'
 import styled from 'styled-components'
 import { excerpt } from './components'
-import useCollapse from '..'
+import { useCollapse } from '..'
 
 const Item = styled.li({
   all: 'unset',
@@ -69,8 +69,8 @@ const Collapse = ({
   )
 }
 
-const AccordionParent = ({ children }) => {
-  const [activeIndex, setActiveIndex] = useState(null)
+const AccordionParent = ({ children }: any) => {
+  const [activeIndex, setActiveIndex] = useState<null | number>(null)
   return (
     <StyledAccordion>
       {Children.map(children, (child, index) =>

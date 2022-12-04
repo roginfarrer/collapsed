@@ -1,5 +1,5 @@
-import React from 'react'
-import useCollapse from '..'
+import * as React from 'react'
+import { useCollapse } from '..'
 import { Collapse, excerpt, Toggle } from './components'
 
 export default {
