@@ -1,5 +1,5 @@
 import { useId, useState, MouseEventHandler, useRef } from 'react'
-import { Collapse, CollapseParams } from './Collapse'
+import { Collapse, CollapseParams } from '@collapsed/core'
 import {
   callAll,
   mergeRefs,

@@ -1,0 +1,4 @@
+{
+  "extends": "@collapsed-internal/tsconfig/base.json",
+  "include": ["."]
+}
