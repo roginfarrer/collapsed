@@ -44,11 +44,13 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Build
+        run: pnpm build
+
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
         with:
-          version: pnpm run version
-          publish: pnpm release
+          publish: pnpm publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

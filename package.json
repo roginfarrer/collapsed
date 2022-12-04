@@ -5,7 +5,8 @@
     "preinstall": "npx only-allow pnpm",
     "build": "turbo build && npx tsx scripts/postbuild.ts",
     "test": "turbo test",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "publish-packages": "turbo build test lint && changesets version && changesets publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.25.2",
