@@ -65,7 +65,7 @@ function createBanner(packageName, version) {
   return `/**
   * ${packageName} v${version}
   *
-  * Copyright (c) 2018-${new Date().getFullYear()}, Rogin Farrer
+  * Copyright (c) 2019-${new Date().getFullYear()}, Rogin Farrer
   *
   * This source code is licensed under the MIT license found in the
   * LICENSE.md file in the root directory of this source tree.

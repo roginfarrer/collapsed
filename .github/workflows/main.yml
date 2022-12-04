@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - next
   pull_request:
 
 jobs:
@@ -36,30 +35,3 @@ jobs:
         with:
           browser: chrome
           component: true
-
-  release:
-    name: Publish to NPM
-    needs: main
-    # publish only when merged in master on original repo, not on PR
-    if: github.repository == 'roginfarrer/react-collapsed' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next')
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: './.nvmrc'
-
-      - name: Install Dependencies
-        uses: bahmutov/npm-install@v1
-
-      - name: Build
-        run: yarn build
-
-      - name: 🚀 Release
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

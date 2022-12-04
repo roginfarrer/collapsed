@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent, screen } from '@testing-library/react'
-import useCollapse from '..'
+import { useCollapse } from '..'
 
 const Collapse = ({
   toggleElement: Toggle = 'div',

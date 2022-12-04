@@ -1,5 +1,4 @@
 {
   "extends": "@collapsed-internal/tsconfig/react.json",
-  "include": ["."],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src", "jest-setup.ts", "tsup.config.ts"]
 }

@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['collapsed/base'],
+  extends: ['collapsed'],
 }
