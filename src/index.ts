@@ -4,7 +4,8 @@ import {
   noop,
   callAll,
   getElementHeight,
-  getAutoHeightDuration,
+  getElementWidth,
+  getAutoDistanceDuration,
   mergeRefs,
   usePaddingWarning,
   useUniqueId,
@@ -34,6 +35,7 @@ export default function useCollapse({
   isExpanded: configIsExpanded,
   defaultExpanded = false,
   hasDisabledAnimation = false,
+  isHorizontal = false,
   ...initialConfig
 }: UseCollapseInput = {}): UseCollapseOutput {
   const [isExpanded, setExpanded] = useControlledState(
@@ -43,10 +45,11 @@ export default function useCollapse({
   const uniqueId = useUniqueId()
   const el = useRef<HTMLElement | null>(null)
   usePaddingWarning(el)
-  const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`
+  const dimension = isHorizontal ? 'width' : 'height'
+  const collapsedDimension = `${(isHorizontal ? initialConfig.collapsedWidth : initialConfig.collapsedHeight) || 0}px`
   const collapsedStyles = {
-    display: collapsedHeight === '0px' ? 'none' : 'block',
-    height: collapsedHeight,
+    display: collapsedDimension === '0px' ? 'none' : 'block',
+    [dimension]: collapsedDimension,
     overflow: 'hidden',
   }
   const [styles, setStylesRaw] = useState<CSSProperties>(
@@ -64,87 +67,99 @@ export default function useCollapse({
     setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }))
   }
 
-  function getTransitionStyles(height: number | string): CSSProperties {
+  function getTransitionStyles(distance: number | string): CSSProperties {
     if (hasDisabledAnimation) {
       return {}
     }
-    const _duration = duration || getAutoHeightDuration(height)
+    const _duration = duration || getAutoDistanceDuration(distance)
     return {
-      transition: `height ${_duration}ms ${easing}`,
+      transition: `${dimension} ${_duration}ms ${easing}`,
     }
   }
 
+  const [initHeight, setIniHeight] = useState<string|number>(0)
+  const [initWidth, setInitWidth] = useState<string|number>(0)
+
   useEffectAfterMount(() => {
+    if (isHorizontal && initHeight === 0) {
+      setIniHeight(getElementHeight(el))
+      setInitWidth(getElementWidth(el))
+      return
+    }
     if (isExpanded) {
       requestAnimationFrame(() => {
         onExpandStart()
         mergeStyles({
           ...expandStyles,
-          willChange: 'height',
+          willChange: dimension,
           display: 'block',
           overflow: 'hidden',
         })
         requestAnimationFrame(() => {
-          const height = getElementHeight(el)
+          const dimensionValue = isHorizontal ? initWidth : getElementHeight(el)
+          const transitionStyles = getTransitionStyles(dimensionValue)
           mergeStyles({
-            ...getTransitionStyles(height),
-            height,
+            ...transitionStyles,
+            [dimension]: dimensionValue,
           })
         })
       })
     } else {
       requestAnimationFrame(() => {
         onCollapseStart()
-        const height = getElementHeight(el)
+        const dimensionValue = isHorizontal ? getElementWidth(el) : getElementHeight(el)
+        const transitionStyles = getTransitionStyles(dimensionValue)
         mergeStyles({
           ...collapseStyles,
-          ...getTransitionStyles(height),
-          willChange: 'height',
-          height,
+          ...transitionStyles,
+          willChange: dimension,
+          [dimension]: dimensionValue,
         })
         requestAnimationFrame(() => {
           mergeStyles({
-            height: collapsedHeight,
+            [dimension]: collapsedDimension,
             overflow: 'hidden',
+            // when collapsing width we make sure to preserve the initial height
+            ...(isHorizontal ? {height: initHeight} : {}),
           })
         })
       })
     }
-  }, [isExpanded, collapsedHeight])
+  }, [isExpanded, collapsedDimension, initHeight])
 
   const handleTransitionEnd = (e: TransitionEvent): void => {
     // Sometimes onTransitionEnd is triggered by another transition,
     // such as a nested collapse panel transitioning. But we only
     // want to handle this if this component's element is transitioning
-    if (e.target !== el.current || e.propertyName !== 'height') {
+    if (e.target !== el.current || e.propertyName !== dimension) {
       return
     }
 
-    // The height comparisons below are a final check before
+    // The height/width comparisons below are a final check before
     // completing the transition
     // Sometimes this callback is run even though we've already begun
     // transitioning the other direction
     // The conditions give us the opportunity to bail out,
     // which will prevent the collapsed content from flashing on the screen
     if (isExpanded) {
-      const height = getElementHeight(el)
+      const dimensionValue = isHorizontal ? getElementWidth(el) : getElementHeight(el)
 
-      // If the height at the end of the transition
-      // matches the height we're animating to,
-      if (height === styles.height) {
+      // If the height/width at the end of the transition
+      // matches the height/width we're animating to,
+      if (dimensionValue === styles[dimension]) {
         setStyles({})
       } else {
-        // If the heights don't match, this could be due the height
+        // If the heights/widths don't match, this could be due the height/width
         // of the content changing mid-transition
-        mergeStyles({ height })
+        mergeStyles({ [dimension]: dimensionValue })
       }
 
       onExpandEnd()
 
-      // If the height we should be animating to matches the collapsed height,
+      // If the height/width we should be animating to matches the collapsed height/width,
       // it's safe to apply the collapsed overrides
-    } else if (styles.height === collapsedHeight) {
-      setStyles(collapsedStyles)
+    } else if (styles[dimension] === collapsedDimension) {
+      setStyles({...collapsedStyles, ...(isHorizontal ? {height: initHeight} : {})})
       onCollapseEnd()
     }
   }

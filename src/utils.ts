@@ -29,6 +29,21 @@ export function getElementHeight(
   return el.current.scrollHeight
 }
 
+export function getElementWidth(
+  el: RefObject<HTMLElement> | { current?: { scrollWidth: number } }
+): string | number {
+  if (!el?.current) {
+    warning(
+      true,
+      `useCollapse was not able to find a ref to the collapse element via \`getCollapseProps\`. Ensure that the element exposes its \`ref\` prop. If it exposes the ref prop under a different name (like \`innerRef\`), use the \`refKey\` property to change it. Example:
+
+{...getCollapseProps({refKey: 'innerRef'})}`
+    )
+    return 'auto'
+  }
+  return el.current.scrollWidth
+}
+
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
 export const callAll =
   (...fns: AnyFunction[]) =>
@@ -36,12 +51,12 @@ export const callAll =
     fns.forEach((fn) => fn && fn(...args))
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
-export function getAutoHeightDuration(height: number | string): number {
-  if (!height || typeof height === 'string') {
+export function getAutoDistanceDuration(distance: number | string): number {
+  if (!distance || typeof distance === 'string') {
     return 0
   }
 
-  const constant = height / 36
+  const constant = distance / 36
 
   // https://www.wolframalpha.com/input/?i=(4+%2B+15+*+(x+%2F+36+)+**+0.25+%2B+(x+%2F+36)+%2F+5)+*+10
   return Math.round((4 + 15 * constant ** 0.25 + constant / 5) * 10)

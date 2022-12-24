@@ -57,6 +57,7 @@ export interface UseCollapseInput {
   isExpanded?: boolean
   defaultExpanded?: boolean
   collapsedHeight?: number
+  collapsedWidth?: number
   expandStyles?: {}
   collapseStyles?: {}
   easing?: string
@@ -66,6 +67,7 @@ export interface UseCollapseInput {
   onExpandStart?: () => void
   onExpandEnd?: () => void
   hasDisabledAnimation?: boolean
+  isHorizontal?: boolean
 }
 
 export interface UseCollapseOutput {
