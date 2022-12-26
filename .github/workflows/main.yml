@@ -23,13 +23,13 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: latest
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'pnpm'
+      # - name: Install Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16
+      #     cache: 'pnpm'
 
       - name: Install Dependencies
         run: pnpm install
@@ -44,8 +44,8 @@ jobs:
         run: pnpm test
 
       - name: Cypress run
-        uses: cypress-io/github-action@v4.2.1
+        uses: cypress-io/github-action@v5
         with:
-          browser: chrome
+          build: npx cypress info
           component: true
           working-directory: ./packages/react

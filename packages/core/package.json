@@ -2,7 +2,7 @@
   "name": "@collapsed/core",
   "version": "4.0.0",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
-  "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
+  "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
   "source": "src/index.ts",
   "main": "dist/index.cjs.js",
