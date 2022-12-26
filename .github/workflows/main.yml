@@ -25,11 +25,11 @@ jobs:
         with:
           version: latest
 
-      # - name: Install Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16
-      #     cache: 'pnpm'
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'pnpm'
 
       - name: Install Dependencies
         run: pnpm install
@@ -46,6 +46,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          build: npx cypress info
+          install: false
           component: true
           working-directory: ./packages/react
