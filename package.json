@@ -6,6 +6,7 @@
     "build": "turbo build && npx tsx scripts/postbuild.ts",
     "test": "turbo test",
     "lint": "turbo lint",
+    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
     "publish-packages": "turbo build test lint && changesets version && changesets publish"
   },
   "dependencies": {

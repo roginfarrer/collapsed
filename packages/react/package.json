@@ -1,8 +1,8 @@
 {
   "name": "@collapsed/react",
-  "version": "4.0.0",
+  "version": "3.0.0",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
-  "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
+  "description": "A React custom-hook for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
   "source": "src/index.ts",
   "main": "dist/index.cjs.js",
@@ -21,7 +21,6 @@
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "release": "np --no-2fa"
