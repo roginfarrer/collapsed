@@ -23,7 +23,8 @@
     "lint": "eslint .",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "release": "np --no-2fa"
+    "release": "np --no-2fa",
+    "cypress:run": "cypress run --component"
   },
   "peerDependencies": {
     "react": "^18",

@@ -43,13 +43,13 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Prep cypress
-        run: pnpm --filter react run cypress install
+      - name: Cypress
+        run: pnpm --dir packages/react cypress:run
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-        with:
-          command-prefix: npx
-          install: false
-          component: true
-          working-directory: ./packages/react
+      # - name: Cypress run
+      #   uses: cypress-io/github-action@v5
+      #   with:
+      #     command-prefix: npx
+      #     install: false
+      #     component: true
+      #     working-directory: ./packages/react
