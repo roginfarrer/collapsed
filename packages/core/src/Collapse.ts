@@ -5,7 +5,9 @@ type Style = Partial<CSSStyleDeclaration>
 export interface CollapseParams {
   /** If true, the collapse element will initialize expanded */
   defaultExpanded?: boolean
-  /** Height in pixels that the collapse element collapses to */
+  /** @deprecate Height in pixels that the collapse element collapses to */
+  collapsedHeight?: number
+  /** Dimension in pixels that the collapse element collapses to */
   collapsedDimension?: number
   /** Styles applied to the collapse upon expanding */
   expandStyles?: Style
@@ -22,8 +24,8 @@ export interface CollapseParams {
   hasDisabledAnimation?: boolean
   /** Unique ID used for accessibility */
   id?: string
-  /** Horizontal mode expand/collapse width */
-  isHorizontal?: boolean
+  /** Vertical/Horizontal mode expand/collapse height/width, default value is vertical */
+  axis?: 'vertical' | 'horizontal'
   /** Handler called when the expanded state changes */
   onExpandedChange?: (state: boolean) => void
   /** Handler called when the collapse transition starts */
@@ -46,14 +48,15 @@ export class Collapse {
   private id!: string
   private collapseElement: HTMLElement | null | undefined = null
   private isMounted = false
+  private isVertical = true
   private dimension: 'height' | 'width'
-  private initialWidth = 0
-  private initialHeight = 0
+  private initialDimensions = { height: 0, width: 0 }
 
   constructor(params: CollapseParams) {
     this.setOptions(params)
     this.isExpanded = Boolean(this.options.defaultExpanded)
-    this.dimension = this.options.isHorizontal ? 'width' : 'height'
+    this.isVertical = this.options.axis === 'vertical'
+    this.dimension = this.isVertical ? 'height' : 'width'
     this.init()
     this.isMounted = true
   }
@@ -67,7 +70,7 @@ export class Collapse {
         this.setStyles({
           ...this.getCollapsedStyles(),
           // When expand = false and collapsing width we preserve initial height
-          ...(this.options.isHorizontal ? {height: `${this.initialHeight}px`} : {}),
+          ...(this.isVertical ? {} : { height: `${this.initialDimensions.height}px` }),
         })
       }
     }
@@ -96,12 +99,15 @@ export class Collapse {
       expandStyles: {},
       collapseStyles: {},
       hasDisabledAnimation: false,
+      collapsedHeight: 0,
       collapsedDimension: 0,
       defaultExpanded: false,
-      isHorizontal: false,
+      axis: 'vertical',
       onExpandedChange() {},
       ...opts,
     }
+
+    this.options.collapsedDimension = this.isVertical ? this.options.collapsedHeight : this.options.collapsedDimension
 
     this.id = this.options.id ?? `collapse-${uid(this)}`
   }
@@ -156,11 +162,11 @@ export class Collapse {
 
   private setInitialDimensions = () => {
     const collapseElement = this.options.getCollapseElement()
-    if (this.initialWidth === 0) {
-      this.initialWidth = collapseElement?.scrollWidth || 0
+    if (this.initialDimensions.width === 0) {
+      this.initialDimensions.width = collapseElement?.scrollWidth || 0
     }
-    if (this.initialHeight === 0) {
-      this.initialHeight = collapseElement?.scrollHeight || 0
+    if (this.initialDimensions.height === 0) {
+      this.initialDimensions.height = collapseElement?.scrollHeight || 0
     }
   }
 
@@ -187,7 +193,7 @@ export class Collapse {
         [this.dimension]: `${this.options.collapsedDimension}px`,
       })
       requestAnimationFrame(() => {
-        const dimensionValue = this.options.isHorizontal ? this.initialWidth : target.scrollHeight
+        const dimensionValue = this.isVertical ? target.scrollHeight : this.initialDimensions.width
 
         // Order important! So setting properties directly
         target.style.transition = this.getTransitionStyles(dimensionValue)
@@ -216,7 +222,7 @@ export class Collapse {
     this.options.onExpandedChange?.(false)
     this.options.onCollapseStart?.()
     requestAnimationFrame(() => {
-      const dimensionValue = this.options.isHorizontal ? target.scrollWidth : target.scrollHeight
+      const dimensionValue = this.isVertical ? target.scrollHeight : target.scrollWidth
       this.setStyles({
         ...this.options.collapseStyles,
         transition: this.getTransitionStyles(dimensionValue),
@@ -227,7 +233,7 @@ export class Collapse {
           [this.dimension]: `${this.options.collapsedDimension}px`,
           overflow: 'hidden',
           // when collapsing width we make sure to preserve the initial height
-          ...(this.options.isHorizontal ? {height: `${this.initialHeight}px`} : {}),
+          ...(this.isVertical ? {} : { height: `${this.initialDimensions.height}px` }),
         })
       })
     })
