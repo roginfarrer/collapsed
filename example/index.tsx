@@ -1,7 +1,6 @@
-import 'react-app-polyfill/ie11'
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import useCollapse from '../src'
+import * as ReactDOM from 'react-dom/client'
+import { useCollapse } from '@collapsed/react'
 
 const collapseStyles = { background: 'blue', color: 'white' }
 
@@ -41,4 +40,5 @@ const App = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root')!)
+root.render(<App />)
