@@ -1,6 +1,6 @@
 {
   "name": "@collapsed/react",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "description": "A React custom-hook for creating flexible and accessible expand/collapse components.",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@collapsed/core",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
