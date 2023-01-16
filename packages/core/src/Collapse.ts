@@ -1,4 +1,4 @@
-import { uid, getAutoHeightDuration, paddingWarning } from './utils'
+import { uid, getAutoDimensionDuration, paddingWarning } from './utils'
 
 type Style = Partial<CSSStyleDeclaration>
 
@@ -6,7 +6,7 @@ export interface CollapseParams {
   /** If true, the collapse element will initialize expanded */
   defaultExpanded?: boolean
   /** Height in pixels that the collapse element collapses to */
-  collapsedHeight?: number
+  collapsedDimension?: number
   /** Styles applied to the collapse upon expanding */
   expandStyles?: Style
   /** Styles applied to the collapse upon collapsing */
@@ -22,6 +22,8 @@ export interface CollapseParams {
   hasDisabledAnimation?: boolean
   /** Unique ID used for accessibility */
   id?: string
+  /** Horizontal mode expand/collapse width */
+  isHorizontal?: boolean
   /** Handler called when the expanded state changes */
   onExpandedChange?: (state: boolean) => void
   /** Handler called when the collapse transition starts */
@@ -44,10 +46,14 @@ export class Collapse {
   private id!: string
   private collapseElement: HTMLElement | null | undefined = null
   private isMounted = false
+  private dimension: 'height' | 'width'
+  private initialWidth = 0
+  private initialHeight = 0
 
   constructor(params: CollapseParams) {
     this.setOptions(params)
     this.isExpanded = Boolean(this.options.defaultExpanded)
+    this.dimension = this.options.isHorizontal ? 'width' : 'height'
     this.init()
     this.isMounted = true
   }
@@ -56,16 +62,21 @@ export class Collapse {
     const collapseElement = this.options.getCollapseElement()
     if (this.collapseElement !== collapseElement) {
       this.collapseElement = collapseElement
+      this.setInitialDimensions()
       if (!this.isExpanded) {
-        this.setStyles(this.getCollapsedStyles())
+        this.setStyles({
+          ...this.getCollapsedStyles(),
+          // When expand = false and collapsing width we preserve initial height
+          ...(this.options.isHorizontal ? {height: `${this.initialHeight}px`} : {}),
+        })
       }
     }
   }
 
   private getCollapsedStyles = (): Style => {
     return {
-      display: this.options.collapsedHeight === 0 ? 'none' : 'block',
-      height: `${this.options.collapsedHeight}px`,
+      display: this.options.collapsedDimension === 0 ? 'none' : 'block',
+      [this.dimension]: `${this.options.collapsedDimension}px`,
       overflow: 'hidden',
     }
   }
@@ -85,8 +96,9 @@ export class Collapse {
       expandStyles: {},
       collapseStyles: {},
       hasDisabledAnimation: false,
-      collapsedHeight: 0,
+      collapsedDimension: 0,
       defaultExpanded: false,
+      isHorizontal: false,
       onExpandedChange() {},
       ...opts,
     }
@@ -109,25 +121,25 @@ export class Collapse {
     }
   }
 
-  private getTransitionStyles = (height: number | string) => {
+  private getTransitionStyles = (dimension: number | string) => {
     if (this.options.hasDisabledAnimation) {
       return ''
     }
     const duration =
       this.options.duration === 'auto'
-        ? getAutoHeightDuration(height)
+        ? getAutoDimensionDuration(dimension)
         : this.options.duration
-    return `height ${duration}ms ${this.options.easing}`
+    return `${this.dimension} ${duration}ms ${this.options.easing}`
   }
 
   private handleTransitionEnd = (e: TransitionEvent) => {
-    if (e.propertyName !== 'height') {
+    if (e.propertyName !== this.dimension) {
       return
     }
 
     if (this.isExpanded) {
       this.setStyles({
-        height: '',
+        [this.dimension]: '',
         overflow: '',
         transition: '',
         display: '',
@@ -139,6 +151,16 @@ export class Collapse {
         transition: '',
       })
       this.options.onCollapseEnd?.()
+    }
+  }
+
+  private setInitialDimensions = () => {
+    const collapseElement = this.options.getCollapseElement()
+    if (this.initialWidth === 0) {
+      this.initialWidth = collapseElement?.scrollWidth || 0
+    }
+    if (this.initialHeight === 0) {
+      this.initialHeight = collapseElement?.scrollHeight || 0
     }
   }
 
@@ -162,14 +184,14 @@ export class Collapse {
         ...this.options.expandStyles,
         display: 'block',
         overflow: 'hidden',
-        height: `${this.options.collapsedHeight}px`,
+        [this.dimension]: `${this.options.collapsedDimension}px`,
       })
       requestAnimationFrame(() => {
-        const height = target.scrollHeight
+        const dimensionValue = this.options.isHorizontal ? this.initialWidth : target.scrollHeight
 
         // Order important! So setting properties directly
-        target.style.transition = this.getTransitionStyles(height)
-        target.style.height = `${height}px`
+        target.style.transition = this.getTransitionStyles(dimensionValue)
+        target.style[this.dimension] = `${dimensionValue}px`
       })
     })
   }
@@ -194,16 +216,18 @@ export class Collapse {
     this.options.onExpandedChange?.(false)
     this.options.onCollapseStart?.()
     requestAnimationFrame(() => {
-      const height = target.scrollHeight
+      const dimensionValue = this.options.isHorizontal ? target.scrollWidth : target.scrollHeight
       this.setStyles({
         ...this.options.collapseStyles,
-        transition: this.getTransitionStyles(height),
-        height: `${height}px`,
+        transition: this.getTransitionStyles(dimensionValue),
+        [this.dimension]: `${dimensionValue}px`,
       })
       requestAnimationFrame(() => {
         this.setStyles({
-          height: `${this.options.collapsedHeight}px`,
+          [this.dimension]: `${this.options.collapsedDimension}px`,
           overflow: 'hidden',
+          // when collapsing width we make sure to preserve the initial height
+          ...(this.options.isHorizontal ? {height: `${this.initialHeight}px`} : {}),
         })
       })
     })
