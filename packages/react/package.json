@@ -89,5 +89,8 @@
     "expand",
     "hooks",
     "auto"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

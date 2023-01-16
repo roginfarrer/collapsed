@@ -54,5 +54,8 @@
     "render",
     "expand",
     "auto"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
