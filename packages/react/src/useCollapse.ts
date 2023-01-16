@@ -1,4 +1,4 @@
-import { useId, useState, MouseEventHandler, useRef } from 'react'
+import * as React from 'react'
 import { Collapse, CollapseParams } from '@collapsed/core'
 import {
   callAll,
@@ -20,9 +20,9 @@ export function useCollapse(options: UseCollapseParams = {}) {
     ...opts
   } = options
 
-  const id = useId()
-  const collapseEl = useRef<HTMLElement | null>(null)
-  const [toggleEl, setToggleEl] = useState<HTMLElement | null>(null)
+  const id = React.useId()
+  const collapseEl = React.useRef<HTMLElement | null>(null)
+  const [toggleEl, setToggleEl] = React.useState<HTMLElement | null>(null)
   const [isExpanded, setExpanded] = useControlledState(
     propExpanded,
     propDefaultExpanded,
@@ -38,7 +38,7 @@ export function useCollapse(options: UseCollapseParams = {}) {
     onExpandedChange: setExpanded,
   }
 
-  const [instance] = useState(() => new Collapse(resolvedOptions))
+  const [instance] = React.useState(() => new Collapse(resolvedOptions))
 
   instance.setOptions(resolvedOptions)
 
@@ -62,8 +62,13 @@ export function useCollapse(options: UseCollapseParams = {}) {
   return {
     getCollapseProps({
       refKey = 'ref',
+      onTransitionEnd = () => {},
       ...rest
-    }: { refKey?: string; [k: string]: unknown } = {}) {
+    }: {
+      refKey?: string
+      onTransitionEnd?: React.TransitionEventHandler
+      [k: string]: unknown
+    } = {}) {
       const theirRef: any = rest[refKey]
       if (!instance) {
         return { [refKey]: mergeRefs(theirRef, assignRef) }
@@ -75,8 +80,10 @@ export function useCollapse(options: UseCollapseParams = {}) {
         ...rest,
         ...props,
         [refKey]: mergeRefs(theirRef, assignRef),
-        onTransitionEnd:
+        onTransitionEnd: callAll(
           onTransitionEndHandler as unknown as React.TransitionEventHandler,
+          onTransitionEnd
+        ),
       }
     },
     getToggleProps({
@@ -86,7 +93,7 @@ export function useCollapse(options: UseCollapseParams = {}) {
       ...rest
     }: {
       disabled?: boolean
-      onClick?: MouseEventHandler<any>
+      onClick?: React.MouseEventHandler<any>
       refKey?: string
       [k: string]: unknown
     } = {}) {

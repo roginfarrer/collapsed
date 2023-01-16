@@ -43,10 +43,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/roginfarrer/react-collapsed.git"
-  },
-  "bugs": {
-    "url": "https://github.com/roginfarrer/react-collapsed/issues"
+    "url": "https://github.com/roginfarrer/collapsed.git",
+    "directory": "packages/core"
   },
   "keywords": [
     "collapse",
