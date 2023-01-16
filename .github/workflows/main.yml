@@ -44,11 +44,12 @@ jobs:
         run: pnpm test
 
       - name: Prep cypress
-        run: pnpm cypress install
+        run: pnpm --filter react run cypress install
 
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
+          command-prefix: npx
           install: false
           component: true
           working-directory: ./packages/react
