@@ -43,6 +43,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Prep cypress
+        run: pnpm cypress install
+
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
