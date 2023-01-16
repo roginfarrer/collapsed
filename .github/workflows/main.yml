@@ -31,14 +31,6 @@ jobs:
           node-version: 16
           cache: 'pnpm'
 
-      - name: Cache Cypress binary
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-cypress-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            cypress-${{ runner.os }}-cypress-
-
       - name: Install Dependencies
         run: pnpm install
 
@@ -52,7 +44,7 @@ jobs:
         run: pnpm test
 
       - name: Cypress
-        run: pnpm --dir packages/react cypress:run
+        run: cd packages/react && npx cypress run --component && cd -
 
       # - name: Cypress run
       #   uses: cypress-io/github-action@v5
