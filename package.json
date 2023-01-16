@@ -7,7 +7,8 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "publish-packages": "turbo build test lint && changesets version && changesets publish"
+    "publish-packages": "turbo build test lint && changesets version && changesets publish",
+    "example": "pnpm --filter example run start"
   },
   "dependencies": {
     "@changesets/cli": "^2.25.2",
@@ -17,7 +18,13 @@
     "np": "^6.4.0",
     "prettier": "^2.3.2",
     "turbo": "^1.6.3",
-    "typescript": "^4.9"
+    "typescript": "^4.9",
+    "buffer": "^5.5.0",
+    "process": "^0.11.10"
   },
-  "prettier": "eslint-config-rogin/prettier"
+  "prettier": "eslint-config-rogin/prettier",
+  "alias": {
+    "process": "process/browser.js",
+    "buffer": "buffer"
+  }
 }
