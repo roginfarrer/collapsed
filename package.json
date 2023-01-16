@@ -1,108 +1,30 @@
 {
-  "name": "react-collapsed",
-  "version": "0.0.0-development",
-  "author": "Rogin Farrer <rogin@roginfarrer.com>",
-  "description": "A tiny React custom-hook for creating flexible and accessible expand/collapse components.",
-  "license": "MIT",
-  "source": "src/index.ts",
-  "main": "dist/react-collapsed.js",
-  "module": "dist/react-collapsed.esm.js",
-  "umd:main": "dist/react-collapsed.umd.js",
-  "unpkg": "dist/react-collapsed.umd.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "src",
-    "dist"
-  ],
+  "name": "collapse-workspace",
+  "private": true,
   "scripts": {
-    "watch": "microbundle watch",
-    "build": "microbundle",
-    "test": "jest src",
-    "lint": "tsc --project tsconfig.json --noEmit",
+    "preinstall": "npx only-allow pnpm",
+    "build": "turbo build && npx tsx scripts/postbuild.ts",
+    "test": "turbo test",
+    "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "release": "np --no-2fa"
-  },
-  "peerDependencies": {
-    "react": "^16.8 || ^17",
-    "react-dom": "^16.8 || ^17"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/eslint-parser": "^7.15.4",
-    "@babel/preset-react": "^7.14.5",
-    "@storybook/addon-a11y": "^6.3.9",
-    "@storybook/addon-actions": "^6.3.9",
-    "@storybook/addon-essentials": "^6.3.9",
-    "@storybook/addon-links": "^6.3.9",
-    "@storybook/react": "^6.3.9",
-    "@testing-library/jest-dom": "^5.3.0",
-    "@testing-library/react": "^10.0.2",
-    "@types/jest": "^25.1.2",
-    "@types/node": "^16.7.13",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "@types/styled-components": "^5.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
-    "@typescript-eslint/parser": "^4.31.0",
-    "babel-loader": "^8.2.2",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-typescript": "^14.0.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-rogin": "1.0.0",
-    "eslint-plugin-html": "^6.1.2",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.25.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "jest": "^27.1.0",
-    "microbundle": "^0.13.3",
-    "np": "^6.4.0",
-    "prettier": "^2.3.2",
-    "react": "^17",
-    "react-docgen-typescript-loader": "^3.7.1",
-    "react-dom": "^17",
-    "semantic-release": "^18.0.0",
-    "styled-components": "^5.2.0",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.2"
+    "publish-packages": "turbo build test lint && changesets version && changesets publish",
+    "example": "pnpm --filter example run start"
   },
   "dependencies": {
-    "tiny-warning": "^1.0.3"
+    "@changesets/cli": "^2.25.2",
+    "@collapsed-internal/tsconfig": "workspace:*",
+    "@types/node": "^16.7.13",
+    "eslint-config-collapsed": "workspace:*",
+    "np": "^6.4.0",
+    "prettier": "^2.3.2",
+    "turbo": "^1.6.3",
+    "typescript": "^4.9",
+    "buffer": "^5.5.0",
+    "process": "^0.11.10"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.ts"
-    ],
-    "globals": {
-      "__DEV__": true
-    },
-    "testMatch": [
-      "<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/roginfarrer/react-collapsed.git"
-  },
-  "bugs": {
-    "url": "https://github.com/roginfarrer/react-collapsed/issues"
-  },
-  "keywords": [
-    "collapse",
-    "react",
-    "collapsible",
-    "animate",
-    "height",
-    "render",
-    "expand",
-    "hooks",
-    "auto"
-  ],
-  "prettier": "eslint-config-rogin/prettier"
+  "prettier": "eslint-config-rogin/prettier",
+  "alias": {
+    "process": "process/browser.js",
+    "buffer": "buffer"
+  }
 }
