@@ -44,7 +44,7 @@ jobs:
         run: pnpm test
 
       - name: Cypress
-        run: cd packages/react && npx cypress run --component && cd -
+        run: cd packages/react && npx cypress install && npx cypress run --component && cd -
 
       # - name: Cypress run
       #   uses: cypress-io/github-action@v5
