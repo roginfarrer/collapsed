@@ -3,8 +3,15 @@
 '@collapsed/react': major
 ---
 
-- Package refactored into two libraries: `@collapsed/core` and `@collapsed/react`.
-  - `@collapsed/core` is the main functionality that hold can be adapted to different frameworks.
-  - `@collapsed/react` is the adapter for React (this replaces `react-collapsed`).
-- `useCollapse` is now a named export, not default export.
-- New configuration option: `onExpandedChange`.
+## BREAKING CHANGES
+
+- Adopts React 18's `useId`, making the library incompatible with React <18
+- Switch to `tsup` from `microbundle` for bundling library. No longer exports a UMD version, just CJS and MJS
+
+## Features & Bug fixes
+
+- Refactors core functionality to vanilla JS (with a React) adapter, which I think should fix #103 and fix #100
+- Added `onExpandedChange` option
+- Tries to detect if `getToggleProps` is used. If the toggle element ref can be accessed, the `aria-labelledby` attribute will be added to the collapse element
+- Added `role="region"` to collapse
+- Updated toggle props to pass the appropriate attributes to the element, whether it's a button or not
