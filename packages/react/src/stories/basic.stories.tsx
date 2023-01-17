@@ -30,7 +30,9 @@ export const Controlled = () => {
 }
 
 export const HorizontalMode = () => {
-  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({ axis: 'horizontal' })
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
+    axis: 'horizontal',
+  })
 
   return (
     <div>
