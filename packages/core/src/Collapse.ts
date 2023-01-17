@@ -5,7 +5,7 @@ type Style = Partial<CSSStyleDeclaration>
 export interface CollapseParams {
   /** If true, the collapse element will initialize expanded */
   defaultExpanded?: boolean
-  /** @deprecate will be replaced by collapsedDimension
+  /** @deprecated will be replaced by collapsedDimension
    * Height in pixels that the collapse element collapses to */
   collapsedHeight?: number
   /** Dimension in pixels that the collapse element collapses to */
