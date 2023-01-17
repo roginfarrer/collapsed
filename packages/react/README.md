@@ -84,7 +84,6 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
     axis: 'vertical' | 'horizontal',
     expandStyles: {},
     collapseStyles: {},
-    collapsedHeight: 0,
     collapsedDimension: 0,
     easing: string,
     duration: number,
