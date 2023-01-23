@@ -1,5 +1,11 @@
 # @collapsed/core
 
+## 4.0.1
+
+### Patch Changes
+
+- cd21fd4: Remove package.json exports
+
 ## 4.0.0
 
 ### Major Changes

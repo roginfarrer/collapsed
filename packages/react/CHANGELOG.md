@@ -1,5 +1,13 @@
 Changelog has been moved to [the releases tab](https://github.com/roginfarrer/react-collapsed/releases).
 
+## 4.0.1
+
+### Patch Changes
+
+- cd21fd4: Remove package.json exports
+- Updated dependencies [cd21fd4]
+  - @collapsed/core@4.0.1
+
 ## 4.0.0
 
 ### Major Changes
