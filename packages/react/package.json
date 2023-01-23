@@ -71,7 +71,7 @@
     "vite": "^3.2.4"
   },
   "dependencies": {
-    "@collapsed/core": "workspace:*",
+    "@collapsed/core": "4.0.0",
     "tiny-warning": "^1.0.3"
   },
   "repository": {
