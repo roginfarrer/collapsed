@@ -8,11 +8,14 @@ on:
 
 jobs:
   main:
+    name: Tests
     runs-on: ubuntu-latest
     # To use Turborepo Remote Caching, set the following environment variables for the job.
     env:
+      CI: true
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,7 +26,8 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: latest
+          version: 7
+          run_install: false
 
       - name: Install Node.js
         uses: actions/setup-node@v3
