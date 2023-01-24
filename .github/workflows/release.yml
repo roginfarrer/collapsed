@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Publish & Deploy
+    name: Release
     runs-on: ubuntu-latest
     env:
       CI: true
@@ -17,11 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          fetch-depth: 2
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -29,6 +26,12 @@ jobs:
         with:
           version: 7
           run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'pnpm'
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -44,6 +47,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+
+      - name: setup pnpm config
+        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+
       - name: Install Dependencies
         run: pnpm install
 
@@ -53,7 +62,9 @@ jobs:
       - name: Create release PR or publish to npm
         uses: changesets/action@v1
         with:
-          publish: pnpm publish
+          publish: pnpm publish -r
+          commit: 'chore: update versions'
+          title: 'chore: update versions'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

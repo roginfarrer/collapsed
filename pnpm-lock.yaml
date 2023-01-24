@@ -122,7 +122,7 @@ importers:
       '@babel/preset-react': ^7.14.5
       '@collapsed-internal/build': workspace:*
       '@collapsed-internal/tsconfig': workspace:*
-      '@collapsed/core': 4.0.0
+      '@collapsed/core': workspace:*
       '@cypress/vite-dev-server': ^5.0.0
       '@storybook/addon-a11y': ^6.5.11
       '@storybook/addon-actions': ^6.5.11
