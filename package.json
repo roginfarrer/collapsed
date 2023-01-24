@@ -8,8 +8,9 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "publish-packages": "turbo build test lint && changesets version && changesets publish",
-    "example": "pnpm --filter example run start"
+    "example": "pnpm --filter example run start",
+    "ci:version": "changeset version && pnpm install --lockfile-only",
+    "ci:release": "pnpm build && changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.25.2",
