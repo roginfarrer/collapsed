@@ -6,7 +6,7 @@ module.exports = {
     '@storybook/addon-a11y',
   ],
   reactOptions: {
-    // strictMode: true,
+    strictMode: true,
   },
   core: {
     builder: '@storybook/builder-vite',
