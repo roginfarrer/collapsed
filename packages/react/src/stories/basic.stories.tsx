@@ -2,28 +2,51 @@ import * as React from 'react'
 import { useCollapse } from '..'
 import { Toggle, Collapse, excerpt } from './components'
 
-export const Uncontrolled = () => {
-  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse()
+export const Uncontrolled = ({ id }) => {
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
+    id,
+    defaultExpanded: true,
+  })
+  const [collapse, setCollapse] = React.useState(false)
 
   return (
     <div>
+      <button onClick={() => setCollapse((x) => !x)}>change collapse</button>
       <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
-      <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+      {collapse ? (
+        <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+      ) : (
+        <div {...getCollapseProps()} style={{ background: 'lightblue' }}>
+          {excerpt}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export const Foo = () => {
+  const [mount, setMount] = React.useState(true)
+  const [id, setId] = React.useState('foo')
+  return (
+    <div>
+      <button onClick={() => setMount((x) => !x)}>Toggle</button>
+      <input value={id} onChange={(e) => setId(e.target.value)} />
+      {mount && <Uncontrolled id={id} />}
     </div>
   )
 }
 
 export const Controlled = () => {
   const [isExpanded, setOpen] = React.useState<boolean>(true)
-  const { getToggleProps, getCollapseProps } = useCollapse({
+  const { getToggleProps, getCollapseProps, setExpanded } = useCollapse({
     isExpanded,
   })
 
   return (
     <div>
-      <Toggle {...getToggleProps({ onClick: () => setOpen((x) => !x) })}>
+      <button onClick={() => setOpen((x) => !x)}>
         {isExpanded ? 'Close' : 'Open'}
-      </Toggle>
+      </button>
       <Collapse {...getCollapseProps({})}>{excerpt}</Collapse>
     </div>
   )

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Collapse, CollapseParams } from '@collapsed/core'
+import { Collapse, CollapseParams, State } from '@collapsed/core'
 import {
   callAll,
   mergeRefs,
@@ -8,61 +8,79 @@ import {
 } from './utils'
 
 export interface UseCollapseParams
-  extends Omit<CollapseParams, 'getToggleElement' | 'getCollapseElement'> {
+  extends Omit<
+    CollapseParams,
+    'getToggleElement' | 'getCollapseElement' | 'styles' | 'setStyles' | 'state'
+  > {
   isExpanded?: boolean
+  defaultExpanded?: boolean
 }
 
 export function useCollapse(options: UseCollapseParams = {}) {
   const {
     isExpanded: propExpanded,
-    defaultExpanded: propDefaultExpanded,
+    defaultExpanded: propDefaultExpanded = true,
     onExpandedChange,
     ...opts
   } = options
 
-  const id = React.useId()
-  const collapseEl = React.useRef<HTMLElement | null>(null)
-  const [toggleEl, setToggleEl] = React.useState<HTMLElement | null>(null)
   const [isExpanded, setExpanded] = useControlledState(
     propExpanded,
     propDefaultExpanded,
     onExpandedChange
   )
+  const [state, setState] = React.useState<State>(
+    isExpanded ? 'open' : 'closed'
+  )
+
+  const id = React.useId()
+  const collapseRef = React.useRef<HTMLElement | null>(null)
+  const toggleRef = React.useRef<HTMLElement | null>(null)
+  const prevExpanded = React.useRef(isExpanded)
 
   const resolvedOptions: CollapseParams = {
     id,
-    ...opts,
-    getCollapseElement: () => collapseEl.current,
-    getToggleElement: () => toggleEl,
-    defaultExpanded: isExpanded,
     onExpandedChange: setExpanded,
+    getCollapseElement: () => collapseRef.current,
+    getToggleElement: () => toggleRef.current,
+    state,
+    ...opts,
+    onStateChange(stage) {
+      opts.onStateChange?.(stage)
+      setState(stage)
+    },
   }
 
-  const [instance] = React.useState(() => new Collapse(resolvedOptions))
-
-  instance.setOptions(resolvedOptions)
+  const instanceRef = React.useRef<Collapse>(new Collapse(resolvedOptions))
 
   useLayoutEffect(() => {
+    const wasExpanded = prevExpanded.current
+    if (wasExpanded === isExpanded) {
+      return
+    }
+
+    const instance = instanceRef.current
     if (isExpanded) {
       instance.open()
     } else {
       instance.close()
     }
-  }, [isExpanded, instance])
 
-  const assignRef = (node: HTMLElement | null) => {
-    if (collapseEl.current !== node) {
-      collapseEl.current = node
-      if (!!node) {
-        instance.init()
-      }
+    prevExpanded.current = isExpanded
+
+    return () => {
+      instance.cleanup()
     }
-  }
+  }, [isExpanded])
+
+  instanceRef.current.setOptions((prev) => ({
+    ...prev,
+    ...resolvedOptions,
+  }))
 
   return {
     getCollapseProps({
       refKey = 'ref',
-      onTransitionEnd = () => {},
       ...rest
     }: {
       refKey?: string
@@ -70,20 +88,13 @@ export function useCollapse(options: UseCollapseParams = {}) {
       [k: string]: unknown
     } = {}) {
       const theirRef: any = rest[refKey]
-      if (!instance) {
-        return { [refKey]: mergeRefs(theirRef, assignRef) }
-      }
 
-      const { onTransitionEndHandler, ...props } = instance.getCollapse()
+      const props = instanceRef.current.getCollapse()
 
       return {
         ...rest,
         ...props,
-        [refKey]: mergeRefs(theirRef, assignRef),
-        onTransitionEnd: callAll(
-          onTransitionEndHandler as unknown as React.TransitionEventHandler,
-          onTransitionEnd
-        ),
+        [refKey]: mergeRefs(theirRef, collapseRef),
       }
     },
     getToggleProps({
@@ -98,18 +109,16 @@ export function useCollapse(options: UseCollapseParams = {}) {
       [k: string]: unknown
     } = {}) {
       const theirRef: any = rest[refKey]
-      if (!instance) {
-        return { [refKey]: mergeRefs(theirRef, setToggleEl) }
-      }
 
-      const { onClickHandler, ...props } = instance.getToggle({
+      const props = instanceRef.current.getToggle({
         disabled,
       })
+
       return {
         ...rest,
         ...props,
-        [refKey]: mergeRefs(theirRef, setToggleEl),
-        onClick: callAll(onClickHandler, onClick),
+        [refKey]: mergeRefs(theirRef, toggleRef),
+        onClick: callAll(() => setExpanded((x) => !x), onClick),
       }
     },
     isExpanded,

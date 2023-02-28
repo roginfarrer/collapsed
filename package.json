@@ -5,6 +5,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "turbo build && npx tsx scripts/postbuild.ts",
+    "watch": "turbo watch",
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",

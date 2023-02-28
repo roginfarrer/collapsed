@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "watch": "tsup --watch",
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
