@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "watch": "tsup --watch",
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
@@ -36,6 +37,7 @@
     "@storybook/addon-actions": "^6.5.11",
     "@storybook/addon-essentials": "^6.5.11",
     "@storybook/addon-links": "^6.5.11",
+    "@storybook/builder-vite": "^0.3.0",
     "@storybook/react": "^6.5.11",
     "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.16.0",

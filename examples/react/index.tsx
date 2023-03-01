@@ -10,7 +10,7 @@ export const Uncontrolled = () => {
   })
 
   return (
-    <div>
+    <div style={{ maxWidth: 250, margin: '0 auto' }}>
       <button {...getToggleProps({ style: { marginRight: 4 } })}>
         {isExpanded ? 'Close' : 'Open'}
       </button>
