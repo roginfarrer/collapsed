@@ -1,4 +1,4 @@
 packages:
   - 'internal/*'
   - 'packages/*'
-  - 'example'
+  - 'examples/*'

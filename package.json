@@ -17,13 +17,13 @@
     "@changesets/cli": "^2.25.2",
     "@collapsed-internal/tsconfig": "workspace:*",
     "@types/node": "^16.7.13",
+    "buffer": "^5.5.0",
     "eslint-config-collapsed": "workspace:*",
     "np": "^6.4.0",
     "prettier": "^2.3.2",
+    "process": "^0.11.10",
     "turbo": "^1.6.3",
-    "typescript": "^4.9",
-    "buffer": "^5.5.0",
-    "process": "^0.11.10"
+    "typescript": "^4.9"
   },
   "prettier": "eslint-config-rogin/prettier",
   "alias": {

@@ -1,0 +1,12 @@
+{
+  "name": "vanilla-example",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "parcel index.html"
+  },
+  "dependencies": {
+    "parcel": "^2.8.3",
+    "@collapsed/core": "workspace:*"
+  }
+}

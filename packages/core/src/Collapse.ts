@@ -28,23 +28,11 @@ export interface CollapseParams {
   /** Unique ID used for accessibility */
   id?: string
   /** Handler called when the expanded state changes */
-  onExpandedChange?: (state: boolean) => void
-  /** Handler called when the collapse transition starts */
-  onCollapseStart?: () => void
-  /** Handler called when the collapse transtion ends */
-  onCollapseEnd?: () => void
-  /** Handler called when the expand transition starts */
-  onExpandStart?: () => void
-  /** Handler called when the expand transition end */
-  onExpandEnd?: () => void
+  onStateChange?: (state: State) => void
   /** Function that returns a reference to the element that expands and collapses */
   getCollapseElement: () => HTMLElement | null | undefined
   /** Function that returns a reference to the toggle for the collapse region */
-  getToggleElement?: () => HTMLElement | null | undefined
-  setStyles?: (newStyles: any) => void
-  styles?: Record<string, string | number>
-  onStateChange?: (stage: State) => void
-  state: State
+  getToggleElement?: () => HTMLElement | null | undefined | void
   initialExpanded?: boolean
 }
 
@@ -57,23 +45,29 @@ export type State =
   | 'preClose'
 
 export class Collapse {
-  options!: CollapseParams
+  options!: Required<CollapseParams>
+  state!: State
   private id!: string
-  toggleEl: HTMLElement | undefined
-  frameId: number | undefined
-  endFrameId: Frame | undefined
-  styles: any = {}
+  private frameId: number | undefined
+  private endFrameId: Frame | undefined
+  private styles: any = {}
 
   constructor(params: CollapseParams) {
     this.setOptions(params)
+    this.setState(this.options.initialExpanded ? 'open' : 'closed')
   }
 
-  getCollapsedStyles = (): Style => {
+  getCollapsedStyles = () => {
     return {
       display: this.options.collapsedHeight === 0 ? 'none' : 'block',
       height: `${this.options.collapsedHeight}px`,
       overflow: 'hidden',
-    }
+    } as const
+  }
+
+  setState(newState: State) {
+    this.state = newState
+    this.options.onStateChange?.(newState)
   }
 
   setOptions = (
@@ -92,11 +86,12 @@ export class Collapse {
       collapseStyles: {},
       hasDisabledAnimation: false,
       collapsedHeight: 0,
-      onExpandedChange() {},
+      onStateChange() {},
+      getToggleElement() {},
+      id: `collapse-${uid(this)}`,
+      initialExpanded: false,
       ...opts,
     }
-
-    this.id = this.options.id ?? `collapse-${uid(this)}`
   }
 
   private setStyles = (styles: Style) => {
@@ -118,7 +113,7 @@ export class Collapse {
     }
   }
 
-  getDuration = (height: number) => {
+  private getDuration = (height: number) => {
     return this.options.duration === 'auto' || !this.options.duration
       ? getAutoHeightDuration(height)
       : this.options.duration
@@ -136,37 +131,37 @@ export class Collapse {
   }
 
   private endTransition = () => {
-    console.log('transitionend')
-
-    if (this.options.state === 'opening') {
+    if (this.state === 'opening') {
       this.setStyles({
         height: '',
         overflow: '',
         transition: '',
         display: '',
       })
-      this.options.onExpandEnd?.()
-      this.options.onStateChange?.('open')
-    } else if (this.options.state === 'closing') {
+      this.setState('open')
+    } else if (this.state === 'closing') {
       this.setStyles({
         ...this.getCollapsedStyles(),
         transition: '',
       })
-      this.options.onCollapseEnd?.()
-      this.options.onStateChange?.('closed')
+      this.setState('closed')
     }
   }
 
-  setTransitionEndTimeout = ({ duration }: { duration: number }) => {
+  private setTransitionEndTimeout = ({ duration }: { duration: number }) => {
     if (this.endFrameId) {
       clearAnimationTimeout(this.endFrameId)
     }
     this.endFrameId = setAnimationTimeout(this.endTransition, duration)
   }
 
+  private getIsOpen = () => {
+    const state = this.state
+    return state === 'preClose' || state === 'open' || state === 'opening'
+  }
+
   open = () => {
     const target = this.options.getCollapseElement()
-    console.log('start open', { target })
     if (!target) {
       return
     }
@@ -175,10 +170,10 @@ export class Collapse {
       cancelAnimationFrame(this.frameId)
     }
 
-    this.options.onExpandStart?.()
     paddingWarning(target)
+
     this.frameId = requestAnimationFrame(() => {
-      this.options.onStateChange?.('preOpen')
+      this.setState('preOpen')
       this.setStyles({
         ...this.options.expandStyles,
         display: 'block',
@@ -186,7 +181,7 @@ export class Collapse {
         height: `${this.options.collapsedHeight}px`,
       })
       this.frameId = requestAnimationFrame(() => {
-        this.options.onStateChange?.('opening')
+        this.setState('opening')
         const height = target.scrollHeight
         this.setTransitionEndTimeout({ duration: this.getDuration(height) })
 
@@ -201,7 +196,6 @@ export class Collapse {
 
   close = () => {
     const target = this.options.getCollapseElement()
-    console.log('start close', { target })
     if (!target) {
       return
     }
@@ -210,9 +204,8 @@ export class Collapse {
       cancelAnimationFrame(this.frameId)
     }
 
-    this.options.onCollapseStart?.()
     this.frameId = requestAnimationFrame(() => {
-      this.options.onStateChange?.('preClose')
+      this.setState('preOpen')
       const height = target.scrollHeight
       this.setTransitionEndTimeout({ duration: this.getDuration(height) })
       this.setStyles({
@@ -220,8 +213,9 @@ export class Collapse {
         transition: this.getTransitionStyles(height),
         height: `${height}px`,
       })
+
       this.frameId = requestAnimationFrame(() => {
-        this.options.onStateChange?.('closing')
+        this.setState('closing')
         this.setStyles({
           height: `${this.options.collapsedHeight}px`,
           overflow: 'hidden',
@@ -231,22 +225,12 @@ export class Collapse {
   }
 
   cleanup = () => {
-    console.log('cleanup', this.frameId)
     if (this.frameId) {
       cancelAnimationFrame(this.frameId)
     }
     if (this.endFrameId) {
       clearAnimationTimeout(this.endFrameId)
     }
-  }
-
-  getIsOpen = () => {
-    const state = this.options.state
-    return state === 'preClose' || state === 'open' || state === 'opening'
-  }
-  getIsClosed = () => {
-    const state = this.options.state
-    return state === 'preOpen' || state === 'closed' || state === 'closing'
   }
 
   getCollapse = () => {
@@ -256,7 +240,7 @@ export class Collapse {
       'aria-hidden': this.getIsOpen() ? undefined : true,
       style: {
         boxSizing: 'border-box' as const,
-        ...(this.options.state === 'closed' ? this.getCollapsedStyles() : {}),
+        ...(this.state === 'closed' ? this.getCollapsedStyles() : {}),
         ...this.styles,
       },
       role: 'region',

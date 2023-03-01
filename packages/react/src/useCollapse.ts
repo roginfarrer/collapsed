@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Collapse, CollapseParams, State } from '@collapsed/core'
+import { Collapse, CollapseParams } from '@collapsed/core'
 import {
   callAll,
   mergeRefs,
@@ -29,9 +29,6 @@ export function useCollapse(options: UseCollapseParams = {}) {
     propDefaultExpanded,
     onExpandedChange
   )
-  const [state, setState] = React.useState<State>(
-    isExpanded ? 'open' : 'closed'
-  )
 
   const id = React.useId()
   const collapseRef = React.useRef<HTMLElement | null>(null)
@@ -40,15 +37,10 @@ export function useCollapse(options: UseCollapseParams = {}) {
 
   const resolvedOptions: CollapseParams = {
     id,
-    onExpandedChange: setExpanded,
     getCollapseElement: () => collapseRef.current,
     getToggleElement: () => toggleRef.current,
-    state,
+    initialExpanded: isExpanded,
     ...opts,
-    onStateChange(stage) {
-      opts.onStateChange?.(stage)
-      setState(stage)
-    },
   }
 
   const instanceRef = React.useRef<Collapse>(new Collapse(resolvedOptions))
@@ -60,18 +52,18 @@ export function useCollapse(options: UseCollapseParams = {}) {
     }
 
     const instance = instanceRef.current
+
     if (isExpanded) {
       instance.open()
     } else {
       instance.close()
     }
-
     prevExpanded.current = isExpanded
 
     return () => {
       instance.cleanup()
     }
-  }, [isExpanded])
+  }, [isExpanded, onExpandedChange])
 
   instanceRef.current.setOptions((prev) => ({
     ...prev,
@@ -84,7 +76,6 @@ export function useCollapse(options: UseCollapseParams = {}) {
       ...rest
     }: {
       refKey?: string
-      onTransitionEnd?: React.TransitionEventHandler
       [k: string]: unknown
     } = {}) {
       const theirRef: any = rest[refKey]
