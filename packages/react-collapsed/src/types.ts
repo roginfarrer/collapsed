@@ -1,7 +1,6 @@
 import type {
   ReactNode,
   CSSProperties,
-  TransitionEvent,
   MouseEvent,
   MutableRefObject,
 } from 'react'
@@ -34,21 +33,21 @@ export interface GetTogglePropsOutput {
 
 export interface GetTogglePropsInput {
   [key: string]: unknown
+  isButton?: boolean
   disabled?: boolean
   onClick?: (e: MouseEvent) => void
 }
 
 export interface GetCollapsePropsOutput {
   id: string
-  onTransitionEnd: (e: TransitionEvent) => void
   style: CSSProperties
   'aria-hidden': AriaBoolean
+  role: 'region'
 }
 
 export interface GetCollapsePropsInput {
   [key: string]: unknown
   style?: CSSProperties
-  onTransitionEnd?: (e: TransitionEvent) => void
   refKey?: string
   ref?: (node: ReactNode) => void | null | undefined
 }
@@ -57,8 +56,8 @@ export interface UseCollapseInput {
   isExpanded?: boolean
   defaultExpanded?: boolean
   collapsedHeight?: number
-  expandStyles?: {}
-  collapseStyles?: {}
+  expandStyles?: Partial<CSSStyleDeclaration>
+  collapseStyles?: Partial<CSSStyleDeclaration>
   easing?: string
   duration?: number
   onCollapseStart?: () => void

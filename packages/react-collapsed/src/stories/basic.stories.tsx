@@ -15,13 +15,13 @@ export const Uncontrolled = () => {
 
 export const Controlled = () => {
   const [isExpanded, setOpen] = React.useState<boolean>(true)
-  const { getToggleProps, getCollapseProps } = useCollapse({
+  const { getCollapseProps } = useCollapse({
     isExpanded,
   })
 
   return (
     <div>
-      <Toggle {...getToggleProps({ onClick: () => setOpen((x) => !x) })}>
+      <Toggle onClick={() => setOpen((x) => !x)}>
         {isExpanded ? 'Close' : 'Open'}
       </Toggle>
       <Collapse {...getCollapseProps({})}>{excerpt}</Collapse>

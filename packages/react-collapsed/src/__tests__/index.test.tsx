@@ -12,10 +12,7 @@ const Collapse = ({
   collapseProps?: any
   toggleProps?: any
 }) => {
-  const { getCollapseProps, getToggleProps } = useCollapse({
-    ...props,
-    id: 'test',
-  })
+  const { getCollapseProps, getToggleProps } = useCollapse(props)
   return (
     <>
       <Toggle {...getToggleProps(toggleProps)} data-testid="toggle">
@@ -36,31 +33,35 @@ test('does not throw', () => {
 test('Toggle has expected props when closed (default)', () => {
   const { rerender } = render(<Collapse toggleElement="div" />)
   const toggle = screen.getByRole('button')
+  const collapse = screen.getByTestId('collapse')
   expect(toggle).toHaveAttribute('role', 'button')
   expect(toggle).toHaveAttribute('tabIndex', '0')
   expect(toggle).toHaveAttribute('aria-expanded', 'false')
-  expect(toggle).toHaveAttribute('aria-controls', 'test')
+  expect(toggle).toHaveAttribute('aria-controls', collapse.id)
 
   rerender(<Collapse toggleElement="button" />)
   const toggle2 = screen.getByRole('button')
+  const collapse2 = screen.getByTestId('collapse')
   expect(toggle2).toHaveAttribute('type', 'button')
   expect(toggle2).toHaveAttribute('aria-expanded', 'false')
-  expect(toggle2).toHaveAttribute('aria-controls', 'test')
+  expect(toggle2).toHaveAttribute('aria-controls', collapse2.id)
 })
 
 test('Toggle has expected props when collapse is open', () => {
   const { rerender } = render(<Collapse toggleElement="div" isExpanded />)
   const toggle = screen.getByRole('button')
+  const collapse = screen.getByTestId('collapse')
   expect(toggle).toHaveAttribute('role', 'button')
   expect(toggle).toHaveAttribute('tabIndex', '0')
   expect(toggle).toHaveAttribute('aria-expanded', 'true')
-  expect(toggle).toHaveAttribute('aria-controls', 'test')
+  expect(toggle).toHaveAttribute('aria-controls', collapse.id)
 
   rerender(<Collapse toggleElement="button" isExpanded />)
   const toggle2 = screen.getByRole('button')
+  const collapse2 = screen.getByTestId('collapse')
   expect(toggle2).toHaveAttribute('type', 'button')
   expect(toggle2).toHaveAttribute('aria-expanded', 'true')
-  expect(toggle2).toHaveAttribute('aria-controls', 'test')
+  expect(toggle2).toHaveAttribute('aria-controls', collapse2.id)
 })
 
 test('Toggle has expected props when disabled', () => {
@@ -68,24 +69,26 @@ test('Toggle has expected props when disabled', () => {
     <Collapse toggleElement="div" toggleProps={{ disabled: true }} />
   )
   const toggle = screen.getByRole('button')
+  const collapse = screen.getByTestId('collapse')
   expect(toggle).toHaveAttribute('role', 'button')
   expect(toggle).toHaveAttribute('tabIndex', '-1')
   expect(toggle).toHaveAttribute('aria-expanded', 'false')
-  expect(toggle).toHaveAttribute('aria-controls', 'test')
+  expect(toggle).toHaveAttribute('aria-controls', collapse.id)
   expect(toggle).toHaveAttribute('aria-disabled')
 
   rerender(<Collapse toggleElement="button" toggleProps={{ disabled: true }} />)
   const toggle2 = screen.getByRole('button')
+  const collapse2 = screen.getByTestId('collapse')
   expect(toggle2).toHaveAttribute('type', 'button')
   expect(toggle2).toHaveAttribute('aria-expanded', 'false')
-  expect(toggle2).toHaveAttribute('aria-controls', 'test')
+  expect(toggle2).toHaveAttribute('aria-controls', collapse2.id)
   expect(toggle2).toHaveAttribute('disabled')
 })
 
 test('Collapse has expected props when closed (default)', () => {
   render(<Collapse />)
   const collapse = screen.getByTestId('collapse')
-  expect(collapse).toHaveAttribute('id', 'test')
+  expect(collapse).toHaveAttribute('id')
   expect(collapse.getAttribute('aria-hidden')).toBe('true')
   expect(collapse).toHaveStyle({ display: 'none', height: '0px' })
 })
@@ -93,22 +96,13 @@ test('Collapse has expected props when closed (default)', () => {
 test('Collapse has expected props when open', () => {
   render(<Collapse isExpanded />)
   const collapse = screen.getByTestId('collapse')
-  expect(collapse).toHaveAttribute('id', 'test')
-  expect(collapse).not.toHaveAttribute('aria-hidden')
+  expect(collapse).toHaveAttribute('id')
+  expect(collapse).toHaveAttribute('aria-hidden', 'false')
   expect(collapse.style).not.toContain(
     expect.objectContaining({
       display: 'none',
       height: '0px',
     })
-  )
-})
-
-test("Toggle's aria-controls matches Collapse's id", () => {
-  render(<Collapse />)
-  const toggle = screen.getByRole('button')
-  const collapse = screen.getByTestId('collapse')
-  expect(toggle.getAttribute('aria-controls')).toEqual(
-    collapse.getAttribute('id')
   )
 })
 

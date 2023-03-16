@@ -1,32 +1,44 @@
-import { useState, useRef, TransitionEvent, CSSProperties } from 'react'
-import { flushSync } from 'react-dom'
+import {
+  useState,
+  useRef,
+  useId,
+  useEffect,
+  useLayoutEffect as useReactLayoutEffect,
+  useCallback,
+} from 'react'
 import {
   noop,
-  callAll,
   getElementHeight,
   getAutoHeightDuration,
   mergeRefs,
   usePaddingWarning,
-  useUniqueId,
-  useEffectAfterMount,
   useControlledState,
+  callAll,
 } from './utils'
 import {
   UseCollapseInput,
-  UseCollapseOutput,
-  GetCollapsePropsOutput,
   GetCollapsePropsInput,
   GetTogglePropsOutput,
   GetTogglePropsInput,
+  UseCollapseOutput,
+  GetCollapsePropsOutput,
 } from './types'
+import {
+  clearAnimationTimeout,
+  Frame,
+  setAnimationTimeout,
+} from './setAnimationTimeout'
 
 const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
+const useLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useReactLayoutEffect
 
 export function useCollapse({
   duration,
   easing = easeInOut,
-  collapseStyles = {},
-  expandStyles = {},
+  // collapseStyles = {},
+  // expandStyles = {},
   onExpandStart = noop,
   onExpandEnd = noop,
   onCollapseStart = noop,
@@ -40,136 +52,179 @@ export function useCollapse({
     configIsExpanded,
     defaultExpanded
   )
-  const uniqueId = useUniqueId()
-  const el = useRef<HTMLElement | null>(null)
-  usePaddingWarning(el)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const prevExpanded = useRef(isExpanded)
+  const uniqueId = useId()
+  const frameId = useRef<number>()
+  const endFrameId = useRef<Frame>()
+  const collapseElRef = useRef<HTMLElement | null>(null)
+  const toggleElRef = useRef<HTMLElement | null>(null)
+
+  usePaddingWarning(collapseElRef)
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`
-  const collapsedStyles = {
-    display: collapsedHeight === '0px' ? 'none' : 'block',
-    height: collapsedHeight,
-    overflow: 'hidden',
+
+  function setStyles<T extends Partial<CSSStyleDeclaration>>(newStyles: T) {
+    if (!collapseElRef.current) return
+    const target = collapseElRef.current
+
+    for (const property in newStyles) {
+      const value = newStyles[property]
+      if (value) {
+        target.style[property] = value
+      } else {
+        target.style.removeProperty(property)
+      }
+    }
   }
-  const [styles, setStylesRaw] = useState<CSSProperties>(
-    isExpanded ? {} : collapsedStyles
+
+  const setTransitionEndTimeout = useCallback(
+    (duration: number) => {
+      function endTransition() {
+        if (isExpanded) {
+          setStyles({
+            height: '',
+            overflow: '',
+            transition: '',
+            display: '',
+          })
+          onExpandEnd()
+        } else {
+          setStyles({
+            transition: '',
+          })
+          onCollapseEnd()
+        }
+        setIsAnimating(false)
+      }
+
+      if (endFrameId.current) {
+        clearAnimationTimeout(endFrameId.current)
+      }
+      endFrameId.current = setAnimationTimeout(endTransition, duration)
+    },
+    [isExpanded, onCollapseEnd, onExpandEnd]
   )
-  const setStyles = (newStyles: {} | ((oldStyles: {}) => {})): void => {
-    // We rely on reading information from layout
-    // at arbitrary times, so ensure all style changes
-    // happen before we might attempt to read them.
-    flushSync(() => {
-      setStylesRaw(newStyles)
-    })
-  }
-  const mergeStyles = (newStyles: {}): void => {
-    setStyles((oldStyles) => ({ ...oldStyles, ...newStyles }))
-  }
 
-  function getTransitionStyles(height: number | string): CSSProperties {
-    if (hasDisabledAnimation) {
-      return {}
+  useLayoutEffect(() => {
+    if (isExpanded === prevExpanded.current) {
+      return
     }
-    const _duration = duration || getAutoHeightDuration(height)
-    return {
-      transition: `height ${_duration}ms ${easing}`,
-    }
-  }
+    prevExpanded.current = isExpanded
 
-  useEffectAfterMount(() => {
+    const collapse = collapseElRef.current
+    if (!collapse) return
+
+    function getDuration(height: number | string) {
+      if (hasDisabledAnimation) {
+        return 0
+      }
+      return duration ?? getAutoHeightDuration(height)
+    }
+    const getTransitionStyles = (height: number | string) =>
+      `height ${getDuration(height)}ms ${easing}`
+
+    setIsAnimating(true)
+
     if (isExpanded) {
-      requestAnimationFrame(() => {
+      frameId.current = requestAnimationFrame(() => {
         onExpandStart()
-        mergeStyles({
-          ...expandStyles,
-          willChange: 'height',
+        setStyles({
           display: 'block',
           overflow: 'hidden',
+          height: collapsedHeight,
         })
-        requestAnimationFrame(() => {
-          const height = getElementHeight(el)
-          mergeStyles({
-            ...getTransitionStyles(height),
-            height,
-          })
+        frameId.current = requestAnimationFrame(() => {
+          const height = getElementHeight(collapseElRef)
+          setTransitionEndTimeout(getDuration(height))
+
+          if (collapseElRef.current) {
+            // Order is important! Setting directly.
+            collapseElRef.current.style.transition = getTransitionStyles(height)
+            collapseElRef.current.style.height = `${height}px`
+          }
         })
       })
     } else {
-      requestAnimationFrame(() => {
+      frameId.current = requestAnimationFrame(() => {
         onCollapseStart()
-        const height = getElementHeight(el)
-        mergeStyles({
-          ...collapseStyles,
-          ...getTransitionStyles(height),
-          willChange: 'height',
-          height,
+        const height = getElementHeight(collapseElRef)
+        setTransitionEndTimeout(getDuration(height))
+        setStyles({
+          transition: getTransitionStyles(height),
+          height: `${height}px`,
         })
-        requestAnimationFrame(() => {
-          mergeStyles({
+        frameId.current = requestAnimationFrame(() => {
+          setStyles({
             height: collapsedHeight,
             overflow: 'hidden',
           })
         })
       })
     }
-  }, [isExpanded, collapsedHeight])
 
-  const handleTransitionEnd = (e: TransitionEvent): void => {
-    // Sometimes onTransitionEnd is triggered by another transition,
-    // such as a nested collapse panel transitioning. But we only
-    // want to handle this if this component's element is transitioning
-    if (e.target !== el.current || e.propertyName !== 'height') {
-      return
+    return () => {
+      if (frameId.current) cancelAnimationFrame(frameId.current)
+      if (endFrameId.current) clearAnimationTimeout(endFrameId.current)
     }
+  }, [
+    isExpanded,
+    collapsedHeight,
+    onExpandStart,
+    setTransitionEndTimeout,
+    onCollapseStart,
+    hasDisabledAnimation,
+    duration,
+    easing,
+  ])
 
-    // The height comparisons below are a final check before
-    // completing the transition
-    // Sometimes this callback is run even though we've already begun
-    // transitioning the other direction
-    // The conditions give us the opportunity to bail out,
-    // which will prevent the collapsed content from flashing on the screen
-    if (isExpanded) {
-      const height = getElementHeight(el)
-
-      // If the height at the end of the transition
-      // matches the height we're animating to,
-      if (height === styles.height) {
-        setStyles({})
-      } else {
-        // If the heights don't match, this could be due the height
-        // of the content changing mid-transition
-        mergeStyles({ height })
-      }
-
-      onExpandEnd()
-
-      // If the height we should be animating to matches the collapsed height,
-      // it's safe to apply the collapsed overrides
-    } else if (styles.height === collapsedHeight) {
-      setStyles(collapsedStyles)
-      onCollapseEnd()
+  useEffect(() => {
+    return () => {
+      if (frameId.current) cancelAnimationFrame(frameId.current)
+      if (endFrameId.current) clearAnimationTimeout(endFrameId.current)
     }
-  }
+  }, [])
 
   function getToggleProps({
     disabled = false,
     onClick = noop,
+    refKey = 'ref',
+    isButton,
     ...rest
   }: GetTogglePropsInput = {}): GetTogglePropsOutput {
-    return {
-      type: 'button',
-      role: 'button',
+    const theirRef: any = rest[refKey as string]
+
+    const props: any = {
       id: `react-collapsed-toggle-${uniqueId}`,
       'aria-controls': `react-collapsed-panel-${uniqueId}`,
       'aria-expanded': isExpanded,
-      tabIndex: 0,
-      disabled,
-      ...rest,
       onClick: disabled ? noop : callAll(onClick, () => setExpanded((n) => !n)),
+      [refKey as string]: mergeRefs(theirRef, toggleElRef),
+    }
+    const buttonProps = {
+      type: 'button',
+      disabled: disabled ? true : undefined,
+    }
+    const fakeButtonProps = {
+      'aria-disabled': disabled ? true : undefined,
+      role: 'button',
+      tabIndex: disabled ? -1 : 0,
+    }
+
+    if (isButton === false) {
+      return { ...props, ...fakeButtonProps }
+    } else if (isButton === true) {
+      return { ...props, ...buttonProps }
+    } else {
+      return {
+        ...props,
+        ...buttonProps,
+        ...fakeButtonProps,
+      }
     }
   }
 
   function getCollapseProps({
     style = {},
-    onTransitionEnd = noop,
     refKey = 'ref',
     ...rest
   }: GetCollapsePropsInput = {}): GetCollapsePropsOutput {
@@ -177,15 +232,21 @@ export function useCollapse({
     return {
       id: `react-collapsed-panel-${uniqueId}`,
       'aria-hidden': !isExpanded,
+      role: 'region',
       ...rest,
-      [refKey]: mergeRefs(el, theirRef),
-      onTransitionEnd: callAll(handleTransitionEnd, onTransitionEnd),
+      [refKey]: mergeRefs(collapseElRef, theirRef),
       style: {
         boxSizing: 'border-box',
+        ...(!isAnimating && !isExpanded
+          ? {
+              // collapsed and not animating
+              display: collapsedHeight === '0px' ? 'none' : 'block',
+              height: collapsedHeight,
+              overflow: 'hidden',
+            }
+          : {}),
         // additional styles passed, e.g. getCollapseProps({style: {}})
         ...style,
-        // style overrides from state
-        ...styles,
       },
     }
   }

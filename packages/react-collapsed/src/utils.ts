@@ -16,7 +16,7 @@ export const noop = (): void => {}
 
 export function getElementHeight(
   el: RefObject<HTMLElement> | { current?: { scrollHeight: number } }
-): string | number {
+): number {
   if (!el?.current) {
     warning(
       true,
@@ -24,7 +24,7 @@ export function getElementHeight(
 
 {...getCollapseProps({refKey: 'innerRef'})}`
     )
-    return 'auto'
+    return 0
   }
   return el.current.scrollHeight
 }
@@ -83,104 +83,62 @@ export function mergeRefs<RefValueType = any>(
   }
 }
 
-export function useControlledState(
-  isExpanded?: boolean,
-  defaultExpanded?: boolean
-): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
-  const [stateExpanded, setStateExpanded] = useState(defaultExpanded || false)
-  const initiallyControlled = useRef(isExpanded != null)
-  const expanded = initiallyControlled.current
-    ? (isExpanded as boolean)
-    : stateExpanded
-  const setExpanded = useCallback((n) => {
-    if (!initiallyControlled.current) {
-      setStateExpanded(n)
-    }
-  }, [])
+export function useEvent<T extends (...args: any[]) => any>(callback?: T) {
+  const ref = useRef<T | undefined>(callback)
+
+  useEffect(() => {
+    ref.current = callback
+  })
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useCallback(((...args: any) => ref.current?.(...args)) as T, [])
+}
+
+export function useControlledState<T>(
+  value: T | undefined,
+  defaultValue: T | undefined,
+  callback?: (value: T) => void
+): [T, (update: T | ((value: T) => T)) => void] {
+  const [state, setState] = useState<T>(defaultValue as T)
+  const initiallyControlled = useRef(typeof value !== 'undefined')
+  const effectiveValue = initiallyControlled.current ? value : state
+  const cb = useEvent(callback)
+
+  const onChange = useCallback(
+    (update: React.SetStateAction<T>) => {
+      const setter = update as (value?: T) => T
+      const newValue =
+        typeof update === 'function' ? setter(effectiveValue) : update
+
+      if (!initiallyControlled.current) {
+        setState(newValue)
+      }
+
+      cb?.(newValue)
+    },
+    [cb, effectiveValue]
+  )
 
   useEffect(() => {
     warning(
-      !(initiallyControlled.current && isExpanded == null),
+      !(initiallyControlled.current && value == null),
       'useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
     warning(
-      !(!initiallyControlled.current && isExpanded != null),
+      !(!initiallyControlled.current && value != null),
       'useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the `isExpanded` prop.'
     )
-  }, [isExpanded])
+  }, [value])
 
-  return [expanded, setExpanded]
+  return [effectiveValue as T, onChange]
 }
 
-export function useEffectAfterMount(
-  cb: () => void,
-  dependencies: unknown[]
-): void {
-  const justMounted = useRef(true)
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (!justMounted.current) {
-      return cb()
-    }
-    justMounted.current = false
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies)
-}
-
-/**
- * Taken from Reach
- * https://github.com/reach/reach-ui/blob/d2b88c50caf52f473a7d20a4493e39e3c5e95b7b/packages/auto-id
- *
- * Autogenerate IDs to facilitate WAI-ARIA and server rendering.
- *
- * Note: The returned ID will initially be `null` and will update after a
- * component mounts. Users may need to supply their own ID if they need
- * consistent values for SSR.
- *
- * @see Docs https://reach.tech/auto-id
- */
-const useIsomorphicLayoutEffect =
+export const useIsomorphicLayoutEffect: typeof useLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
-let serverHandoffComplete = false
-let id = 0
-const genId = () => ++id
-export function useUniqueId(idFromProps?: string | null) {
-  /*
-   * If this instance isn't part of the initial render, we don't have to do the
-   * double render/patch-up dance. We can just generate the ID and return it.
-   */
-  const initialId = idFromProps || (serverHandoffComplete ? genId() : null)
-
-  const [id, setId] = useState(initialId)
-
-  useIsomorphicLayoutEffect(() => {
-    if (id === null) {
-      /*
-       * Patch the ID after render. We do this in `useLayoutEffect` to avoid any
-       * rendering flicker, though it'll make the first render slower (unlikely
-       * to matter, but you're welcome to measure your app and let us know if
-       * it's a problem).
-       */
-      setId(genId())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (serverHandoffComplete === false) {
-      /*
-       * Flag all future uses of `useId` to skip the update dance. This is in
-       * `useEffect` because it goes after `useLayoutEffect`, ensuring we don't
-       * accidentally bail out of the patch-up dance prematurely.
-       */
-      serverHandoffComplete = true
-    }
-  }, [])
-  return id != null ? String(id) : undefined
-}
 
 export function usePaddingWarning(element: RefObject<HTMLElement>): void {
-  // @ts-ignore
+  // @ts-expect-error we do use it in dev
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let warn = (el?: RefObject<HTMLElement>): void => {}
 
   if (process.env.NODE_ENV !== 'production') {
