@@ -5,6 +5,7 @@ import {
   useEffect,
   useLayoutEffect as useReactLayoutEffect,
   useCallback,
+  CSSProperties,
 } from 'react'
 import {
   noop,
@@ -14,51 +15,94 @@ import {
   usePaddingWarning,
   useControlledState,
   callAll,
-} from './utils'
-import {
-  UseCollapseInput,
-  GetCollapsePropsInput,
-  GetTogglePropsOutput,
-  GetTogglePropsInput,
-  UseCollapseOutput,
-  GetCollapsePropsOutput,
-} from './types'
-import {
+  useEvent,
+  useReduceMotion,
   clearAnimationTimeout,
   Frame,
+  AssignableRef,
   setAnimationTimeout,
-} from './setAnimationTimeout'
+} from './utils'
 
 const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 const useLayoutEffect =
   typeof window === 'undefined' ? useEffect : useReactLayoutEffect
 
+export interface UseCollapseInput {
+  /**
+   * If true, the collapsible element is expanded. If set, this value must be controlled
+   */
+  isExpanded?: boolean
+  /**
+   * If true, the collapsible element is expanded when it initially mounts
+   * @default false
+   */
+  defaultExpanded?: boolean
+  /**
+   * Sets the height (Number) to which the elements collapsses
+   * @default 0
+   */
+  collapsedHeight?: number
+  /**
+   * Sets the transition-timing-function of the animation
+   * @default 'cubic-bezier(0.4, 0, 0.2, 1)'
+   */
+  easing?: string
+  /**
+   * Sets the duration of the animation. If 'auto', a 'natural' duration is
+   * calculated based on the distance of the animation
+   * @default 'auto'
+   */
+  duration?: number
+  /**
+   * If true, the animation is disabled. Overrides the hooks own logic for
+   * disabling the animation according to reduced motion preferences
+   * @default false
+   */
+  hasDisabledAnimation?: boolean
+  /**
+   * Handler called at each stage of the animation
+   */
+  onAnimationStageChange?: (
+    state:
+      | 'expandStart'
+      | 'expandEnd'
+      | 'expanding'
+      | 'collapseStart'
+      | 'collapseEnd'
+      | 'collapsing'
+  ) => void
+}
+
 export function useCollapse({
   duration,
   easing = easeInOut,
-  // collapseStyles = {},
-  // expandStyles = {},
-  onExpandStart = noop,
-  onExpandEnd = noop,
-  onCollapseStart = noop,
-  onCollapseEnd = noop,
+  onAnimationStageChange: propAnimationStateChange = noop,
   isExpanded: configIsExpanded,
   defaultExpanded = false,
-  hasDisabledAnimation = false,
+  hasDisabledAnimation,
   ...initialConfig
-}: UseCollapseInput = {}): UseCollapseOutput {
+}: UseCollapseInput = {}) {
+  const onAnimationStateChange = useEvent(propAnimationStateChange)
+  const uniqueId = useId()
+
   const [isExpanded, setExpanded] = useControlledState(
     configIsExpanded,
     defaultExpanded
   )
-  const [isAnimating, setIsAnimating] = useState(false)
   const prevExpanded = useRef(isExpanded)
-  const uniqueId = useId()
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const prefersReducedMotion = useReduceMotion()
+  const disableAnimation = hasDisabledAnimation ?? prefersReducedMotion
+
+  // Animation frames
   const frameId = useRef<number>()
   const endFrameId = useRef<Frame>()
+
+  // Collapse + toggle elements
   const collapseElRef = useRef<HTMLElement | null>(null)
-  const toggleElRef = useRef<HTMLElement | null>(null)
+  const [toggleEl, setToggleEl] = useState<HTMLElement | null>(null)
 
   usePaddingWarning(collapseElRef)
   const collapsedHeight = `${initialConfig.collapsedHeight || 0}px`
@@ -87,12 +131,10 @@ export function useCollapse({
             transition: '',
             display: '',
           })
-          onExpandEnd()
+          onAnimationStateChange('expandEnd')
         } else {
-          setStyles({
-            transition: '',
-          })
-          onCollapseEnd()
+          setStyles({ transition: '' })
+          onAnimationStateChange('collapseEnd')
         }
         setIsAnimating(false)
       }
@@ -102,24 +144,23 @@ export function useCollapse({
       }
       endFrameId.current = setAnimationTimeout(endTransition, duration)
     },
-    [isExpanded, onCollapseEnd, onExpandEnd]
+    [isExpanded, onAnimationStateChange]
   )
 
   useLayoutEffect(() => {
-    if (isExpanded === prevExpanded.current) {
-      return
-    }
+    if (isExpanded === prevExpanded.current) return
     prevExpanded.current = isExpanded
 
     const collapse = collapseElRef.current
     if (!collapse) return
 
     function getDuration(height: number | string) {
-      if (hasDisabledAnimation) {
+      if (disableAnimation) {
         return 0
       }
       return duration ?? getAutoHeightDuration(height)
     }
+
     const getTransitionStyles = (height: number | string) =>
       `height ${getDuration(height)}ms ${easing}`
 
@@ -127,13 +168,14 @@ export function useCollapse({
 
     if (isExpanded) {
       frameId.current = requestAnimationFrame(() => {
-        onExpandStart()
+        onAnimationStateChange('expandStart')
         setStyles({
           display: 'block',
           overflow: 'hidden',
           height: collapsedHeight,
         })
         frameId.current = requestAnimationFrame(() => {
+          onAnimationStateChange('expanding')
           const height = getElementHeight(collapseElRef)
           setTransitionEndTimeout(getDuration(height))
 
@@ -146,7 +188,7 @@ export function useCollapse({
       })
     } else {
       frameId.current = requestAnimationFrame(() => {
-        onCollapseStart()
+        onAnimationStateChange('collapseStart')
         const height = getElementHeight(collapseElRef)
         setTransitionEndTimeout(getDuration(height))
         setStyles({
@@ -154,6 +196,7 @@ export function useCollapse({
           height: `${height}px`,
         })
         frameId.current = requestAnimationFrame(() => {
+          onAnimationStateChange('collapsing')
           setStyles({
             height: collapsedHeight,
             overflow: 'hidden',
@@ -169,92 +212,128 @@ export function useCollapse({
   }, [
     isExpanded,
     collapsedHeight,
-    onExpandStart,
     setTransitionEndTimeout,
-    onCollapseStart,
-    hasDisabledAnimation,
+    disableAnimation,
     duration,
     easing,
+    onAnimationStateChange,
   ])
 
-  useEffect(() => {
-    return () => {
-      if (frameId.current) cancelAnimationFrame(frameId.current)
-      if (endFrameId.current) clearAnimationTimeout(endFrameId.current)
-    }
-  }, [])
-
-  function getToggleProps({
-    disabled = false,
-    onClick = noop,
-    refKey = 'ref',
-    isButton,
-    ...rest
-  }: GetTogglePropsInput = {}): GetTogglePropsOutput {
-    const theirRef: any = rest[refKey as string]
-
-    const props: any = {
-      id: `react-collapsed-toggle-${uniqueId}`,
-      'aria-controls': `react-collapsed-panel-${uniqueId}`,
-      'aria-expanded': isExpanded,
-      onClick: disabled ? noop : callAll(onClick, () => setExpanded((n) => !n)),
-      [refKey as string]: mergeRefs(theirRef, toggleElRef),
-    }
-    const buttonProps = {
-      type: 'button',
-      disabled: disabled ? true : undefined,
-    }
-    const fakeButtonProps = {
-      'aria-disabled': disabled ? true : undefined,
-      role: 'button',
-      tabIndex: disabled ? -1 : 0,
-    }
-
-    if (isButton === false) {
-      return { ...props, ...fakeButtonProps }
-    } else if (isButton === true) {
-      return { ...props, ...buttonProps }
-    } else {
-      return {
-        ...props,
-        ...buttonProps,
-        ...fakeButtonProps,
-      }
-    }
-  }
-
-  function getCollapseProps({
-    style = {},
-    refKey = 'ref',
-    ...rest
-  }: GetCollapsePropsInput = {}): GetCollapsePropsOutput {
-    const theirRef: any = rest[refKey]
-    return {
-      id: `react-collapsed-panel-${uniqueId}`,
-      'aria-hidden': !isExpanded,
-      role: 'region',
-      ...rest,
-      [refKey]: mergeRefs(collapseElRef, theirRef),
-      style: {
-        boxSizing: 'border-box',
-        ...(!isAnimating && !isExpanded
-          ? {
-              // collapsed and not animating
-              display: collapsedHeight === '0px' ? 'none' : 'block',
-              height: collapsedHeight,
-              overflow: 'hidden',
-            }
-          : {}),
-        // additional styles passed, e.g. getCollapseProps({style: {}})
-        ...style,
-      },
-    }
-  }
-
   return {
-    getToggleProps,
-    getCollapseProps,
     isExpanded,
     setExpanded,
+
+    getToggleProps<
+      Args extends {
+        onClick?: React.MouseEventHandler
+        disabled?: boolean
+        [k: string]: unknown
+      },
+      RefKey extends string | undefined = 'ref'
+    >(
+      rest?: Args & {
+        /**
+         * Sets the key of the prop that the component uses for ref assignment
+         * @default 'ref'
+         */
+        refKey?: RefKey
+      }
+    ): { [K in RefKey extends string ? RefKey : 'ref']: AssignableRef<any> } & {
+      onClick: React.MouseEventHandler
+      id: string
+      'aria-controls': string
+      'aria-expanded'?: boolean
+      type?: 'button'
+      disabled?: boolean
+      'aria-disabled'?: boolean
+      role?: 'button'
+      tabIndex?: number
+    } {
+      const { disabled, onClick, refKey } = {
+        refKey: 'ref',
+        onClick() {},
+        disabled: false,
+        ...rest,
+      }
+
+      const isButton = toggleEl ? toggleEl.tagName === 'BUTTON' : undefined
+
+      const theirRef: any = rest?.[refKey || 'ref']
+
+      const props: any = {
+        id: `react-collapsed-toggle-${uniqueId}`,
+        'aria-controls': `react-collapsed-panel-${uniqueId}`,
+        'aria-expanded': isExpanded,
+        onClick: disabled
+          ? noop
+          : callAll(onClick, () => setExpanded((n) => !n)),
+        [refKey || 'ref']: mergeRefs(theirRef, setToggleEl),
+      }
+
+      const buttonProps = {
+        type: 'button',
+        disabled: disabled ? true : undefined,
+      }
+      const fakeButtonProps = {
+        'aria-disabled': disabled ? true : undefined,
+        role: 'button',
+        tabIndex: disabled ? -1 : 0,
+      }
+
+      if (isButton === false) {
+        return { ...props, ...fakeButtonProps }
+      } else if (isButton === true) {
+        return { ...props, ...buttonProps }
+      } else {
+        return {
+          ...props,
+          ...buttonProps,
+          ...fakeButtonProps,
+        }
+      }
+    },
+
+    getCollapseProps<
+      Args extends { style?: CSSProperties; [k: string]: unknown },
+      RefKey extends string | undefined = 'ref'
+    >(
+      rest?: Args & {
+        /**
+         * Sets the key of the prop that the component uses for ref assignment
+         * @default 'ref'
+         */
+        refKey?: RefKey
+      }
+    ): {
+      [K in RefKey extends string ? RefKey : 'ref']: AssignableRef<any>
+    } & {
+      id: string
+      'aria-hidden': boolean
+      role: string
+      style: CSSProperties
+    } {
+      const { style, refKey } = { refKey: 'ref', style: {}, ...rest }
+      const theirRef: any = rest?.[refKey || 'ref']
+      return {
+        id: `react-collapsed-panel-${uniqueId}`,
+        'aria-hidden': !isExpanded,
+        role: 'region',
+        ...rest,
+        [refKey || 'ref']: mergeRefs(collapseElRef, theirRef),
+        style: {
+          boxSizing: 'border-box',
+          ...(!isAnimating && !isExpanded
+            ? {
+                // collapsed and not animating
+                display: collapsedHeight === '0px' ? 'none' : 'block',
+                height: collapsedHeight,
+                overflow: 'hidden',
+              }
+            : {}),
+          // additional styles passed, e.g. getCollapseProps({style: {}})
+          ...style,
+        },
+      } as any
+    },
   }
 }

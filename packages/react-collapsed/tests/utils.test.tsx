@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import { useControlledState, callAll } from '../utils'
+import { useControlledState, callAll } from '../src/utils'
 
 describe('callAll', () => {
   it('it calls the two functions passed into it', () => {

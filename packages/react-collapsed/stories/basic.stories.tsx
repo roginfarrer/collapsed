@@ -3,8 +3,11 @@ import { useCollapse } from '..'
 import { Toggle, Collapse, excerpt } from './components'
 
 export const Uncontrolled = () => {
+  const foo = React.useRef()
   const { getToggleProps, getCollapseProps, isExpanded } = useCollapse()
 
+  const c = getCollapseProps()
+  const obj = { ref: foo }
   return (
     <div>
       <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
