@@ -3,7 +3,7 @@ import { CollapseError, warning } from './CollapseError'
 
 export { useEvent } from './useEvent'
 export { useControlledState } from './useControlledState'
-export { useReduceMotion } from './useReduceMotion'
+export { usePrefersReducedMotion } from './usePrefersReducedMotion'
 export { useId } from './useId'
 export * from './setAnimationTimeout'
 

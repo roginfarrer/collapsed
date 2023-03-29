@@ -11,11 +11,16 @@ export function Unmount() {
   const [mountChildren, setMountChildren] = React.useState(true)
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-    onExpandStart() {
-      setMountChildren(true)
-    },
-    onCollapseEnd() {
-      setMountChildren(false)
+    onTransitionStateChange(state) {
+      switch (state) {
+        case 'expandStart':
+          setMountChildren(true)
+          break
+        case 'collapseEnd':
+          setMountChildren(false)
+          break
+        default:
+      }
     },
   })
 

@@ -13,51 +13,48 @@ import {
   usePaddingWarning,
   useControlledState,
   useEvent,
-  useReduceMotion,
+  usePrefersReducedMotion,
   clearAnimationTimeout,
   Frame,
   AssignableRef,
   setAnimationTimeout,
 } from './utils'
 
-const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
-
 const useLayoutEffect =
   typeof window === 'undefined' ? useEffect : useReactLayoutEffect
 
 export interface UseCollapseInput {
   /**
-   * If true, the collapsible element is expanded. If set, this value must be controlled
+   * If true, the collapsible element is expanded.
    */
   isExpanded?: boolean
   /**
-   * If true, the collapsible element is expanded when it initially mounts
+   * If true, the collapsible element is expanded when it initially mounts.
    * @default false
    */
   defaultExpanded?: boolean
   /**
-   * Sets the height (Number) to which the elements collapsses
+   * Sets the height (Number) to which the elements collapses.
    * @default 0
    */
   collapsedHeight?: number
   /**
-   * Sets the transition-timing-function of the animation
+   * Sets the transition-timing-function of the animation.
    * @default 'cubic-bezier(0.4, 0, 0.2, 1)'
    */
   easing?: string
   /**
-   * Sets the duration of the animation. If 'auto', a 'natural' duration is
-   * calculated based on the distance of the animation
-   * @default 'auto'
+   * Sets the duration of the animation. If undefined, a 'natural' duration is
+   * calculated based on the distance of the animation.
    */
   duration?: number
   /**
    * If true, the animation is disabled. Overrides the hooks own logic for
-   * disabling the animation according to reduced motion preferences
+   * disabling the animation according to reduced motion preferences.
    */
   hasDisabledAnimation?: boolean
   /**
-   * Handler called at each stage of the animation
+   * Handler called at each stage of the animation.
    */
   onTransitionStateChange?: (
     state:
@@ -72,7 +69,7 @@ export interface UseCollapseInput {
 
 export function useCollapse({
   duration,
-  easing = easeInOut,
+  easing = 'cubic-bezier(0.4, 0, 0.2, 1)',
   onTransitionStateChange: propOnTransitionStateChange = () => {},
   isExpanded: configIsExpanded,
   defaultExpanded = false,
@@ -89,7 +86,7 @@ export function useCollapse({
   const prevExpanded = useRef(isExpanded)
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const prefersReducedMotion = useReduceMotion()
+  const prefersReducedMotion = usePrefersReducedMotion()
   const disableAnimation = hasDisabledAnimation ?? prefersReducedMotion
 
   // Animation frames
