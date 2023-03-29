@@ -6,6 +6,10 @@
       "outputs": ["dist/**"],
       "inputs": ["internal/*", "packages/*"]
     },
+    "watch": {
+      "outputs": ["dist/**"],
+      "inputs": ["internal/*", "packages/*"]
+    },
     "lint": {
       "outputs": []
     },
