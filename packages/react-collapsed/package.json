@@ -16,7 +16,7 @@
     "watch": "tsup --watch",
     "test": "jest",
     "typecheck": "tsc --project tsconfig.json --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "release": "np --no-2fa",

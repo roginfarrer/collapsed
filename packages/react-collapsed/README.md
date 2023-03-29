@@ -81,15 +81,10 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
   useCollapse({
     isExpanded: boolean,
     defaultExpanded: boolean,
-    expandStyles: {},
-    collapseStyles: {},
     collapsedHeight: 0,
     easing: string,
     duration: number,
-    onCollapseStart: func,
-    onCollapseEnd: func,
-    onExpandStart: func,
-    onExpandEnd: func,
+    onTransitionStateChange: func,
   })
 ```
 

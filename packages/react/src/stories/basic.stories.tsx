@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { useCollapse } from '..'
-import { AssignableRef } from '../utils'
 import { Toggle, Collapse, excerpt } from './components'
 
 export const Uncontrolled = () => {
   const { getToggleProps, getCollapseProps, isExpanded } = useCollapse()
 
-  const tp = getToggleProps({ refKey: 'innerRef' })
   return (
     <div>
       <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
@@ -14,31 +12,6 @@ export const Uncontrolled = () => {
     </div>
   )
 }
-
-declare function test<
-  Args extends {
-    onClick?: React.MouseEventHandler
-    disabled?: boolean
-    [k: string]: unknown
-  },
-  IsButton extends boolean | undefined = true,
-  T extends string | undefined = 'ref'
->(
-  rest?: Args & {
-    refKey?: T
-    isButton?: IsButton
-  }
-): { [K in T extends string ? T : 'ref']: AssignableRef<any> } & {
-  onClick: React.MouseEventHandler
-  id: string
-  'aria-controls': string
-  'aria-expanded'?: boolean
-} & Omit<Args, 'refKey' | 'isButton'> &
-  (IsButton extends true
-    ? { type: 'button'; disabled?: boolean }
-    : { 'aria-disabled'?: boolean; role: 'button'; tabIndex: number })
-
-const foo = test({ refKey: 'innerRef', isButton: false })
 
 export const Controlled = () => {
   const [isExpanded, setOpen] = React.useState<boolean>(true)
