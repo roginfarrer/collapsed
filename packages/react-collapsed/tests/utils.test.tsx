@@ -1,17 +1,6 @@
 import React from 'react'
 import { render, act } from '@testing-library/react'
-import { useControlledState, callAll } from '../src/utils'
-
-describe('callAll', () => {
-  it('it calls the two functions passed into it', () => {
-    const functionOne = jest.fn()
-    const functionTwo = jest.fn()
-    const theFunk = callAll(functionOne, functionTwo)
-    theFunk()
-    expect(functionOne).toHaveBeenCalled()
-    expect(functionTwo).toHaveBeenCalled()
-  })
-})
+import { useControlledState } from '../src/utils'
 
 describe('useControlledState', () => {
   let hookReturn: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -78,7 +67,7 @@ describe('useControlledState', () => {
       rerender(<Foo isExpanded />)
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
-        `"Warning: useCollapse is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
+        `"Warning: [react-collapsed] -- \`isExpanded\` state is changing from uncontrolled to controlled. useCollapse should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
       )
       expect(consoleOutput.length).toBe(1)
     })
@@ -90,7 +79,7 @@ describe('useControlledState', () => {
       rerender(<Foo isExpanded={undefined} />)
 
       expect(consoleOutput[0]).toMatchInlineSnapshot(
-        `"Warning: useCollapse is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
+        `"Warning: [react-collapsed] -- \`isExpanded\` state is changing from controlled to uncontrolled. useCollapse should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled collapse for the lifetime of the component. Check the \`isExpanded\` prop."`
       )
       expect(consoleOutput.length).toBe(1)
     })

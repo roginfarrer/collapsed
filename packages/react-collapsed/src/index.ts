@@ -1,20 +1,17 @@
 import {
   useState,
   useRef,
-  useId,
   useEffect,
   useLayoutEffect as useReactLayoutEffect,
-  useCallback,
   CSSProperties,
 } from 'react'
 import {
-  noop,
+  useId,
   getElementHeight,
   getAutoHeightDuration,
   mergeRefs,
   usePaddingWarning,
   useControlledState,
-  callAll,
   useEvent,
   useReduceMotion,
   clearAnimationTimeout,
@@ -57,13 +54,12 @@ export interface UseCollapseInput {
   /**
    * If true, the animation is disabled. Overrides the hooks own logic for
    * disabling the animation according to reduced motion preferences
-   * @default false
    */
   hasDisabledAnimation?: boolean
   /**
    * Handler called at each stage of the animation
    */
-  onAnimationStageChange?: (
+  onTransitionStateChange?: (
     state:
       | 'expandStart'
       | 'expandEnd'
@@ -77,13 +73,13 @@ export interface UseCollapseInput {
 export function useCollapse({
   duration,
   easing = easeInOut,
-  onAnimationStageChange: propAnimationStateChange = noop,
+  onTransitionStateChange: propOnTransitionStateChange = () => {},
   isExpanded: configIsExpanded,
   defaultExpanded = false,
   hasDisabledAnimation,
   ...initialConfig
 }: UseCollapseInput = {}) {
-  const onAnimationStateChange = useEvent(propAnimationStateChange)
+  const onTransitionStateChange = useEvent(propOnTransitionStateChange)
   const uniqueId = useId()
 
   const [isExpanded, setExpanded] = useControlledState(
@@ -121,38 +117,12 @@ export function useCollapse({
     }
   }
 
-  const setTransitionEndTimeout = useCallback(
-    (duration: number) => {
-      function endTransition() {
-        if (isExpanded) {
-          setStyles({
-            height: '',
-            overflow: '',
-            transition: '',
-            display: '',
-          })
-          onAnimationStateChange('expandEnd')
-        } else {
-          setStyles({ transition: '' })
-          onAnimationStateChange('collapseEnd')
-        }
-        setIsAnimating(false)
-      }
-
-      if (endFrameId.current) {
-        clearAnimationTimeout(endFrameId.current)
-      }
-      endFrameId.current = setAnimationTimeout(endTransition, duration)
-    },
-    [isExpanded, onAnimationStateChange]
-  )
-
   useLayoutEffect(() => {
-    if (isExpanded === prevExpanded.current) return
-    prevExpanded.current = isExpanded
-
     const collapse = collapseElRef.current
     if (!collapse) return
+
+    if (isExpanded === prevExpanded.current) return
+    prevExpanded.current = isExpanded
 
     function getDuration(height: number | string) {
       if (disableAnimation) {
@@ -164,18 +134,41 @@ export function useCollapse({
     const getTransitionStyles = (height: number | string) =>
       `height ${getDuration(height)}ms ${easing}`
 
+    const setTransitionEndTimeout = (duration: number) => {
+      function endTransition() {
+        if (isExpanded) {
+          setStyles({
+            height: '',
+            overflow: '',
+            transition: '',
+            display: '',
+          })
+          onTransitionStateChange('expandEnd')
+        } else {
+          setStyles({ transition: '' })
+          onTransitionStateChange('collapseEnd')
+        }
+        setIsAnimating(false)
+      }
+
+      if (endFrameId.current) {
+        clearAnimationTimeout(endFrameId.current)
+      }
+      endFrameId.current = setAnimationTimeout(endTransition, duration)
+    }
+
     setIsAnimating(true)
 
     if (isExpanded) {
       frameId.current = requestAnimationFrame(() => {
-        onAnimationStateChange('expandStart')
+        onTransitionStateChange('expandStart')
         setStyles({
           display: 'block',
           overflow: 'hidden',
           height: collapsedHeight,
         })
         frameId.current = requestAnimationFrame(() => {
-          onAnimationStateChange('expanding')
+          onTransitionStateChange('expanding')
           const height = getElementHeight(collapseElRef)
           setTransitionEndTimeout(getDuration(height))
 
@@ -188,7 +181,7 @@ export function useCollapse({
       })
     } else {
       frameId.current = requestAnimationFrame(() => {
-        onAnimationStateChange('collapseStart')
+        onTransitionStateChange('collapseStart')
         const height = getElementHeight(collapseElRef)
         setTransitionEndTimeout(getDuration(height))
         setStyles({
@@ -196,7 +189,7 @@ export function useCollapse({
           height: `${height}px`,
         })
         frameId.current = requestAnimationFrame(() => {
-          onAnimationStateChange('collapsing')
+          onTransitionStateChange('collapsing')
           setStyles({
             height: collapsedHeight,
             overflow: 'hidden',
@@ -212,11 +205,10 @@ export function useCollapse({
   }, [
     isExpanded,
     collapsedHeight,
-    setTransitionEndTimeout,
     disableAnimation,
     duration,
     easing,
-    onAnimationStateChange,
+    onTransitionStateChange,
   ])
 
   return {
@@ -264,9 +256,11 @@ export function useCollapse({
         id: `react-collapsed-toggle-${uniqueId}`,
         'aria-controls': `react-collapsed-panel-${uniqueId}`,
         'aria-expanded': isExpanded,
-        onClick: disabled
-          ? noop
-          : callAll(onClick, () => setExpanded((n) => !n)),
+        onClick(evt: any) {
+          if (disabled) return
+          onClick?.(evt)
+          setExpanded((n) => !n)
+        },
         [refKey || 'ref']: mergeRefs(theirRef, setToggleEl),
       }
 

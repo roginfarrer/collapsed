@@ -4,9 +4,9 @@ import { CollapseError, warning } from './CollapseError'
 export { useEvent } from './useEvent'
 export { useControlledState } from './useControlledState'
 export { useReduceMotion } from './useReduceMotion'
+export { useId } from './useId'
 export * from './setAnimationTimeout'
 
-type AnyFunction = (...args: any[]) => unknown
 /**
  * React.Ref uses the readonly type `React.RefObject` instead of
  * `React.MutableRefObject`, We pretty much always assume ref objects are
@@ -36,12 +36,6 @@ const collapseProps = getCollapseProps({refKey: 'innerRef'})`
   // clientHeight, offsetHeight, nor getBoundingClientRect().height will do so
   return el.current.scrollHeight
 }
-
-// Helper function for render props. Sets a function to be called, plus any additional functions passed in
-export const callAll =
-  (...fns: AnyFunction[]) =>
-  (...args: any[]): void =>
-    fns.forEach((fn) => fn && fn(...args))
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
 export function getAutoHeightDuration(height: number | string): number {
