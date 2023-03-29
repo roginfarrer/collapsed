@@ -7,7 +7,7 @@ export class CollapseError extends Error {
 }
 
 const collapseWarning = (...args: Parameters<typeof warning>) => {
-  return warning(args[0], `react-collapsed: ${args[1]}`)
+  return warning(args[0], `[react-collapsed] -- ${args[1]}`)
 }
 
 export { collapseWarning as warning }

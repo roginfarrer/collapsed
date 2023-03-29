@@ -28,12 +28,13 @@ export function getElementHeight(el: RefObject<HTMLElement>): number {
       true,
       `Was not able to find a ref to the collapse element via \`getCollapseProps\`. Ensure that the element exposes its \`ref\` prop. If it exposes the ref prop under a different name (like \`innerRef\`), use the \`refKey\` property to change it. Example:
 
-{...getCollapseProps({refKey: 'innerRef'})}`
+const collapseProps = getCollapseProps({refKey: 'innerRef'})`
     )
     return 0
   }
-  // https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model/Determining_the_dimensions_of_elements#how_much_room_does_it_use_up
-  return el.current.offsetHeight
+  // scrollHeight will give us the height of the element, even if it's not visible.
+  // clientHeight, offsetHeight, nor getBoundingClientRect().height will do so
+  return el.current.scrollHeight
 }
 
 // Helper function for render props. Sets a function to be called, plus any additional functions passed in
@@ -107,7 +108,15 @@ export function usePaddingWarning(element: RefObject<HTMLElement>): void {
 
       warning(
         !hasPadding,
-        'Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element.'
+        `Padding applied to the collapse element will cause the animation to break and not perform as expected. To fix, apply equivalent padding to the direct descendent of the collapse element. Example:
+
+Before:   <div {...getCollapseProps({style: {padding: 10}})}>{children}</div>
+
+After:   <div {...getCollapseProps()}>
+             <div style={{padding: 10}}>
+                 {children}
+             </div>
+          </div>`
       )
     }
   }
