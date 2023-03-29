@@ -1,3 +1,9 @@
+# NOTE
+
+You're probably looking for [react-collapsed](../react-collapsed). This package (alongside [@collapsed/react](../react)) is a WIP rewrite to create a Vanilla JS core.
+
+---
+
 ## @collapsed/core
 
 [![CI][ci-badge]][ci]

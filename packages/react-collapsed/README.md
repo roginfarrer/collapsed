@@ -1,4 +1,4 @@
-# @collapsed/react (useCollapse)
+# 🙈 react-collapsed (useCollapse)
 
 [![CI][ci-badge]][ci]
 ![npm bundle size (version)][minzipped-badge]
@@ -24,7 +24,7 @@ A React hook for creating accessible expand/collapse components. Animates the he
 ## Installation
 
 ```bash
-$ npm i @collapsed/react
+$ npm i react-collapsed
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ $ npm i @collapsed/react
 
 ```js
 import React from 'react'
-import { useCollapse } from '@collapsed/react'
+import { useCollapse } from 'react-collapsed'
 
 function Demo() {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
@@ -53,7 +53,7 @@ function Demo() {
 
 ```js
 import React, { useState } from 'react'
-import { useCollapse } from '@collapsed/react'
+import { useCollapse } from 'react-collapsed'
 
 function Demo() {
   const [isExpanded, setExpanded] = useState(false)
@@ -97,20 +97,15 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
 
 The following are optional properties passed into `useCollapse({ })`:
 
-| Prop                 | Type     | Default                        | Description                                                                                                                                         |
-| -------------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isExpanded           | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
-| defaultExpanded      | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
-| expandStyles         | object   | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
-| collapseStyles       | object   | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
-| collapsedHeight      | number   | `0`                            | The height of the content when collapsed                                                                                                            |
-| easing               | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
-| duration             | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
-| onCollapseStart      | function | no-op                          | Handler called when the collapse animation begins                                                                                                   |
-| onCollapseEnd        | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
-| onExpandStart        | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
-| onExpandEnd          | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
-| hasDisabledAnimation | boolean  | false                          | If true, will disable the animation                                                                                                                 |
+| Prop                    | Type     | Default                        | Description                                                                                                                                         |
+| ----------------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isExpanded              | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
+| defaultExpanded         | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
+| collapsedHeight         | number   | `0`                            | The height of the content when collapsed                                                                                                            |
+| easing                  | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
+| duration                | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| onTransitionStateChange | function | no-op                          | Handler called with at each stage of the transition animation                                                                                       |
+| hasDisabledAnimation    | boolean  | false                          | If true, will disable the animation                                                                                                                 |
 
 ### What you get
 
@@ -151,9 +146,9 @@ To avoid this, simply move that padding from the element to an element directly 
 
 </details>
 
-[minzipped-badge]: https://img.shields.io/bundlephobia/minzip/@collapsed/react/latest
-[npm-badge]: http://img.shields.io/npm/v/@collapsed/react.svg?style=flat
-[npm-version]: https://npmjs.org/package/@collapsed/react 'View this project on npm'
+[minzipped-badge]: https://img.shields.io/bundlephobia/minzip/react-collapsed/latest
+[npm-badge]: http://img.shields.io/npm/v/react-collapsed.svg?style=flat
+[npm-version]: https://npmjs.org/package/react-collapsed 'View this project on npm'
 [ci-badge]: https://github.com/roginfarrer/collapsed/workflows/CI/badge.svg
 [ci]: https://github.com/roginfarrer/collapsed/actions?query=workflow%3ACI+branch%3Amain
 [netlify]: https://app.netlify.com/sites/react-collapsed/deploys
