@@ -11,7 +11,7 @@ export function usePrefersReducedMotion() {
     setPrefersReducedMotion(mediaQueryList.matches)
 
     const listener = (event: MediaQueryListEvent) => {
-      setPrefersReducedMotion(!event.matches)
+      setPrefersReducedMotion(event.matches)
     }
 
     mediaQueryList.addEventListener('change', listener)
