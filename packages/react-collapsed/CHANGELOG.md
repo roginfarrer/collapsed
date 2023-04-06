@@ -1,5 +1,11 @@
 ## 4.0.1
 
+## 4.0.2
+
+### Patch Changes
+
+- 980b971: Fixed mismatched logic for prefer-reduced-motion
+
 ### Major Changes
 
 - 5e427ec: This is a big refactor of `react-collapsed`, enough I wanted to denote it with a new major version.
