@@ -9,8 +9,8 @@
     "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
     "example": "pnpm --filter example run start",
-    "ci:version": "changeset version && pnpm install --lockfile-only",
-    "ci:release": "pnpm build && changeset publish"
+    "version": "changeset version && pnpm install --lockfile-only",
+    "release": "pnpm build && changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.25.2",
@@ -29,5 +29,6 @@
   "alias": {
     "process": "process/browser.js",
     "buffer": "buffer"
-  }
+  },
+  "packageManager": "pnpm@7.30.3"
 }

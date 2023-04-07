@@ -12,30 +12,28 @@ jobs:
     env:
       CI: true
     steps:
-      - uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.30.3
-
-      - name: Checkout Repo
-        uses: actions/checkout@main
+      - name: Checkout repo
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: pnpm/action-setup@v2
+
       - name: Setup Node.js
         uses: actions/setup-node@main
         with:
-          node-version-file: '.nvmrc'
+          node-version: '.nvmrc'
           cache: 'pnpm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm i
 
       - name: Create release PR or publish to npm
-        uses: changesets/action@v1
+        uses: changesets/action@c2918239208f2162b9d27a87f491375c51592434
         with:
-          version: pnpm ci:version
-          publish: pnpm ci:publish
+          version: pnpm run version
+          publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
