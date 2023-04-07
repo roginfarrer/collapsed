@@ -1,3 +1,9 @@
+## 4.0.2
+
+### Patch Changes
+
+- 980b971: Fixed mismatched logic for prefer-reduced-motion
+
 ## 4.0.1
 
 ### Major Changes
