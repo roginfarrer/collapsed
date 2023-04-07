@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@main
         with:
-          node-version: '.nvmrc'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
