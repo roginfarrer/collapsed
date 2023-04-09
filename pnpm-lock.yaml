@@ -13,7 +13,7 @@ importers:
       np: ^6.4.0
       prettier: ^2.3.2
       process: ^0.11.10
-      turbo: ^1.6.3
+      turbo: ^1.8.8
       typescript: ^4.9
     dependencies:
       '@changesets/cli': 2.25.2
@@ -25,7 +25,7 @@ importers:
       np: 6.5.0
       prettier: 2.4.1
       process: 0.11.10
-      turbo: 1.6.3
+      turbo: 1.8.8
       typescript: 4.9.3
 
   example:
@@ -143,7 +143,7 @@ importers:
       '@types/testing-library__react': ^10.2.0
       '@vitejs/plugin-react': ^2.2.0
       babel-loader: ^8.2.2
-      cypress: ^11.2.0
+      cypress: ^12.9.0
       eslint-config-collapsed: workspace:*
       jest: ^29.3.1
       jest-environment-jsdom: ^29.3.1
@@ -174,7 +174,7 @@ importers:
       '@storybook/addon-essentials': 6.5.13_wf3vkn74tbeiauqgwtkjdgsucu
       '@storybook/addon-links': 6.5.13_biqbaboplfbrettd7655fr4n2y
       '@storybook/react': 6.5.13_wf3vkn74tbeiauqgwtkjdgsucu
-      '@testing-library/cypress': 8.0.7_cypress@11.2.0
+      '@testing-library/cypress': 8.0.7_cypress@12.9.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 25.2.3
@@ -186,7 +186,7 @@ importers:
       '@types/testing-library__react': 10.2.0_biqbaboplfbrettd7655fr4n2y
       '@vitejs/plugin-react': 2.2.0_vite@3.2.4
       babel-loader: 8.3.0_@babel+core@7.20.2
-      cypress: 11.2.0
+      cypress: 12.9.0
       eslint-config-collapsed: link:../../internal/eslint-config-collapsed
       jest: 29.3.1_@types+node@16.18.3
       jest-environment-jsdom: 29.3.1
@@ -228,7 +228,7 @@ importers:
       '@types/testing-library__react': ^10.2.0
       '@vitejs/plugin-react': ^2.2.0
       babel-loader: ^8.2.2
-      cypress: ^11.2.0
+      cypress: ^12.9.0
       eslint-config-collapsed: workspace:*
       jest: ^29.3.1
       jest-environment-jsdom: ^29.3.1
@@ -259,7 +259,7 @@ importers:
       '@storybook/addon-links': 6.5.13_biqbaboplfbrettd7655fr4n2y
       '@storybook/builder-vite': 0.4.2_4q74n645get5mu4v5eciwu5nti
       '@storybook/react': 6.5.13_wf3vkn74tbeiauqgwtkjdgsucu
-      '@testing-library/cypress': 8.0.7_cypress@11.2.0
+      '@testing-library/cypress': 8.0.7_cypress@12.9.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 25.2.3
@@ -271,7 +271,7 @@ importers:
       '@types/testing-library__react': 10.2.0_biqbaboplfbrettd7655fr4n2y
       '@vitejs/plugin-react': 2.2.0_vite@3.2.4
       babel-loader: 8.3.0_@babel+core@7.20.2
-      cypress: 11.2.0
+      cypress: 12.9.0
       eslint-config-collapsed: link:../../internal/eslint-config-collapsed
       jest: 29.3.1_@types+node@16.18.3
       jest-environment-jsdom: 29.3.1
@@ -4778,7 +4778,7 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
 
-  /@testing-library/cypress/8.0.7_cypress@11.2.0:
+  /@testing-library/cypress/8.0.7_cypress@12.9.0:
     resolution: {integrity: sha512-3HTV725rOS+YHve/gD9coZp/UcPK5xhr4H0GMnq/ni6USdtzVtSOG9WBFtd8rYnrXk8rrGD+0toRFYouJNIG0Q==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -4786,7 +4786,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.1
       '@testing-library/dom': 8.19.0
-      cypress: 11.2.0
+      cypress: 12.9.0
     dev: true
 
   /@testing-library/dom/8.19.0:
@@ -7578,9 +7578,9 @@ packages:
     resolution: {integrity: sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A==}
     dev: true
 
-  /cypress/11.2.0:
-    resolution: {integrity: sha512-u61UGwtu7lpsNWLUma/FKNOsrjcI6wleNmda/TyKHe0dOBcVjbCPlp1N6uwFZ0doXev7f/91YDpU9bqDCFeBLA==}
-    engines: {node: '>=12.0.0'}
+  /cypress/12.9.0:
+    resolution: {integrity: sha512-Ofe09LbHKgSqX89Iy1xen2WvpgbvNxDzsWx3mgU1mfILouELeXYGwIib3ItCwoRrRifoQwcBFmY54Vs0zw7QCg==}
+    engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     hasBin: true
     requiresBuild: true
     dependencies:
@@ -7610,7 +7610,7 @@ packages:
       figures: 3.2.0
       fs-extra: 9.1.0
       getos: 3.2.1
-      is-ci: 3.0.0
+      is-ci: 3.0.1
       is-installed-globally: 0.4.0
       lazy-ass: 1.6.0
       listr2: 3.14.0_enquirer@2.3.6
@@ -10671,19 +10671,11 @@ packages:
     dependencies:
       ci-info: 2.0.0
 
-  /is-ci/3.0.0:
-    resolution: {integrity: sha512-kDXyttuLeslKAHYL/K28F2YkM3x5jvFPEw3yXbRptXydjD9rpLEz+C5K5iutY9ZiUu6AP41JdvRQwF4Iqs4ZCQ==}
-    hasBin: true
-    dependencies:
-      ci-info: 3.6.1
-    dev: true
-
   /is-ci/3.0.1:
     resolution: {integrity: sha512-ZYvCgrefwqoQ6yTyYUbQu64HsITZ3NfKX1lzaEYdkTDcfKzzCI/wthRRYKkdjHKFVgNiXKAKm65Zo1pk2as/QQ==}
     hasBin: true
     dependencies:
       ci-info: 3.6.1
-    dev: false
 
   /is-core-module/2.11.0:
     resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
@@ -16266,65 +16258,65 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
-  /turbo-darwin-64/1.6.3:
-    resolution: {integrity: sha512-QmDIX0Yh1wYQl0bUS0gGWwNxpJwrzZU2GIAYt3aOKoirWA2ecnyb3R6ludcS1znfNV2MfunP+l8E3ncxUHwtjA==}
+  /turbo-darwin-64/1.8.8:
+    resolution: {integrity: sha512-18cSeIm7aeEvIxGyq7PVoFyEnPpWDM/0CpZvXKHpQ6qMTkfNt517qVqUTAwsIYqNS8xazcKAqkNbvU1V49n65Q==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-darwin-arm64/1.6.3:
-    resolution: {integrity: sha512-75DXhFpwE7CinBbtxTxH08EcWrxYSPFow3NaeFwsG8aymkWXF+U2aukYHJA6I12n9/dGqf7yRXzkF0S/9UtdyQ==}
+  /turbo-darwin-arm64/1.8.8:
+    resolution: {integrity: sha512-ruGRI9nHxojIGLQv1TPgN7ud4HO4V8mFBwSgO6oDoZTNuk5ybWybItGR+yu6fni5vJoyMHXOYA2srnxvOc7hjQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-64/1.6.3:
-    resolution: {integrity: sha512-O9uc6J0yoRPWdPg9THRQi69K6E2iZ98cRHNvus05lZbcPzZTxJYkYGb5iagCmCW/pq6fL4T4oLWAd6evg2LGQA==}
+  /turbo-linux-64/1.8.8:
+    resolution: {integrity: sha512-N/GkHTHeIQogXB1/6ZWfxHx+ubYeb8Jlq3b/3jnU4zLucpZzTQ8XkXIAfJG/TL3Q7ON7xQ8yGOyGLhHL7MpFRg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-arm64/1.6.3:
-    resolution: {integrity: sha512-dCy667qqEtZIhulsRTe8hhWQNCJO0i20uHXv7KjLHuFZGCeMbWxB8rsneRoY+blf8+QNqGuXQJxak7ayjHLxiA==}
+  /turbo-linux-arm64/1.8.8:
+    resolution: {integrity: sha512-hKqLbBHgUkYf2Ww8uBL9UYdBFQ5677a7QXdsFhONXoACbDUPvpK4BKlz3NN7G4NZ+g9dGju+OJJjQP0VXRHb5w==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-64/1.6.3:
-    resolution: {integrity: sha512-lKRqwL3mrVF09b9KySSaOwetehmGknV9EcQTF7d2dxngGYYX1WXoQLjFP9YYH8ZV07oPm+RUOAKSCQuDuMNhiA==}
+  /turbo-windows-64/1.8.8:
+    resolution: {integrity: sha512-2ndjDJyzkNslXxLt+PQuU21AHJWc8f6MnLypXy3KsN4EyX/uKKGZS0QJWz27PeHg0JS75PVvhfFV+L9t9i+Yyg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-arm64/1.6.3:
-    resolution: {integrity: sha512-BXY1sDPEA1DgPwuENvDCD8B7Hb0toscjus941WpL8CVd10hg9pk/MWn9CNgwDO5Q9ks0mw+liDv2EMnleEjeNA==}
+  /turbo-windows-arm64/1.8.8:
+    resolution: {integrity: sha512-xCA3oxgmW9OMqpI34AAmKfOVsfDljhD5YBwgs0ZDsn5h3kCHhC4x9W5dDk1oyQ4F5EXSH3xVym5/xl1J6WRpUg==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo/1.6.3:
-    resolution: {integrity: sha512-FtfhJLmEEtHveGxW4Ye/QuY85AnZ2ZNVgkTBswoap7UMHB1+oI4diHPNyqrQLG4K1UFtCkjOlVoLsllUh/9QRw==}
+  /turbo/1.8.8:
+    resolution: {integrity: sha512-qYJ5NjoTX+591/x09KgsDOPVDUJfU9GoS+6jszQQlLp1AHrf1wRFA3Yps8U+/HTG03q0M4qouOfOLtRQP4QypA==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.6.3
-      turbo-darwin-arm64: 1.6.3
-      turbo-linux-64: 1.6.3
-      turbo-linux-arm64: 1.6.3
-      turbo-windows-64: 1.6.3
-      turbo-windows-arm64: 1.6.3
+      turbo-darwin-64: 1.8.8
+      turbo-darwin-arm64: 1.8.8
+      turbo-linux-64: 1.8.8
+      turbo-linux-arm64: 1.8.8
+      turbo-windows-64: 1.8.8
+      turbo-windows-arm64: 1.8.8
     dev: false
 
   /tweetnacl/0.14.5:
