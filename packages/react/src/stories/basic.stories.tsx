@@ -29,6 +29,19 @@ export const Controlled = () => {
   )
 }
 
+export const HorizontalMode = () => {
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
+    axis: 'horizontal',
+  })
+
+  return (
+    <div>
+      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Open'}</Toggle>
+      <Collapse {...getCollapseProps()}>{excerpt}</Collapse>
+    </div>
+  )
+}
+
 function useReduceMotion() {
   const [matches, setMatch] = React.useState(
     window.matchMedia('(prefers-reduced-motion: reduce)').matches

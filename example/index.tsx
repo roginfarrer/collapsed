@@ -11,6 +11,7 @@ export const Uncontrolled = () => {
 
   return (
     <div>
+      <h2>Uncontrolled</h2>
       <button {...getToggleProps({ style: { marginRight: 4 } })}>
         {isExpanded ? 'Close' : 'Open'}
       </button>
@@ -32,10 +33,57 @@ export const Uncontrolled = () => {
   )
 }
 
-const App = () => {
+const Sidebar = () => {
+  const [showExample, setShowExample] = React.useState(false)
+  const { getToggleProps, getCollapseProps, isExpanded } = useCollapse({
+    axis: 'horizontal',
+    collapsedDimension: 75,
+  })
+
+  let content: JSX.Element
+  if (!showExample) {
+    content = <button onClick={() => setShowExample(true)}>Show Example</button>
+  } else {
+    content = (
+      <div>
+        <div
+          {...getCollapseProps()}
+          style={{ position: 'fixed', inset: 0, maxWidth: 300 }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              backgroundColor: 'cyan',
+            }}
+          >
+            <button {...getToggleProps()}>
+              {isExpanded ? 'Close' : 'Open'}
+            </button>
+            <button onClick={() => setShowExample(false)}>
+              Disable example
+            </button>
+            <div style={{ marginTop: 'auto' }}>sit at the bottom</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
+      <h2>Sidebar</h2>
+      {content}
+    </div>
+  )
+}
+
+const App = () => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
       <Uncontrolled />
+      <Sidebar />
     </div>
   )
 }

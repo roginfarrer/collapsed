@@ -15,7 +15,7 @@ A React hook for creating accessible expand/collapse components. Animates the he
 
 ## Features
 
-- Handles the height of animations of your elements, `auto` included!
+- Handles the height/width of animations of your elements, `auto` included!
 - You control the UI - `useCollapse` provides the necessary props, you control the styles and the elements.
 - Accessible out of the box - no need to worry if your collapse/expand component is accessible, since this takes care of it for you!
 - No animation framework required! Simply powered by CSS animations
@@ -87,9 +87,10 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
   useCollapse({
     isExpanded: boolean,
     defaultExpanded: boolean,
+    axis: 'vertical' | 'horizontal',
     expandStyles: {},
     collapseStyles: {},
-    collapsedHeight: 0,
+    collapsedDimension: 0,
     easing: string,
     duration: number,
     onCollapseStart: func,
@@ -103,20 +104,21 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
 
 The following are optional properties passed into `useCollapse({ })`:
 
-| Prop                 | Type     | Default                        | Description                                                                                                                                         |
-| -------------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isExpanded           | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
-| defaultExpanded      | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
-| expandStyles         | object   | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
-| collapseStyles       | object   | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
-| collapsedHeight      | number   | `0`                            | The height of the content when collapsed                                                                                                            |
-| easing               | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
-| duration             | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
-| onCollapseStart      | function | no-op                          | Handler called when the collapse animation begins                                                                                                   |
-| onCollapseEnd        | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
-| onExpandStart        | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
-| onExpandEnd          | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
-| hasDisabledAnimation | boolean  | false                          | If true, will disable the animation                                                                                                                 |
+| Prop                 | Type                       | Default                        | Description                                                                                                                                         |
+| -------------------- | -------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isExpanded           | boolean                    | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
+| defaultExpanded      | boolean                    | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
+| axis                 | "vertical" / "horizontal"  | `"vertical"`                   | If "horizontal", the component will collapse/expand horizontally                                                                                    |
+| expandStyles         | object                     | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
+| collapseStyles       | object                     | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
+| collapsedDimension   | number                     | `0`                            | The height/width of the content when collapsed                                                                                                      |
+| easing               | string                     | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
+| duration             | number                     | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| onCollapseStart      | function                   | no-op                          | Handler called when the collapse animation begins                                                                                                   |
+| onCollapseEnd        | function                   | no-op                          | Handler called when the collapse animation ends                                                                                                     |
+| onExpandStart        | function                   | no-op                          | Handler called when the expand animation begins                                                                                                     |
+| onExpandEnd          | function                   | no-op                          | Handler called when the expand animation ends                                                                                                       |
+| hasDisabledAnimation | boolean                    | false                          | If true, will disable the animation                                                                                                                 |
 
 ### What you get
 
