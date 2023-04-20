@@ -116,7 +116,7 @@ The following are optional properties passed into `useCollapse({ })`:
 | onCollapseEnd        | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
 | onExpandStart        | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
 | onExpandEnd          | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
-| hasDisabledAnimation | boolean  | false                          | If true, will disable the animation                                                                                                                 |
+| hasDisabledAnimation | boolean  | `undefined`                    | If true, will disable the animation. If `undefined`, will fallback to media `prefers-reduced-animation` setting.                                    |
 
 ### What you get
 
