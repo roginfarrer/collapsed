@@ -92,6 +92,7 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
     collapsedHeight: 0,
     easing: string,
     duration: number,
+    hasDisabledAnimation: boolean,
     onCollapseStart: func,
     onCollapseEnd: func,
     onExpandStart: func,
@@ -112,11 +113,11 @@ The following are optional properties passed into `useCollapse({ })`:
 | collapsedHeight      | number   | `0`                            | The height of the content when collapsed                                                                                                            |
 | easing               | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
 | duration             | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| hasDisabledAnimation | boolean  | `undefined`                    | If true, will disable the animation. If `undefined`, will fallback to media `prefers-reduced-animation` setting.                                    |
 | onCollapseStart      | function | no-op                          | Handler called when the collapse animation begins                                                                                                   |
 | onCollapseEnd        | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
 | onExpandStart        | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
 | onExpandEnd          | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
-| hasDisabledAnimation | boolean  | `undefined`                    | If true, will disable the animation. If `undefined`, will fallback to media `prefers-reduced-animation` setting.                                    |
 
 ### What you get
 
