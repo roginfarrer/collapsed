@@ -14,9 +14,10 @@ export function usePrefersReducedMotion() {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQueryList.addEventListener('change', listener)
+    // Fallback to addListener/removeListener for older browsers, #152
+    (mediaQueryList.addEventListener ?? mediaQueryList.addListener)('change', listener)
     return () => {
-      mediaQueryList.removeEventListener('change', listener)
+      (mediaQueryList.removeEventListener ?? mediaQueryList.removeListener)('change', listener)
     }
   }, [])
   return prefersReducedMotion
