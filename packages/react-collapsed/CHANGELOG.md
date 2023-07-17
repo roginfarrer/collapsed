@@ -1,3 +1,11 @@
+# react-collapsed
+
+## 4.0.3
+
+### Patch Changes
+
+- 6bb5507: Fixed crashing errors from MatchMedia in Safari <= 13. Thanks @kostia1st!
+
 ## 4.0.2
 
 ### Patch Changes
