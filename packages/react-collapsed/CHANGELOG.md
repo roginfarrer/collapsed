@@ -1,5 +1,11 @@
 # react-collapsed
 
+## 4.0.4
+
+### Patch Changes
+
+- 2a098e1: Account for different signatures of addEventListener and addListener, fix #152
+
 ## 4.0.3
 
 ### Patch Changes
