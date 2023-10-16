@@ -144,3 +144,17 @@ test('permits access to the collapse ref', () => {
   const { queryByTestId } = render(<Collapse collapseProps={{ ref: cb }} />)
   expect(cb).toHaveBeenCalledWith(queryByTestId('collapse'))
 })
+
+test('id argument modifies all rendered elements', () => {
+  const {container} = render(<Collapse id="foo" />)
+  expect(container.querySelector('#react-collapsed-toggle-foo')).toBeInTheDocument()
+  expect(container.querySelector('#react-collapsed-panel-foo')).toBeInTheDocument()
+})
+
+test('id will be overridden by prop getters', () => {
+  const {container} = render(<Collapse id="foo" collapseProps={{id: 'bar'}} toggleProps={{id: 'baz'}} />)
+  expect(container.querySelector('#react-collapsed-toggle-foo')).not.toBeInTheDocument()
+  expect(container.querySelector('#react-collapsed-panel-foo')).not.toBeInTheDocument()
+  expect(container.querySelector('#baz')).toBeInTheDocument()
+  expect(container.querySelector('#bar')).toBeInTheDocument()
+})

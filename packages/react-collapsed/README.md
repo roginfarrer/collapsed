@@ -101,6 +101,7 @@ The following are optional properties passed into `useCollapse({ })`:
 | duration                | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
 | onTransitionStateChange | function | no-op                          | Handler called with at each stage of the transition animation                                                                                       |
 | hasDisabledAnimation    | boolean  | false                          | If true, will disable the animation                                                                                                                 |
+| id                      | string \| number | `undefined` | Unique identifier used to for associating elements appropriately for accessibility. |
 
 ### What you get
 

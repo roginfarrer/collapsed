@@ -65,6 +65,10 @@ export interface UseCollapseInput {
       | 'collapseEnd'
       | 'collapsing'
   ) => void
+  /**
+   * Unique identifier used to for associating elements appropriately for accessibility.
+   */
+  id?: string | number;
 }
 
 export function useCollapse({
@@ -74,10 +78,11 @@ export function useCollapse({
   isExpanded: configIsExpanded,
   defaultExpanded = false,
   hasDisabledAnimation,
+  id,
   ...initialConfig
 }: UseCollapseInput = {}) {
   const onTransitionStateChange = useEvent(propOnTransitionStateChange)
-  const uniqueId = useId()
+  const uniqueId = useId(id ? `${id}` : undefined)
 
   const [isExpanded, setExpanded] = useControlledState(
     configIsExpanded,
@@ -220,7 +225,7 @@ export function useCollapse({
       },
       RefKey extends string | undefined = 'ref'
     >(
-      rest?: Args & {
+      args?: Args & {
         /**
          * Sets the key of the prop that the component uses for ref assignment
          * @default 'ref'
@@ -238,16 +243,16 @@ export function useCollapse({
       role?: 'button'
       tabIndex?: number
     } {
-      const { disabled, onClick, refKey } = {
+      const { disabled, onClick, refKey, ...rest } = {
         refKey: 'ref',
         onClick() {},
         disabled: false,
-        ...rest,
+        ...args,
       }
 
       const isButton = toggleEl ? toggleEl.tagName === 'BUTTON' : undefined
 
-      const theirRef: any = rest?.[refKey || 'ref']
+      const theirRef: any = args?.[refKey || 'ref']
 
       const props: any = {
         id: `react-collapsed-toggle-${uniqueId}`,
@@ -272,14 +277,15 @@ export function useCollapse({
       }
 
       if (isButton === false) {
-        return { ...props, ...fakeButtonProps }
+        return { ...props, ...fakeButtonProps, ...rest }
       } else if (isButton === true) {
-        return { ...props, ...buttonProps }
+        return { ...props, ...buttonProps, ...rest }
       } else {
         return {
           ...props,
           ...buttonProps,
           ...fakeButtonProps,
+          ...rest
         }
       }
     },
@@ -288,7 +294,7 @@ export function useCollapse({
       Args extends { style?: CSSProperties; [k: string]: unknown },
       RefKey extends string | undefined = 'ref'
     >(
-      rest?: Args & {
+      args?: Args & {
         /**
          * Sets the key of the prop that the component uses for ref assignment
          * @default 'ref'
@@ -303,13 +309,13 @@ export function useCollapse({
       role: string
       style: CSSProperties
     } {
-      const { style, refKey } = { refKey: 'ref', style: {}, ...rest }
-      const theirRef: any = rest?.[refKey || 'ref']
+      const { style, refKey } = { refKey: 'ref', style: {}, ...args }
+      const theirRef: any = args?.[refKey || 'ref']
       return {
         id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': !isExpanded,
         role: 'region',
-        ...rest,
+        ...args,
         [refKey || 'ref']: mergeRefs(collapseElRef, theirRef),
         style: {
           boxSizing: 'border-box',
