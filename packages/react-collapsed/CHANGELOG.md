@@ -1,5 +1,11 @@
 # react-collapsed
 
+## 4.1.0
+
+### Minor Changes
+
+- 3c86a81: Added support for overriding `id`.
+
 ## 4.0.4
 
 ### Patch Changes
