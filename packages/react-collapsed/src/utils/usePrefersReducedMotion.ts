@@ -6,6 +6,10 @@ export function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return
+    }
+
     const mediaQueryList = window.matchMedia(QUERY)
     // Set the true initial value, now that we're on the client:
     setPrefersReducedMotion(mediaQueryList.matches)
