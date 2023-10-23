@@ -15,7 +15,7 @@
   "dependencies": {
     "@changesets/cli": "^2.25.2",
     "@collapsed-internal/tsconfig": "workspace:*",
-    "@types/node": "^16.7.13",
+    "@types/node": "^18.0.0",
     "buffer": "^5.5.0",
     "eslint": "^7.32.0",
     "eslint-config-collapsed": "workspace:*",
