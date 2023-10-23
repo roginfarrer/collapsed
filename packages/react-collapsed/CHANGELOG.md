@@ -1,5 +1,11 @@
 # react-collapsed
 
+## 4.1.1
+
+### Patch Changes
+
+- a12f2e4: Do not call window.matchMedia if it does not exist. Fixes errors thrown in environments like JSDOM.
+
 ## 4.1.0
 
 ### Minor Changes
