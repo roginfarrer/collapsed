@@ -314,6 +314,7 @@ export function useCollapse({
       return {
         id: `react-collapsed-panel-${uniqueId}`,
         'aria-hidden': !isExpanded,
+        'aria-labelledby': `react-collapsed-toggle-${uniqueId}`,
         role: 'region',
         ...args,
         [refKey || 'ref']: mergeRefs(collapseElRef, theirRef),
