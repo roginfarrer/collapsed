@@ -143,3 +143,8 @@ test('id will be overridden by prop getters', () => {
   expect(container.querySelector('#baz')).toBeInTheDocument()
   expect(container.querySelector('#bar')).toBeInTheDocument()
 })
+
+test('collapse element labelled by toggle', () => {
+  render(<Collapse />)
+  expect(screen.getByLabelText('Toggle')).toEqual(screen.getByTestId('collapse'))
+})
