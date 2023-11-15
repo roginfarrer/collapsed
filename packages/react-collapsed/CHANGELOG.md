@@ -1,5 +1,11 @@
 # react-collapsed
 
+## 4.1.2
+
+### Patch Changes
+
+- cc68b19: Added `aria-labelledby` to the collapse panel, to be labelled by the toggle.
+
 ## 4.1.1
 
 ### Patch Changes
