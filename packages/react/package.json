@@ -61,7 +61,7 @@
     "styled-components": "^5.2.0",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
-    "tsup": "^6.5.0",
+    "tsup": "^8.0.0",
     "typescript": "^4.9",
     "vite": "^3.2.4"
   },
