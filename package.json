@@ -23,7 +23,7 @@
     "prettier": "^2.3.2",
     "process": "^0.11.10",
     "turbo": "^1.8.8",
-    "typescript": "^4.9"
+    "typescript": "^5.0.0"
   },
   "prettier": "eslint-config-rogin/prettier",
   "alias": {
