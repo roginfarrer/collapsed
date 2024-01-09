@@ -91,7 +91,7 @@ importers:
       '@collapsed-internal/build': workspace:*
       '@collapsed-internal/tsconfig': workspace:*
       '@testing-library/jest-dom': ^5.16.0
-      '@types/jest': ^27.0.2
+      '@types/jest': ^29.0.0
       '@types/node': ^16.7.13
       '@types/testing-library__jest-dom': ^5.14.5
       eslint-config-collapsed: workspace:*
@@ -107,7 +107,7 @@ importers:
       '@collapsed-internal/build': link:../../internal/build
       '@collapsed-internal/tsconfig': link:../../internal/tsconfig
       '@testing-library/jest-dom': 5.16.5
-      '@types/jest': 27.0.2
+      '@types/jest': 29.5.11
       '@types/node': 16.18.3
       '@types/testing-library__jest-dom': 5.14.5
       eslint-config-collapsed: link:../../internal/eslint-config-collapsed
@@ -134,7 +134,7 @@ importers:
       '@testing-library/cypress': ^8.0.7
       '@testing-library/jest-dom': ^5.16.0
       '@testing-library/react': ^13.4.0
-      '@types/jest': ^27.0.2
+      '@types/jest': ^29.0.0
       '@types/node': ^16.7.13
       '@types/react': ^18
       '@types/react-dom': ^18
@@ -177,7 +177,7 @@ importers:
       '@testing-library/cypress': 8.0.7_cypress@12.9.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@types/jest': 27.0.2
+      '@types/jest': 29.5.11
       '@types/node': 16.18.3
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.9
@@ -219,7 +219,7 @@ importers:
       '@testing-library/cypress': ^8.0.7
       '@testing-library/jest-dom': ^5.16.0
       '@testing-library/react': ^13.4.0
-      '@types/jest': ^27.0.2
+      '@types/jest': ^29.0.0
       '@types/node': ^16.7.13
       '@types/react': ^18
       '@types/react-dom': ^18
@@ -262,7 +262,7 @@ importers:
       '@testing-library/cypress': 8.0.7_cypress@12.9.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@types/jest': 27.0.2
+      '@types/jest': 29.5.11
       '@types/node': 16.18.3
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.9
@@ -1859,7 +1859,7 @@ packages:
       '@changesets/types': 5.2.0
       '@manypkg/get-packages': 1.1.3
       fs-extra: 7.0.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
     dev: false
 
   /@changesets/errors/0.1.4:
@@ -2208,7 +2208,7 @@ packages:
       jest-util: 29.3.1
       jest-validate: 29.3.1
       jest-watcher: 29.3.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       pretty-format: 29.3.1
       slash: 3.0.0
       strip-ansi: 6.0.1
@@ -2355,7 +2355,7 @@ packages:
       jest-haste-map: 26.6.2
       jest-regex-util: 26.0.0
       jest-util: 26.6.2
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       pirates: 4.0.5
       slash: 3.0.0
       source-map: 0.6.1
@@ -2379,7 +2379,7 @@ packages:
       jest-haste-map: 29.3.1
       jest-regex-util: 29.2.0
       jest-util: 29.3.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       pirates: 4.0.5
       slash: 3.0.0
       write-file-atomic: 4.0.2
@@ -4536,7 +4536,7 @@ packages:
       endent: 2.1.0
       find-cache-dir: 3.3.2
       flat-cache: 3.0.4
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       react-docgen-typescript: 2.2.2_typescript@4.9.3
       tslib: 2.4.1
       typescript: 4.9.3
@@ -4967,11 +4967,11 @@ packages:
       '@types/istanbul-lib-report': 3.0.0
     dev: true
 
-  /@types/jest/27.0.2:
-    resolution: {integrity: sha512-4dRxkS/AFX0c5XW6IPMNOydLn2tEhNhJV7DnYK+0bjoJZ+QTmfucBlihX7aoEsh/ocYtkLC73UbnBXBXIxsULA==}
+  /@types/jest/29.5.11:
+    resolution: {integrity: sha512-S2mHmYIVe13vrm6q4kN6fLYYAka15ALQki/vgDC3mIukEOx8WJlv0kQPM+d4w8Gp6u0uSdKND04IlTXBv0rwnQ==}
     dependencies:
-      jest-diff: 27.2.4
-      pretty-format: 27.5.1
+      expect: 29.3.1
+      pretty-format: 29.3.1
     dev: true
 
   /@types/jsdom/20.0.1:
@@ -5120,7 +5120,7 @@ packages:
   /@types/testing-library__jest-dom/5.14.5:
     resolution: {integrity: sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==}
     dependencies:
-      '@types/jest': 27.0.2
+      '@types/jest': 29.5.11
     dev: true
 
   /@types/testing-library__react/10.2.0_biqbaboplfbrettd7655fr4n2y:
@@ -7999,11 +7999,6 @@ packages:
       - supports-color
     dev: true
 
-  /diff-sequences/27.0.6:
-    resolution: {integrity: sha512-ag6wfpBFyNXZ0p8pcuIDS//D8H062ZQJ3fzYxjpmeKjnz8W4pekL3AI8VohmyZmsWW2PWaHgjsmqR6L13101VQ==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dev: true
-
   /diff-sequences/29.3.1:
     resolution: {integrity: sha512-hlM3QR272NXCi4pq+N4Kok4kOp6EsgOM3ZSpJI7Da3UAs+Ttsi8MRmB6trM/lhyzUxGfOgnpkHtgqm5Q/CTcfQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -9397,7 +9392,7 @@ packages:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
 
   /fast-json-parse/1.0.3:
     resolution: {integrity: sha512-FRWsaZRWEJ1ESVNbDWmsAlqDk96gPQezzLghafp5J4GUKjbCz3OkAHuZs5TuPEtkbVQERysLp9xv6c24fBm8Aw==}
@@ -9574,7 +9569,7 @@ packages:
   /find-yarn-workspace-root2/1.2.16:
     resolution: {integrity: sha512-hr6hb1w8ePMpPVUK39S4RlwJzi+xPLuVuG8XlwXU3KD5Yn3qgBWVfy3AzNlDhWvE1EORCE65/Qm26rFQt3VLVA==}
     dependencies:
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       pkg-dir: 4.2.0
     dev: false
 
@@ -11384,23 +11379,13 @@ packages:
       jest-runner: 29.3.1
       jest-util: 29.3.1
       jest-validate: 29.3.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       parse-json: 5.2.0
       pretty-format: 29.3.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /jest-diff/27.2.4:
-    resolution: {integrity: sha512-bLAVlDSCR3gqUPGv+4nzVpEXGsHh98HjUL7Vb2hVyyuBDoQmja8eJb0imUABsuxBeUVmf47taJSAd9nDrwWKEg==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dependencies:
-      chalk: 4.1.2
-      diff-sequences: 27.0.6
-      jest-get-type: 27.0.6
-      pretty-format: 27.5.1
     dev: true
 
   /jest-diff/29.3.1:
@@ -11466,11 +11451,6 @@ packages:
       jest-util: 29.3.1
     dev: true
 
-  /jest-get-type/27.0.6:
-    resolution: {integrity: sha512-XTkK5exIeUbbveehcSR8w0bhH+c0yloW/Wpl+9vZrjzztCPWrxhHwkIFpZzCt71oRBsgxmuUfxEqOYoZI2macg==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dev: true
-
   /jest-get-type/29.2.0:
     resolution: {integrity: sha512-uXNJlg8hKFEnDgFsrCjznB+sTxdkuqiCL6zMgA75qEbAJjJYTs9XPrvDctrEig2GDow22T/LvHgO57iJhXB/UA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -11490,7 +11470,7 @@ packages:
       jest-serializer: 26.6.2
       jest-util: 26.6.2
       jest-worker: 26.6.2
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       sane: 4.1.0
       walker: 1.0.8
     optionalDependencies:
@@ -11512,7 +11492,7 @@ packages:
       jest-regex-util: 29.2.0
       jest-util: 29.3.1
       jest-worker: 29.3.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       walker: 1.0.8
     optionalDependencies:
       fsevents: 2.3.2
@@ -11545,7 +11525,7 @@ packages:
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
       graceful-fs: 4.2.10
-      micromatch: 4.0.4
+      micromatch: 4.0.5
       pretty-format: 29.3.1
       slash: 3.0.0
       stack-utils: 2.0.5
@@ -11715,7 +11695,7 @@ packages:
       chalk: 4.1.2
       graceful-fs: 4.2.10
       is-ci: 2.0.0
-      micromatch: 4.0.4
+      micromatch: 4.0.5
     dev: true
 
   /jest-util/29.3.1:
@@ -12737,13 +12717,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /micromatch/4.0.4:
-    resolution: {integrity: sha512-pRmzw/XUcwXGpD9aI9q/0XOwLNygjETJ8y0ao0wdqprrzDa4YnxLcz7fQRZr8voh8V10kGhABbNcHVk5wHgWwg==}
-    engines: {node: '>=8.6'}
-    dependencies:
-      braces: 3.0.2
-      picomatch: 2.3.1
 
   /micromatch/4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
