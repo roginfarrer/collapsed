@@ -1,4 +1,14 @@
 {
   "extends": "@collapsed-internal/tsconfig/react.json",
-  "include": ["src", "jest-setup.ts", "tsup.config.ts", "stories", "tests"]
+  "include": [
+    "src",
+    "jest-setup.ts",
+    "tsup.config.ts",
+    "stories",
+    "tests",
+    "cypress"
+  ],
+  "compilerOptions": {
+    "baseUrl": "."
+  }
 }

@@ -13,22 +13,21 @@
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
-    "@changesets/cli": "^2.25.2",
+    "@changesets/cli": "^2.27.3",
     "@collapsed-internal/tsconfig": "workspace:*",
-    "@types/node": "^16.7.13",
+    "@types/node": "^20",
     "buffer": "^5.5.0",
     "eslint": "^8.0.0",
     "eslint-config-collapsed": "workspace:*",
     "np": "^6.4.0",
-    "prettier": "^2.3.2",
+    "prettier": "^3",
     "process": "^0.11.10",
     "turbo": "^1.8.8",
-    "typescript": "^4.9"
+    "typescript": "^5.4.5"
   },
-  "prettier": "eslint-config-rogin/prettier",
   "alias": {
     "process": "process/browser.js",
     "buffer": "buffer"
   },
-  "packageManager": "pnpm@7.30.3"
+  "packageManager": "pnpm@9.1.2"
 }

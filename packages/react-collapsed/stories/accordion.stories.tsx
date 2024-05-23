@@ -103,4 +103,5 @@ export const Accordion = () => {
 
 export default {
   title: 'Accordion',
+  component: useCollapse
 }
