@@ -5,9 +5,10 @@
   "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "exports": {
+    "require": "./dist/index.cjs.js",
+    "import": "./dist/index.mjs"
+  },
   "files": [
     "dist"
   ],
@@ -20,18 +21,17 @@
     "release": "np --no-2fa"
   },
   "devDependencies": {
-    "@collapsed-internal/tsconfig": "workspace:*",
     "@collapsed-internal/build": "workspace:*",
-    "eslint-config-collapsed": "workspace:*",
+    "@collapsed-internal/tsconfig": "workspace:*",
     "@testing-library/jest-dom": "^5.16.0",
-    "@types/testing-library__jest-dom": "^5.14.5",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.7.13",
+    "@types/testing-library__jest-dom": "^5.14.5",
+    "eslint-config-collapsed": "workspace:*",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
-    "tsup": "^6.5.0"
+    "tsup": "^8"
   },
   "dependencies": {
     "tiny-warning": "^1.0.3"

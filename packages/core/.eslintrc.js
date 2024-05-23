@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['collapsed'],
-}
+  extends: ["../../internal/eslint-config-collapsed/index.cjs"],
+};

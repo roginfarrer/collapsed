@@ -1,18 +1,18 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom/client'
-import { useCollapse } from '@collapsed/react'
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { useCollapse } from "@collapsed/react";
 
-const collapseStyles = { background: 'blue', color: 'white' }
+const collapseStyles = { background: "blue", color: "white" };
 
 export const Uncontrolled = () => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-  })
+  });
 
   return (
     <div>
       <button {...getToggleProps({ style: { marginRight: 4 } })}>
-        {isExpanded ? 'Close' : 'Open'}
+        {isExpanded ? "Close" : "Open"}
       </button>
       <div
         {...getCollapseProps({
@@ -29,16 +29,16 @@ export const Uncontrolled = () => {
         and people going to work.
       </div>
     </div>
-  )
-}
+  );
+};
 
 const App = () => {
   return (
     <div>
       <Uncontrolled />
     </div>
-  )
-}
+  );
+};
 
-const root = ReactDOM.createRoot(document.getElementById('root')!)
-root.render(<App />)
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+root.render(<App />);

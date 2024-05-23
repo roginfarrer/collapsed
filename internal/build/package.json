@@ -1,9 +1,10 @@
 {
   "name": "@collapsed-internal/build",
+  "type": "module",
   "private": true,
   "version": "0.0.0",
-  "devDependencies": {
-    "tsup": "^6.5.0"
+  "dependencies": {
+    "tsup": "^8"
   },
   "main": "index.js",
   "types": "index.d.ts",
