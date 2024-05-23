@@ -23,16 +23,11 @@ jobs:
           fetch-depth: 2
 
       - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
 
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version-file: ".nvmrc"
           cache: "pnpm"
 
       - name: Install Dependencies
