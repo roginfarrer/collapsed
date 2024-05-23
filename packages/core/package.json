@@ -5,9 +5,10 @@
   "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "exports": {
+    "require": "./dist/index.cjs.js",
+    "import": "./dist/index.mjs"
+  },
   "files": [
     "dist"
   ],
