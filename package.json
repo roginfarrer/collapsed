@@ -22,7 +22,7 @@
     "np": "^6.4.0",
     "prettier": "^3",
     "process": "^0.11.10",
-    "turbo": "^1.8.8",
+    "turbo": "^1.13.3",
     "typescript": "^5.4.5"
   },
   "alias": {
