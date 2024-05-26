@@ -29,6 +29,7 @@
     "eslint-config-collapsed": "workspace:*",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
+    "parcel": "^2.8.2",
     "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
     "tsup": "^8"
