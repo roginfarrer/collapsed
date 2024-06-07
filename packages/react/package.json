@@ -64,10 +64,11 @@
     "tslib": "^2.4.1",
     "tsup": "^8",
     "typescript": "^5.4",
-    "vite": "^4"
+    "vite": "^4.5.3"
   },
   "dependencies": {
     "@collapsed/core": "workspace:*",
+    "web-component": "workspace:*",
     "tiny-warning": "^1.0.3"
   },
   "repository": {

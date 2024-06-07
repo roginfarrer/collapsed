@@ -1,0 +1,29 @@
+{
+  "name": "web-component",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./dist/collapsed.js",
+    "./collapsed-toggle": "./dist/collapsed-toggle.js",
+    "./collapsed-disclosure": "./dist/collapsed-disclosure.js"
+  },
+  "devDependencies": {
+    "@collapsed-internal/build": "workspace:*",
+    "@collapsed-internal/tsconfig": "workspace:*",
+    "@web/dev-server": "^0.1.31",
+    "@web/dev-server-legacy": "^1.0.0",
+    "@web/test-runner": "^0.15.0",
+    "@web/test-runner-playwright": "^0.9.0",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
+    "lit-analyzer": "^1.2.1",
+    "parcel": "^2.8.2",
+    "ts-lit-plugin": "^2.0.2",
+    "tslib": "^2.4.1",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "lit": "^3.0.0",
+    "tiny-warning": "^1.0.3"
+  }
+}

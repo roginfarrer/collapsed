@@ -15,6 +15,10 @@ module.exports = {
   },
 
   docs: {},
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
+  },
 };
 
 function getAbsolutePath(value) {

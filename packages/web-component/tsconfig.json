@@ -1,0 +1,19 @@
+{
+  "extends": "@collapsed-internal/tsconfig/base.json",
+  "compilerOptions": {
+    "noEmitOnError": false,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "inlineSources": true,
+    "outDir": "dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ]
+  }
+}
