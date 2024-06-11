@@ -1,15 +1,19 @@
 import * as React from "react";
-import {
-  CollapseAnimation,
-  CollapseOptions,
-} from "../../web-component/src/collapsed";
-//import { Collapse, CollapseParams } from "@collapsed/core";
+import { Collapse, CollapseOptions } from "@collapsed/core";
 import { AssignableRef, mergeRefs, useControlledState } from "./utils";
 
 export interface UseCollapseParams
   extends Omit<CollapseOptions, "getDisclosureElement"> {
+  /**
+   * If true, the disclosure is expanded.
+   */
   isExpanded?: boolean;
+  /** Handler called when the disclosure expands or collapses */
   onExpandedChange?: (state: boolean) => void;
+  /**
+   * If true, the disclosure is expanded when it initially mounts.
+   * @default false
+   */
   initialExpanded?: boolean;
 }
 
@@ -20,9 +24,7 @@ export function useCollapse({
   easing = "cubic-bezier(0.4, 0, 0.2, 1)",
   duration = "auto",
   collapsedHeight = 0,
-  onStateChange = () => {},
   onTransitionStateChange = () => {},
-  disableAnimation = false,
 }: UseCollapseParams = {}) {
   const id = React.useId();
   const [isExpanded, setExpanded] = useControlledState(
@@ -31,76 +33,47 @@ export function useCollapse({
     onExpandedChange,
   );
   let prevState = React.useRef(isExpanded);
-  const [hasMounted, setHasMounted] = React.useState(false);
+  const [isAnimating, setIsAnimating] = React.useState(false);
+
   const [toggleEl, setToggleEl] = React.useState<HTMLElement | null>(null);
   const collapseElRef = React.useRef<HTMLElement | null>(null);
-  // const instance = React.useRef<CollapseAnimation>();
-  const [instance] = React.useState(
-    () =>
-      new CollapseAnimation({
-        easing,
-        duration,
-        collapsedHeight,
-        getDisclosureElement: () => collapseElRef.current!,
-        onStateChange: setExpanded,
-      }),
-  );
 
-  instance.setOptions({
+  const resolvedOptions: CollapseOptions = {
     easing,
     duration,
     collapsedHeight,
     getDisclosureElement: () => collapseElRef.current!,
-    onStateChange: setExpanded,
-  });
-
-  const assignCollapseRef = React.useCallback(
-    (node: HTMLElement | null) => {
-      if (node !== collapseElRef.current) {
-        instance.cleanup();
-      }
-      if (node) {
-        console.log("setup", node, collapseElRef.current);
-        collapseElRef.current = node;
-        instance.setup();
-      }
+    onExpandedChange(state) {
+      setExpanded(state);
+      onExpandedChange?.(state);
     },
-    [instance],
-  );
-
-  React.useEffect(() => {
-    if (isExpanded !== prevState.current) {
-      if (isExpanded) {
-        instance.open();
-      } else {
-        instance.close();
+    onTransitionStateChange(state) {
+      switch (state) {
+        case "collapseEnd":
+        case "expandEnd":
+          setIsAnimating(false);
+          break;
       }
-      prevState.current = isExpanded;
+      onTransitionStateChange?.(state);
+    },
+  };
+
+  const [collapse] = React.useState(() => new Collapse(resolvedOptions));
+  collapse.setOptions(resolvedOptions);
+
+  React.useLayoutEffect(() => {
+    if (isExpanded === prevState.current) return;
+    prevState.current = isExpanded;
+
+    setIsAnimating(true);
+    if (isExpanded) {
+      collapse.open();
+    } else {
+      collapse.close();
     }
-  }, [instance, isExpanded]);
+  }, [collapse, isExpanded]);
 
   const disclosureId = `collapsed-disclosure-${id}`;
-
-  // const resolvedOptions: CollapseParams = {
-  //   id,
-  //   isExpanded: propExpanded,
-  //   initialExpanded: propExpanded ?? propDefaultExpanded,
-  //   ...opts,
-  // };
-
-  // const [instance] = React.useState(() => new Collapse(resolvedOptions));
-  // const [state, setState] = React.useState(() => instance.initialState);
-
-  // useLayoutEffect(() => {
-  //   instance.setOptions((prev) => ({
-  //     ...prev,
-  //     isExpanded: propExpanded ?? state,
-  //     onExpandedChange(state) {
-  //       setState(state);
-  //       resolvedOptions.onExpandedChange?.(state);
-  //     },
-  //   }));
-  // });
 
   return {
     isExpanded: isExpanded,
@@ -183,14 +156,17 @@ export function useCollapse({
     } & {
       id: string;
     } {
-      const { refKey } = { refKey: "ref", ...args };
+      const { refKey, style } = { refKey: "ref", style: {}, ...args };
       const theirRef: any = args?.[refKey || "ref"];
-      console.log({ hasMounted, isExpanded });
       return {
         id: disclosureId,
         ...args,
-        style: !hasMounted && !isExpanded ? { display: "none" } : undefined,
-        [refKey || "ref"]: mergeRefs(assignCollapseRef, theirRef),
+        style: {
+          boxSizing: "border-box",
+          ...(!isAnimating && !isExpanded ? collapse.getCollapsedStyles() : {}),
+          ...style,
+        },
+        [refKey || "ref"]: mergeRefs(collapseElRef, theirRef),
       } as any;
     },
   };

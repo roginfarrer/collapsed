@@ -1,24 +1,30 @@
 {
   "name": "@collapsed/core",
   "version": "4.0.1",
+  "type": "module",
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
-  "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse components.",
+  "description": "A framework-agnostic utility for creating flexible and accessible expand/collapse elements.",
   "license": "MIT",
-  "source": "src/index.ts",
+  "main": "./dist/Collapse.cjs",
+  "module": "./dist/Collapse.js",
+  "types": "./dist/Collapse.d.ts",
   "exports": {
-    "require": "./dist/index.cjs.js",
-    "import": "./dist/index.mjs"
+    ".": {
+      "require": "./dist/Collapse.cjs",
+      "import": "./dist/Collapse.js",
+      "types": "./dist/Collapse.d.ts"
+    }
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "tsup",
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "release": "np --no-2fa"
+    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}"
   },
   "devDependencies": {
     "@collapsed-internal/build": "workspace:*",

@@ -4,12 +4,20 @@
   "author": "Rogin Farrer <rogin@roginfarrer.com>",
   "description": "A React custom-hook for creating flexible and accessible expand/collapse components.",
   "license": "MIT",
-  "source": "src/index.ts",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "tsup",
@@ -68,7 +76,6 @@
   },
   "dependencies": {
     "@collapsed/core": "workspace:*",
-    "web-component": "workspace:*",
     "tiny-warning": "^1.0.3"
   },
   "repository": {

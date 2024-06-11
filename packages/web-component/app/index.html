@@ -15,6 +15,7 @@
   </head>
   <body>
     <button id="btn" aria-controls="foo" aria-expanded="false">Toggle</button>
+    <input type="number" id="height" />
     <collapsed-disclosure id="foo">
       <p>hello there</p>
       <p>hello there</p>
@@ -30,12 +31,16 @@
     </collapsed-disclosure>
     <script type="module">
       let disclosure = document.querySelector("#foo");
-      let open = disclosure.open;
+      let open = disclosure.hasAttribute("open");
       let btn = document.querySelector("#btn");
+      let height = document.querySelector("#height");
       btn.addEventListener("click", () => {
         open = !open;
         disclosure.open = open;
         btn.setAttribute("aria-expanded", open.toString());
+      });
+      height.addEventListener("blur", (e) => {
+        disclosure.setAttribute("collapsed-height", e.target.valueAsNumber);
       });
     </script>
   </body>

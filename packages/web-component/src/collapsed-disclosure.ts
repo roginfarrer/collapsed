@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { LitElement, html, css, PropertyValueMap } from "lit";
+import { customElement, property, query, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { CollapseAnimation } from "./collapsed";
+import { Collapse } from "@collapsed/core";
 
 let id = 0;
 
@@ -32,6 +32,7 @@ export class CollapsedDisclosure extends LitElement {
   static styles = css`
     :host {
       box-sizing: border-box;
+      /* To avoid jankiness with margin collapse */
       display: flex;
     }
     :host *,
@@ -44,81 +45,87 @@ export class CollapsedDisclosure extends LitElement {
   private readonly attrId = ++id;
   private readonly componentId = `collapsed-disclosure-${this.attrId}`;
 
+  @query(":first-child")
+  private collapseEl?: HTMLDivElement;
+
   @state()
-  hasMounted = false;
+  private isAnimating = false;
+
+  @state()
+  private passedFirstUpdate = false;
 
   @property({ type: Boolean, reflect: true })
   open: boolean = false;
 
-  @property({ type: Number })
+  @property({ type: Number, attribute: "collapsed-height", reflect: true })
   collapsedHeight: number = 0;
 
   @property()
   duration: "auto" | number = "auto";
 
-  @property({ attribute: false })
+  @property()
   easing: string = "cubic-bezier(0.4, 0, 0.2, 1)";
 
-  observer?: MutationObserver;
-  collapse: CollapseAnimation;
+  private collapse: Collapse;
 
   constructor() {
     super();
 
     this.id = this.id.length > 0 ? this.id : this.componentId;
 
-    this.collapse = new CollapseAnimation({
-      onStateChange: (state) => {
+    if (this.hasAttribute("open")) {
+      this.open = true;
+    }
+
+    this.collapse = new Collapse({
+      onExpandedChange: (state) => {
         this.dispatchEvent(openStateChange(state));
       },
       onTransitionStateChange: (state) => {
+        switch (state) {
+          case "expandStart":
+          case "collapseStart":
+            this.isAnimating = true;
+            break;
+          case "expandEnd":
+          case "collapseEnd":
+            this.isAnimating = false;
+        }
         this.dispatchEvent(transitionStateChangeEvent(state));
       },
       easing: this.easing,
       collapsedHeight: this.collapsedHeight,
-      getDisclosureElement: () =>
-        this.renderRoot.querySelector(":first-child")!,
+      duration: this.duration,
+      getDisclosureElement: () => this.collapseEl!,
+    });
+  }
+
+  protected async updated(props: PropertyValueMap<typeof this>) {
+    this.collapse.setOptions({
+      easing: this.easing,
+      collapsedHeight: this.collapsedHeight,
+      duration: this.duration,
     });
 
-    if (this.hasAttribute("open")) {
-      this.open = true;
+    if (props.has("collapsedHeight") && !this.open) {
+      this.collapseEl?.style.removeProperty("display");
+      this.collapseEl?.style.setProperty("height", `${this.collapsedHeight}px`);
     }
-  }
 
-  connectedCallback(): void {
-    super.connectedCallback();
-  }
-
-  async firstUpdated() {
-    this.collapse.setup();
-
-    this.observer = new MutationObserver(async (changes) => {
-      for (let change of changes) {
-        if (change.type === "attributes" && change.attributeName === "open") {
-          if (this.open) {
-            this.collapse.open();
-          } else {
-            this.collapse.close();
-          }
-        }
+    if (
+      // So we don't animate on first update
+      this.passedFirstUpdate &&
+      props.has("open") &&
+      this.open !== props.get("open")
+    ) {
+      if (this.open) {
+        this.collapse.open();
+      } else {
+        this.collapse.close();
       }
-    });
-
-    this.observer.observe(this, { attributes: true });
-
-    // In the template, we apply collapsed styles on the first render if the disclosure isn't open
-    // After we've mounted, we remove those styles from subsequent renders, and reapply it
-    // manually if needed
-    this.hasMounted = true;
-    await this.updateComplete;
-    if (!this.open) {
-      this.collapse.setCollapsedStyles();
     }
-  }
 
-  disconnectedCallback(): void {
-    this.collapse.cleanup();
-    this.observer?.disconnect();
+    this.passedFirstUpdate = true;
   }
 
   public toggle = () => {
@@ -129,7 +136,7 @@ export class CollapsedDisclosure extends LitElement {
     return html`<div
       part="root"
       style=${styleMap(
-        !this.hasMounted && !this.open
+        !this.isAnimating && !this.open
           ? this.collapse.getCollapsedStyles()
           : {},
       )}
