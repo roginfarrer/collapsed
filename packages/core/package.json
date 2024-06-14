@@ -24,19 +24,14 @@
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}"
+    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
+    "dev": "parcel dev/index.html"
   },
   "devDependencies": {
     "@collapsed-internal/build": "workspace:*",
     "@collapsed-internal/tsconfig": "workspace:*",
-    "@testing-library/jest-dom": "^5.16.0",
-    "@types/jest": "^27.0.2",
-    "@types/testing-library__jest-dom": "^5.14.5",
     "eslint-config-collapsed": "workspace:*",
-    "jest": "^29.3.1",
-    "jest-environment-jsdom": "^29.3.1",
     "parcel": "^2.8.2",
-    "ts-jest": "^29.0.3",
     "tslib": "^2.4.1",
     "tsup": "^8"
   },

@@ -23,7 +23,7 @@ let banner = `/**
 
 export default defineConfig([
   {
-    entry: ["./src/collapsed-disclosure.ts"],
+    entry: ["./src/index.ts"],
     format: ["esm", "cjs"],
     clean: true,
     minify: true,

@@ -1,6 +1,7 @@
 {
-  "name": "example-bare",
+  "name": "solid-app",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
@@ -9,9 +10,7 @@
   "dependencies": {
     "@solidjs/start": "^1.0.1",
     "solid-js": "^1.8.17",
+    "@collapsed/solid": "workspace:*",
     "vinxi": "^0.3.11"
-  },
-  "engines": {
-    "node": ">=18"
   }
 }

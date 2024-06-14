@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { createCollapse } from "../../solid/src";
+import { createCollapse } from "@collapsed/solid";
 import "./app.css";
 
 export default function App() {
