@@ -8,3 +8,5 @@ storybook-static
 .parcel-cache
 .solid
 .next
+
+*storybook.log

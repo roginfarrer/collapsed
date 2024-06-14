@@ -20,12 +20,18 @@ const transitionStateChangeEvent = (
     composed: true,
   });
 
+export type TransitionStateChangeEvent = ReturnType<
+  typeof transitionStateChangeEvent
+>;
+
 const openStateChange = (payload: boolean) =>
   new CustomEvent("openStateChange", {
     detail: payload,
     bubbles: true,
     composed: true,
   });
+
+export type OpenStateChangeEvent = ReturnType<typeof openStateChange>;
 
 @customElement("collapsed-disclosure")
 export class CollapsedDisclosure extends LitElement {
@@ -145,6 +151,16 @@ export class CollapsedDisclosure extends LitElement {
     </div>`;
   }
 }
+
+// type CustomListeners = <K extends keyof CollapsedDisclosureEventMap>
+// declare function custom = <K extends keyof CollapsedDisclosureEventMap | string>(type: K extends keyof CollapsedDisclosureEventMap ? K : )
+
+// export interface CollapsedDisclosureEventMap {
+//   'openStateChange': OpenStateChangeEvent;
+//   "transitionStateChange": TransitionStateChangeEvent;
+// }
+
+// declare function CollapsedDisclosure.addEventListener = <K extends keyof SelectElementEventMap>(type: K, listener: (this: SelectElement, ev: SelectElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
 
 declare global {
   interface HTMLElementTagNameMap {
