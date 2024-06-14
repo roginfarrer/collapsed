@@ -6,3 +6,5 @@ dist
 storybook-static
 .turbo
 .parcel-cache
+.solid
+.next

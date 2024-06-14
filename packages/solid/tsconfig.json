@@ -1,5 +1,6 @@
 {
   "extends": "@collapsed-internal/tsconfig/base.json",
+  "exclude": ["app"],
   "compilerOptions": {
     "noEmitOnError": false,
     "declaration": true,

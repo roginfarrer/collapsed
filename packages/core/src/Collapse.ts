@@ -103,10 +103,8 @@ export class Collapse {
     let styles: Record<string, string> = {
       height: `${this.#options.collapsedHeight}px`,
       overflow: "hidden",
+      display: this.#options.collapsedHeight === 0 ? "none" : "block",
     };
-    if (this.#options.collapsedHeight === 0) {
-      styles.display = "none";
-    }
     return styles;
   }
 

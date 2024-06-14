@@ -1,0 +1,38 @@
+{
+  "name": "@collapsed/solid",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/collapsed-disclosure.cjs",
+  "module": "./dist/collapsed-disclosure.js",
+  "types": "./dist/collapsed-disclosure.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/collapsed-disclosure.js",
+      "require": "./dist/collapsed-disclosure.cjs",
+      "types": "./dist/collapsed-disclosure.d.ts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@collapsed-internal/build": "workspace:*",
+    "@collapsed-internal/tsconfig": "workspace:*",
+    "lit-analyzer": "^1.2.1",
+    "parcel": "^2.8.2",
+    "ts-lit-plugin": "^2.0.2",
+    "tslib": "^2.4.1",
+    "tsup": "^8",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@collapsed/core": "workspace:*",
+    "solid-js": "^1.8.17"
+  }
+}

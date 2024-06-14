@@ -106,7 +106,7 @@ export function useCollapse({
       const theirRef: any = args?.[refKey || "ref"];
 
       const props: any = {
-        "aria-controls": `react-collapsed-panel-${id}`,
+        "aria-controls": disclosureId,
         "aria-expanded": isExpanded,
         onClick(evt: any) {
           if (disabled) return;
