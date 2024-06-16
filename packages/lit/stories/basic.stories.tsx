@@ -1,5 +1,5 @@
 import { html } from "lit";
-import "./components";
+import { SimpleDemo } from "./components";
 
 export const Basic = () => {
   return html`
@@ -7,6 +7,10 @@ export const Basic = () => {
       <styled-collapse id="basic"></styled-collapse>
     </div>
   `;
+};
+
+export const SimpleComposition = () => {
+  return html`${SimpleDemo()}`;
 };
 
 export default {

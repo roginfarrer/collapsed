@@ -8,7 +8,6 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "example": "pnpm --filter example run start",
     "version": "changeset version && pnpm install --lockfile-only",
     "release": "pnpm build && changeset publish"
   },

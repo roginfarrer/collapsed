@@ -20,18 +20,12 @@ const transitionStateChangeEvent = (
     composed: true,
   });
 
-export type TransitionStateChangeEvent = ReturnType<
-  typeof transitionStateChangeEvent
->;
-
 const openStateChange = (payload: boolean) =>
   new CustomEvent("openStateChange", {
     detail: payload,
     bubbles: true,
     composed: true,
   });
-
-export type OpenStateChangeEvent = ReturnType<typeof openStateChange>;
 
 @customElement("collapsed-disclosure")
 export class CollapsedDisclosure extends LitElement {
@@ -50,15 +44,14 @@ export class CollapsedDisclosure extends LitElement {
 
   private readonly attrId = ++id;
   private readonly componentId = `collapsed-disclosure-${this.attrId}`;
+  private passedFirstUpdate = false;
+  private collapse: Collapse;
 
   @query(":first-child")
   private collapseEl?: HTMLDivElement;
 
   @state()
   private isAnimating = false;
-
-  @state()
-  private passedFirstUpdate = false;
 
   @property({ type: Boolean, reflect: true })
   open: boolean = false;
@@ -71,8 +64,6 @@ export class CollapsedDisclosure extends LitElement {
 
   @property()
   easing: string = "cubic-bezier(0.4, 0, 0.2, 1)";
-
-  private collapse: Collapse;
 
   constructor() {
     super();
@@ -106,7 +97,7 @@ export class CollapsedDisclosure extends LitElement {
     });
   }
 
-  protected async updated(props: PropertyValueMap<typeof this>) {
+  protected updated(props: PropertyValueMap<typeof this>) {
     this.collapse.setOptions({
       easing: this.easing,
       collapsedHeight: this.collapsedHeight,
@@ -134,10 +125,6 @@ export class CollapsedDisclosure extends LitElement {
     this.passedFirstUpdate = true;
   }
 
-  public toggle = () => {
-    this.open = !this.open;
-  };
-
   render() {
     return html`<div
       part="root"
@@ -149,21 +136,5 @@ export class CollapsedDisclosure extends LitElement {
     >
       <slot></slot>
     </div>`;
-  }
-}
-
-// type CustomListeners = <K extends keyof CollapsedDisclosureEventMap>
-// declare function custom = <K extends keyof CollapsedDisclosureEventMap | string>(type: K extends keyof CollapsedDisclosureEventMap ? K : )
-
-// export interface CollapsedDisclosureEventMap {
-//   'openStateChange': OpenStateChangeEvent;
-//   "transitionStateChange": TransitionStateChangeEvent;
-// }
-
-// declare function CollapsedDisclosure.addEventListener = <K extends keyof SelectElementEventMap>(type: K, listener: (this: SelectElement, ev: SelectElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-
-declare global {
-  interface HTMLElementTagNameMap {
-    "collapsed-disclosure": CollapsedDisclosure;
   }
 }

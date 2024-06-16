@@ -147,7 +147,7 @@ export function createCollapse(options: UseCollapseParams) {
     get isExpanded() {
       return isExpanded();
     },
-    setExpanded: setExpanded,
+    setExpanded,
     getToggleProps,
     getCollapseProps,
   };

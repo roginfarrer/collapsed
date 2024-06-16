@@ -12,7 +12,8 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "14.2.3",
-    "@collapsed/react": "workspace:*"
+    "@collapsed/react": "workspace:*",
+    "react-collapsed": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5",

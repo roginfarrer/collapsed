@@ -2,6 +2,39 @@ import { LitElement, css, html } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { CollapsedDisclosure } from "../src/collapsed-disclosure.js";
 
+export function SimpleDemo() {
+  function handleClick(event: MouseEvent) {
+    const collapse = document.querySelector(
+      "#disclosure",
+    ) as CollapsedDisclosure;
+    const btn = event.target as HTMLButtonElement;
+    collapse.toggleAttribute("open");
+    btn.setAttribute("aria-expanded", collapse.hasAttribute("open").toString());
+  }
+
+  return html`<div>
+    <button
+      aria-controls="disclosure"
+      aria-expanded="false"
+      @click="${handleClick}"
+    >
+      Toggle
+    </button>
+    <collapsed-disclosure id="disclosure">
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+      <p>Oh, hello</p>
+    </collapsed-disclosure>
+  </div>`;
+}
+
 @customElement("styled-collapse")
 export class StyledCollapse extends LitElement {
   static styles = css`
@@ -72,7 +105,6 @@ export class StyledCollapse extends LitElement {
 
   firstUpdated() {
     customElements.whenDefined("collapsed-disclosure").then(() => {
-      // @ts-expect-error
       this.disclosure = this.renderRoot.querySelector("collapsed-disclosure")!;
       this.updateButton(this.disclosure.hasAttribute("open"));
     });

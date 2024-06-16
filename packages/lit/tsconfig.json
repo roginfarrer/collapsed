@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "inlineSources": true,
-    "baseUrl": ".",
+    "baseUrl": "../lit",
     "plugins": [
       {
         "name": "ts-lit-plugin",

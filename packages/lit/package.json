@@ -1,5 +1,5 @@
 {
-  "name": "@collapsed/web-component",
+  "name": "@collapsed/lit",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "lint": "eslint .",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
