@@ -1,0 +1,11 @@
+{
+  "virtual:#vinxi/handler/ssr": {
+    "file": "ssr.js",
+    "name": "ssr",
+    "src": "virtual:#vinxi/handler/ssr",
+    "isEntry": true,
+    "css": [
+      "assets/ssr-CMQTawRJ.css"
+    ]
+  }
+}

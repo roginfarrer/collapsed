@@ -1,0 +1,1 @@
+{"name":"solid-app-prod","version":"0.0.0","type":"module","private":true,"dependencies":{"pathe":"1.1.2","seroval":"1.0.7","seroval-plugins":"1.0.7","solid-js":"1.8.17","std-env":"3.7.0","vinxi":"0.3.11"}}

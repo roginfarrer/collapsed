@@ -21,17 +21,16 @@
   ],
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "test": "jest src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
-    "dev": "parcel dev/index.html"
+    "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}"
   },
   "devDependencies": {
     "@collapsed-internal/build": "workspace:*",
     "@collapsed-internal/tsconfig": "workspace:*",
     "eslint-config-collapsed": "workspace:*",
-    "parcel": "^2.8.2",
     "tslib": "^2.4.1",
     "tsup": "^8"
   },

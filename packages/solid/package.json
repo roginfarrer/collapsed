@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "build": "tsup",
-    "typecheck": "tsc --project tsconfig.json --noEmit",
-    "dev": "pnpm --cwd ../solid-app dev"
+    "dev": "tsup --watch",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@collapsed-internal/build": "workspace:*",
