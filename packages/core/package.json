@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "jest src",
+    "test": "vitest",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}"
@@ -32,7 +32,8 @@
     "@collapsed-internal/tsconfig": "workspace:*",
     "eslint-config-collapsed": "workspace:*",
     "tslib": "^2.4.1",
-    "tsup": "^8"
+    "tsup": "^8",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "tiny-warning": "^1.0.3"

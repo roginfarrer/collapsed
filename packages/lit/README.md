@@ -1,5 +1,8 @@
 # @collapsed/lit
 
+![NPM Version](https://img.shields.io/npm/v/%40collapsed%2Flit)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/%40collapsed%2Flit)
+
 A Lit element for creating accessible expand/collapse elements. Animates the height using CSS transitions from `0` to `auto`.
 
 ## Features

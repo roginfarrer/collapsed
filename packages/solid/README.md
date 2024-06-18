@@ -1,5 +1,8 @@
 # @collapsed/solid
 
+![NPM Version](https://img.shields.io/npm/v/%40collapsed%2Fsolid)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/%40collapsed%2Fsolid)
+
 A Solid.js utility for creating accessible expand/collapse components. Animates the height using CSS transitions from `0` to `auto`.
 
 ## Features

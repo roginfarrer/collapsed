@@ -104,7 +104,11 @@ export class CollapsedDisclosure extends LitElement {
       duration: this.duration,
     });
 
-    if (props.has("collapsedHeight") && !this.open) {
+    if (
+      props.has("collapsedHeight") &&
+      this.collapsedHeight > 0 &&
+      !this.open
+    ) {
       this.collapseEl?.style.removeProperty("display");
       this.collapseEl?.style.setProperty("height", `${this.collapsedHeight}px`);
     }

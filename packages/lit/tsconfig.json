@@ -12,6 +12,7 @@
         "name": "ts-lit-plugin",
         "strict": true
       }
-    ]
+    ],
+    "types": ["mocha"]
   }
 }

@@ -74,11 +74,14 @@ export class Collapse {
     return num;
   }
 
-  #setTransitionEndTimeout = (duration: number): void => {
+  #setTransitionEndTimeout = (
+    state: "open" | "close",
+    duration: number,
+  ): void => {
     const endTransition = () => {
       let target = this.#getElement();
       target.style.removeProperty("transition");
-      if (target.style.height === `${this.#options.collapsedHeight}px`) {
+      if (state === "close") {
         // Closed
         this.setCollapsedStyles();
         this.frameId = requestAnimationFrame(() => {
@@ -147,7 +150,7 @@ export class Collapse {
         this.#options.onTransitionStateChange("expanding");
         const height = target.scrollHeight;
         const duration = this.#getDuration(height);
-        this.#setTransitionEndTimeout(duration);
+        this.#setTransitionEndTimeout("open", duration);
         target.style.transition = `height ${duration}ms ${this.#options.easing}`;
         target.style.height = `${height}px`;
       });
@@ -171,7 +174,7 @@ export class Collapse {
 
       const height = target.scrollHeight;
       const duration = this.#getDuration(height);
-      this.#setTransitionEndTimeout(duration);
+      this.#setTransitionEndTimeout("close", duration);
       target.style.transition = `height ${duration}ms ${this.#options.easing}`;
       target.style.height = `${height}px`;
 

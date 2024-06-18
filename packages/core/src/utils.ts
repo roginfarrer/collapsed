@@ -1,8 +1,8 @@
 import warning from "tiny-warning";
 
 // https://github.com/mui-org/material-ui/blob/da362266f7c137bf671d7e8c44c84ad5cfc0e9e2/packages/material-ui/src/styles/transitions.js#L89-L98
-export function getAutoHeightDuration(height: number | string): number {
-  if (!height || typeof height === "string") {
+export function getAutoHeightDuration(height?: number): number {
+  if (!height) {
     return 0;
   }
 
