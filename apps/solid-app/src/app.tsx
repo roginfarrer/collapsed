@@ -43,7 +43,6 @@ export default function App() {
   return (
     <main>
       <Collapse />
-      <Collapse />
     </main>
   );
 }
