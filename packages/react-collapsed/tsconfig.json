@@ -1,14 +1,9 @@
 {
   "extends": "@collapsed-internal/tsconfig/react.json",
-  "include": [
-    "src",
-    "jest-setup.ts",
-    "tsup.config.ts",
-    "stories",
-    "tests",
-    "cypress"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "vitest-setup.ts"],
+  "exclude": ["node_modules", "cypress", "dist"],
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   }
 }

@@ -6,13 +6,12 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "inlineSources": true,
-    "baseUrl": "../lit",
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "ts-lit-plugin",
         "strict": true
       }
-    ],
-    "types": ["mocha"]
+    ]
   }
 }

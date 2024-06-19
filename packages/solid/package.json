@@ -25,10 +25,11 @@
   "devDependencies": {
     "@collapsed-internal/build": "workspace:*",
     "@collapsed-internal/tsconfig": "workspace:*",
+    "@types/node": "^20",
+    "solid-js": "^1.8.17",
     "tslib": "^2.4.1",
     "tsup": "^8",
-    "typescript": "^5.4.5",
-    "solid-js": "^1.8.17"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@collapsed/core": "workspace:*"

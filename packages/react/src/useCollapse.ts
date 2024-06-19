@@ -14,19 +14,24 @@ export interface UseCollapseParams
    * If true, the disclosure is expanded when it initially mounts.
    * @default false
    */
-  initialExpanded?: boolean;
+  defaultExpanded?: boolean;
+  /**
+   * Unique identifier used to for associating elements appropriately for accessibility.
+   */
+  id?: string;
 }
 
 export function useCollapse({
   isExpanded: propExpanded,
-  initialExpanded: propDefaultExpanded = false,
+  defaultExpanded: propDefaultExpanded = false,
   onExpandedChange,
   easing = "cubic-bezier(0.4, 0, 0.2, 1)",
   duration = "auto",
   collapsedHeight = 0,
   onTransitionStateChange = () => {},
+  id: propId,
 }: UseCollapseParams = {}) {
-  const id = React.useId();
+  const reactId = React.useId();
   const [isExpanded, setExpanded] = useControlledState(
     propExpanded,
     propDefaultExpanded,
@@ -73,13 +78,14 @@ export function useCollapse({
     }
   }, [collapse, isExpanded]);
 
-  const disclosureId = `collapsed-disclosure-${id}`;
+  const disclosureId = propId ?? `collapsed-disclosure-${reactId}`;
 
   return {
     isExpanded: isExpanded,
     setExpanded: setExpanded,
     getToggleProps<
-      Args extends React.ComponentPropsWithoutRef<"button"> & {
+      T extends React.ElementType,
+      Args extends React.ComponentPropsWithoutRef<T> & {
         [k: string]: unknown;
       },
       RefKey extends string | undefined = "ref",
@@ -93,10 +99,9 @@ export function useCollapse({
       },
     ): {
       [K in RefKey extends string ? RefKey : "ref"]: AssignableRef<any>;
-    } & React.ComponentPropsWithoutRef<"button"> {
-      const { disabled, onClick, refKey, ...rest } = {
+    } & React.ComponentPropsWithoutRef<T> {
+      const { disabled, refKey, ...rest } = {
         refKey: "ref",
-        onClick() {},
         disabled: false,
         ...args,
       };
@@ -110,7 +115,7 @@ export function useCollapse({
         "aria-expanded": isExpanded,
         onClick(evt: any) {
           if (disabled) return;
-          onClick?.(evt);
+          args?.onClick?.(evt);
           setExpanded((n) => !n);
         },
         [refKey || "ref"]: mergeRefs(theirRef, setToggleEl),

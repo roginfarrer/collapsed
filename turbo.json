@@ -20,6 +20,14 @@
       "outputs": []
     },
     "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "typecheck": {
+      "outputs": []
+    },
+    "cypress:run": {
+      "dependsOn": ["^build"],
       "outputs": []
     }
   }

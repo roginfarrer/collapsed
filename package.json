@@ -7,22 +7,20 @@
     "build": "turbo build",
     "test": "turbo test",
     "lint": "turbo lint",
+    "cypress:run": "turbo cypress:run",
     "format": "prettier --write **/*.{js,ts,tsx,yml,md,md,json}",
     "version": "changeset version && pnpm install --lockfile-only",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "typecheck": "turbo typecheck"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.3",
-    "@collapsed-internal/tsconfig": "workspace:*",
-    "@types/node": "^20",
     "buffer": "^5.5.0",
-    "eslint": "^8.0.0",
-    "eslint-config-collapsed": "workspace:*",
     "np": "^6.4.0",
+    "one-version": "^0.2.0",
     "prettier": "^3",
     "process": "^0.11.10",
-    "turbo": "^1.13.3",
-    "typescript": "^5.4.5"
+    "turbo": "^1.13.3"
   },
   "alias": {
     "process": "process/browser.js",

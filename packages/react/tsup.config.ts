@@ -23,7 +23,7 @@ let banner = `/**
 
 export default defineConfig([
   {
-    entry: ["./src/index.ts"],
+    entry: ["./src/useCollapse.ts"],
     format: ["esm", "cjs"],
     clean: true,
     minify: true,
