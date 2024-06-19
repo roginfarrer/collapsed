@@ -6,11 +6,6 @@ You're probably looking for [react-collapsed](../react-collapsed). This package 
 
 # @collapsed/react (useCollapse)
 
-[![CI][ci-badge]][ci]
-![npm bundle size (version)][minzipped-badge]
-[![npm version][npm-badge]][npm-version]
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5a5b0e80-d15e-4983-976d-37fe6bdada7a/deploy-status)](https://app.netlify.com/sites/react-collapsed/deploys)
-
 A React hook for creating accessible expand/collapse components. Animates the height using CSS transitions from `0` to `auto`.
 
 ## Features
@@ -38,32 +33,32 @@ $ npm i @collapsed/react
 ### Simple Usage
 
 ```js
-import React from 'react'
-import { useCollapse } from '@collapsed/react'
+import React from "react";
+import { useCollapse } from "@collapsed/react";
 
 function Demo() {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
     <div>
       <button {...getToggleProps()}>
-        {isExpanded ? 'Collapse' : 'Expand'}
+        {isExpanded ? "Collapse" : "Expand"}
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  )
+  );
 }
 ```
 
 ### Control it yourself
 
 ```js
-import React, { useState } from 'react'
-import { useCollapse } from '@collapsed/react'
+import React, { useState } from "react";
+import { useCollapse } from "@collapsed/react";
 
 function Demo() {
-  const [isExpanded, setExpanded] = useState(false)
-  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
+  const [isExpanded, setExpanded] = useState(false);
+  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded });
 
   return (
     <div>
@@ -72,60 +67,69 @@ function Demo() {
           onClick: () => setExpanded((prevExpanded) => !prevExpanded),
         })}
       >
-        {isExpanded ? 'Collapse' : 'Expand'}
+        {isExpanded ? "Collapse" : "Expand"}
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  )
+  );
 }
 ```
 
 ## API
 
-```js
-const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
-  useCollapse({
-    isExpanded: boolean,
-    defaultExpanded: boolean,
-    expandStyles: {},
-    collapseStyles: {},
-    collapsedHeight: 0,
-    easing: string,
-    duration: number,
-    onCollapseStart: func,
-    onCollapseEnd: func,
-    onExpandStart: func,
-    onExpandEnd: func,
-  })
+`useCollapse` takes the following options:
+
+```ts
+interface UseCollapseOptions {
+  /** If true, the disclosure is expanded. */
+  isExpanded?: boolean;
+  /**
+   * If true, the disclosure is expanded when it initially mounts.
+   * @default false
+   */
+  defaultExpanded?: boolean;
+  /** Handler called when the disclosure expands or collapses */
+  onExpandedChange?: (state: boolean) => void;
+  /** Handler called at each stage of the animation. */
+  onTransitionStateChange?: (
+    state:
+      | "expandStart"
+      | "expanding"
+      | "expandEnd"
+      | "collapseStart"
+      | "collapsing"
+      | "collapseEnd",
+  ) => void;
+  /** Timing function for the transition */
+  easing?: string;
+  /**
+   * Duration of the expand/collapse animation.
+   * If 'auto', the duration will be calculated based on the height of the collapse element
+   */
+  duration?: "auto" | number;
+  /** Height in pixels that the collapse element collapses to */
+  collapsedHeight?: number;
+  /**
+   * Unique identifier used to for associating elements appropriately for accessibility.
+   */
+  id?: string;
+}
 ```
 
-### `useCollapse` Config
+And returns the following API:
 
-The following are optional properties passed into `useCollapse({ })`:
-
-| Prop                 | Type     | Default                        | Description                                                                                                                                         |
-| -------------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isExpanded           | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
-| defaultExpanded      | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
-| expandStyles         | object   | `{}`                           | Style object applied to the collapse panel when it expands                                                                                          |
-| collapseStyles       | object   | `{}`                           | Style object applied to the collapse panel when it collapses                                                                                        |
-| collapsedHeight      | number   | `0`                            | The height of the content when collapsed                                                                                                            |
-| easing               | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
-| duration             | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
-| onCollapseStart      | function | no-op                          | Handler called when the collapse animation begins                                                                                                   |
-| onCollapseEnd        | function | no-op                          | Handler called when the collapse animation ends                                                                                                     |
-| onExpandStart        | function | no-op                          | Handler called when the expand animation begins                                                                                                     |
-| onExpandEnd          | function | no-op                          | Handler called when the expand animation ends                                                                                                       |
-| hasDisabledAnimation | boolean  | `undefined`                    | If true, will disable the animation. If `undefined`, will fallback to media `prefers-reduced-animation` setting.                                    |
-
-### What you get
-
-| Name             | Description                                                                                                 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| getCollapseProps | Function that returns a prop object, which should be spread onto the collapse element                       |
-| getToggleProps   | Function that returns a prop object, which should be spread onto an element that toggles the collapse panel |
-| isExpanded       | Whether or not the collapse is expanded (if not controlled)                                                 |
-| setExpanded      | Sets the hook's internal isExpanded state                                                                   |
+```ts
+interface CollapseAPI {
+  isExpanded: boolean;
+  setExpanded: (update: boolean | ((prev: boolean) => boolean)) => void;
+  getToggleProps: <T extends HTMLElement>(
+    props?: React.ComponentPropsWithoutRef<T> & { refKey?: string },
+  ) => React.ComponentPropsWithRef<T>;
+  getCollapseProps: <T extends HTMLElement>(
+    props?: React.ComponentPropsWithoutRef<T> & { refKey?: string },
+  ) => React.ComponentPropsWithRef<T>;
+}
+```
 
 ## Alternative Solutions
 
@@ -156,11 +160,3 @@ To avoid this, simply move that padding from the element to an element directly 
 ```
 
 </details>
-
-[minzipped-badge]: https://img.shields.io/bundlephobia/minzip/@collapsed/react/latest
-[npm-badge]: http://img.shields.io/npm/v/@collapsed/react.svg?style=flat
-[npm-version]: https://npmjs.org/package/@collapsed/react 'View this project on npm'
-[ci-badge]: https://github.com/roginfarrer/collapsed/workflows/CI/badge.svg
-[ci]: https://github.com/roginfarrer/collapsed/actions?query=workflow%3ACI+branch%3Amain
-[netlify]: https://app.netlify.com/sites/react-collapsed/deploys
-[netlify-badge]: https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status

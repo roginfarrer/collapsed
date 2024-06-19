@@ -1,6 +1,6 @@
 # 🙈 react-collapsed (useCollapse)
 
-[![CI][ci-badge]][ci]
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/roginfarrer/collapsed/main.yml)
 ![npm bundle size (version)][minzipped-badge]
 [![npm version][npm-badge]][npm-version]
 [![Netlify Status](https://api.netlify.com/api/v1/badges/5a5b0e80-d15e-4983-976d-37fe6bdada7a/deploy-status)](https://app.netlify.com/sites/react-collapsed/deploys)
@@ -32,32 +32,32 @@ $ npm i react-collapsed
 ### Simple Usage
 
 ```js
-import React from 'react'
-import { useCollapse } from 'react-collapsed'
+import React from "react";
+import { useCollapse } from "react-collapsed";
 
 function Demo() {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
     <div>
       <button {...getToggleProps()}>
-        {isExpanded ? 'Collapse' : 'Expand'}
+        {isExpanded ? "Collapse" : "Expand"}
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  )
+  );
 }
 ```
 
 ### Control it yourself
 
 ```js
-import React, { useState } from 'react'
-import { useCollapse } from 'react-collapsed'
+import React, { useState } from "react";
+import { useCollapse } from "react-collapsed";
 
 function Demo() {
-  const [isExpanded, setExpanded] = useState(false)
-  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded })
+  const [isExpanded, setExpanded] = useState(false);
+  const { getCollapseProps, getToggleProps } = useCollapse({ isExpanded });
 
   return (
     <div>
@@ -66,11 +66,11 @@ function Demo() {
           onClick: () => setExpanded((prevExpanded) => !prevExpanded),
         })}
       >
-        {isExpanded ? 'Collapse' : 'Expand'}
+        {isExpanded ? "Collapse" : "Expand"}
       </button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </div>
-  )
+  );
 }
 ```
 
@@ -85,23 +85,23 @@ const { getCollapseProps, getToggleProps, isExpanded, setExpanded } =
     easing: string,
     duration: number,
     onTransitionStateChange: func,
-  })
+  });
 ```
 
 ### `useCollapse` Config
 
 The following are optional properties passed into `useCollapse({ })`:
 
-| Prop                    | Type     | Default                        | Description                                                                                                                                         |
-| ----------------------- | -------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| isExpanded              | boolean  | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
-| defaultExpanded         | boolean  | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
-| collapsedHeight         | number   | `0`                            | The height of the content when collapsed                                                                                                            |
-| easing                  | string   | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
-| duration                | number   | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
-| onTransitionStateChange | function | no-op                          | Handler called with at each stage of the transition animation                                                                                       |
-| hasDisabledAnimation    | boolean  | false                          | If true, will disable the animation                                                                                                                 |
-| id                      | string \| number | `undefined` | Unique identifier used to for associating elements appropriately for accessibility. |
+| Prop                    | Type             | Default                        | Description                                                                                                                                         |
+| ----------------------- | ---------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| isExpanded              | boolean          | `undefined`                    | If true, the Collapse is expanded                                                                                                                   |
+| defaultExpanded         | boolean          | `false`                        | If true, the Collapse will be expanded when mounted                                                                                                 |
+| collapsedHeight         | number           | `0`                            | The height of the content when collapsed                                                                                                            |
+| easing                  | string           | `cubic-bezier(0.4, 0, 0.2, 1)` | The transition timing function for the animation                                                                                                    |
+| duration                | number           | `undefined`                    | The duration of the animation in milliseconds. By default, the duration is programmatically calculated based on the height of the collapsed element |
+| onTransitionStateChange | function         | no-op                          | Handler called with at each stage of the transition animation                                                                                       |
+| hasDisabledAnimation    | boolean          | false                          | If true, will disable the animation                                                                                                                 |
+| id                      | string \| number | `undefined`                    | Unique identifier used to for associating elements appropriately for accessibility.                                                                 |
 
 ### What you get
 
@@ -144,8 +144,6 @@ To avoid this, simply move that padding from the element to an element directly 
 
 [minzipped-badge]: https://img.shields.io/bundlephobia/minzip/react-collapsed/latest
 [npm-badge]: http://img.shields.io/npm/v/react-collapsed.svg?style=flat
-[npm-version]: https://npmjs.org/package/react-collapsed 'View this project on npm'
-[ci-badge]: https://github.com/roginfarrer/collapsed/workflows/CI/badge.svg
-[ci]: https://github.com/roginfarrer/collapsed/actions?query=workflow%3ACI+branch%3Amain
+[npm-version]: https://npmjs.org/package/react-collapsed "View this project on npm"
 [netlify]: https://app.netlify.com/sites/react-collapsed/deploys
 [netlify-badge]: https://api.netlify.com/api/v1/badges/4d285ffc-aa4f-4d32-8549-eb58e00dd2d1/deploy-status

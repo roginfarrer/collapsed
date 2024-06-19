@@ -7,6 +7,9 @@
     "tsup": "^8"
   },
   "main": "index.js",
+  "files": [
+    "postbuild.js"
+  ],
   "types": "index.d.ts",
   "publishConfig": {
     "access": "public"

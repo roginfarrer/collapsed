@@ -1,12 +1,12 @@
-import { useCollapse } from '..'
-import { Toggle, Collapse } from './components'
+import { useCollapse } from "../useCollapse";
+import { Toggle, Collapse } from "./components";
 
 export default {
-  title: 'Nested Collapses',
-}
+  title: "Nested Collapses",
+};
 
 function InnerCollapse() {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse()
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
     <>
@@ -53,27 +53,27 @@ function InnerCollapse() {
         Ambition should be made of sterner stuff:
       </p>
       <Toggle
-        {...getToggleProps({ style: { display: 'block', marginTop: 8 } })}
+        {...getToggleProps({ style: { display: "block", marginTop: 8 } })}
       >
-        {isExpanded ? 'Click to collapse' : 'Read more?'}
+        {isExpanded ? "Click to collapse" : "Read more?"}
       </Toggle>
     </>
-  )
+  );
 }
 
 export function Nested() {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: true,
-  })
+  });
 
   return (
     <>
-      <Toggle {...getToggleProps()}>{isExpanded ? 'Close' : 'Expand'}</Toggle>
+      <Toggle {...getToggleProps()}>{isExpanded ? "Close" : "Expand"}</Toggle>
       <section {...getCollapseProps()}>
-        <Collapse style={{ display: 'inline-block' }}>
+        <Collapse style={{ display: "inline-block" }}>
           <InnerCollapse />
         </Collapse>
       </section>
     </>
-  )
+  );
 }

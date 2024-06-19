@@ -1,3 +1,5 @@
+.output
+.vinxi
 *.log
 .DS_Store
 node_modules
@@ -6,3 +8,7 @@ dist
 storybook-static
 .turbo
 .parcel-cache
+.solid
+.next
+
+*storybook.log

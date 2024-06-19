@@ -1,0 +1,29 @@
+.main {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  margin-bottom: 24px;
+}
+
+.section {
+  flex: 50%;
+  padding: 16px;
+  text-align: center;
+}
+
+.first {
+  background-color: skyblue;
+}
+
+.second {
+  background-color: salmon;
+}
+
+@media screen and (min-width: 500px) {
+  .main {
+    flex-direction: row;
+  }
+}

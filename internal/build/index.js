@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { defineConfig } from "tsup";
+import { postbuild } from "./postbuild.js";
 
 export function getTsupConfig(
   entry,
@@ -22,6 +23,9 @@ export function getTsupConfig(
         "process.env.NODE_ENV": "true",
       },
       target: "es2016",
+      onSuccess: postbuild,
+      clean: true,
+      dts: { banner },
     },
 
     // cjs.prod.js
@@ -36,6 +40,7 @@ export function getTsupConfig(
         "process.env.NODE_ENV": "false",
       },
       target: "es2016",
+      dts: { banner },
     },
 
     // esm

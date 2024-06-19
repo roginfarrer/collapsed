@@ -1,0 +1,32 @@
+.toggle {
+  box-sizing: border-box;
+  background: white;
+  display: inline-block;
+  text-align: center;
+  box-shadow: 5px 5px 0 black;
+  border: 1px solid black;
+  color: black;
+  cursor: pointer;
+  padding: 12px 24px;
+  font-family: Helvetica;
+  font-size: 16px;
+  transition-timing-function: ease;
+  transition-duration: 150ms;
+  transition-property: all;
+  min-width: 150px;
+  width: 100%;
+
+  @media (min-width: 640px) {
+    width: auto;
+  }
+
+  &:hover,
+  &:focus {
+    background: rgba(225, 225, 225, 0.8);
+  }
+  &:active {
+    background: black;
+    color: white;
+    box-shadow: none;
+  }
+}

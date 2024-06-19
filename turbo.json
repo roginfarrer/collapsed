@@ -3,17 +3,31 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", ".vinxi/**", ".next/**"],
       "inputs": ["internal/*", "packages/*"]
     },
     "watch": {
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "inputs": ["internal/*", "packages/*"]
+      "inputs": ["internal/*", "packages/*"],
+      "persistent": true
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
     },
     "lint": {
       "outputs": []
     },
     "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "typecheck": {
+      "outputs": []
+    },
+    "cypress:run": {
+      "dependsOn": ["^build"],
       "outputs": []
     }
   }

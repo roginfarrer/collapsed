@@ -1,265 +1,194 @@
-import { uid, getAutoHeightDuration, paddingWarning } from './utils'
+import {
+  Frame,
+  clearAnimationTimeout,
+  setAnimationTimeout,
+  getAutoHeightDuration,
+  paddingWarning,
+} from "./utils";
 
-type Style = Partial<CSSStyleDeclaration>
+let durationMap = new Map<string | number, number>();
+function calcDuration(height: number): number {
+  if (!durationMap.has(height)) {
+    durationMap.set(height, getAutoHeightDuration(height));
+  }
+  return durationMap.get(height)!;
+}
 
-export interface CollapseParams {
-  /** If true, the collapse element will initialize expanded */
-  defaultExpanded?: boolean
-  /** Height in pixels that the collapse element collapses to */
-  collapsedHeight?: number
-  /** Styles applied to the collapse upon expanding */
-  expandStyles?: Style
-  /** Styles applied to the collapse upon collapsing */
-  collapseStyles?: Style
+export interface CollapseOptions {
+  /** Handler called when the expanded state changes */
+  onExpandedChange?: (open: boolean) => void;
+  /**
+   * Handler called at each stage of the animation.
+   */
+  onTransitionStateChange?: (
+    state:
+      | "expandStart"
+      | "expanding"
+      | "expandEnd"
+      | "collapseStart"
+      | "collapsing"
+      | "collapseEnd",
+  ) => void;
+  getDisclosureElement: () => HTMLElement;
   /** Timing function for the transition */
-  easing?: string
+  easing?: string;
   /**
    * Duration of the expand/collapse animation.
    * If 'auto', the duration will be calculated based on the height of the collapse element
    */
-  duration?: number | 'auto'
-  /** If true, the animation will be disabled. Useful for disabling if the user prefers reduced motion */
-  hasDisabledAnimation?: boolean
-  /** Unique ID used for accessibility */
-  id?: string
-  /** Handler called when the expanded state changes */
-  onExpandedChange?: (state: boolean) => void
-  /** Handler called when the collapse transition starts */
-  onCollapseStart?: () => void
-  /** Handler called when the collapse transtion ends */
-  onCollapseEnd?: () => void
-  /** Handler called when the expand transition starts */
-  onExpandStart?: () => void
-  /** Handler called when the expand transition end */
-  onExpandEnd?: () => void
-  /** Function that returns a reference to the element that expands and collapses */
-  getCollapseElement: () => HTMLElement | null | undefined
-  /** Function that returns a reference to the toggle for the collapse region */
-  getToggleElement?: () => HTMLElement | null | undefined
+  duration?: "auto" | number;
+  /** Height in pixels that the collapse element collapses to */
+  collapsedHeight?: number;
 }
 
 export class Collapse {
-  isExpanded: boolean
-  options!: CollapseParams
-  private id!: string
-  private collapseElement: HTMLElement | null | undefined = null
-  private isMounted = false
+  #options: Required<CollapseOptions>;
 
-  constructor(params: CollapseParams) {
-    this.setOptions(params)
-    this.isExpanded = Boolean(this.options.defaultExpanded)
-    this.init()
-    this.isMounted = true
-  }
+  frameId?: number;
+  endFrameId?: Frame;
 
-  init = () => {
-    const collapseElement = this.options.getCollapseElement()
-    if (this.collapseElement !== collapseElement) {
-      this.collapseElement = collapseElement
-      if (!this.isExpanded) {
-        this.setStyles(this.getCollapsedStyles())
-      }
-    }
-  }
-
-  private getCollapsedStyles = (): Style => {
-    return {
-      display: this.options.collapsedHeight === 0 ? 'none' : 'block',
-      height: `${this.options.collapsedHeight}px`,
-      overflow: 'hidden',
-    }
-  }
-
-  setOptions = (
-    update: CollapseParams | ((prev: CollapseParams) => CollapseParams)
-  ) => {
-    const opts = typeof update === 'function' ? update(this.options) : update
-
-    Object.entries(opts).forEach(([key, value]) => {
-      if (typeof value === 'undefined') delete (opts as any)[key]
-    })
-
-    this.options = {
-      duration: 'auto',
-      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      expandStyles: {},
-      collapseStyles: {},
-      hasDisabledAnimation: false,
+  constructor(options: CollapseOptions) {
+    this.#options = {
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+      duration: "auto",
       collapsedHeight: 0,
-      defaultExpanded: false,
       onExpandedChange() {},
-      ...opts,
-    }
-
-    this.id = this.options.id ?? `collapse-${uid(this)}`
+      onTransitionStateChange() {},
+      ...options,
+    };
   }
 
-  private setStyles = (styles: Style) => {
-    const target = this.options.getCollapseElement()
-    if (!target) {
-      return
-    }
-    for (const property in styles) {
-      const value = styles[property]
-      if (value) {
-        target.style[property] = value
+  setOptions(opts: Partial<CollapseOptions>): void {
+    this.#options = { ...this.#options, ...opts };
+  }
+
+  #getElement(): HTMLElement {
+    return this.#options.getDisclosureElement();
+  }
+
+  #getDuration(height: number): number {
+    let num =
+      this.#options.duration === "auto"
+        ? calcDuration(height)
+        : this.#options.duration;
+    return num;
+  }
+
+  #setTransitionEndTimeout = (
+    state: "open" | "close",
+    duration: number,
+  ): void => {
+    const endTransition = () => {
+      let target = this.#getElement();
+      target.style.removeProperty("transition");
+      if (state === "close") {
+        // Closed
+        this.setCollapsedStyles();
+        this.frameId = requestAnimationFrame(() => {
+          this.#options.onTransitionStateChange("collapseEnd");
+        });
       } else {
-        target.style.removeProperty(property)
+        target.style.removeProperty("height");
+        target.style.removeProperty("overflow");
+        target.style.removeProperty("display");
+        this.frameId = requestAnimationFrame(() => {
+          this.#options.onTransitionStateChange("expandEnd");
+        });
       }
+    };
+    if (this.endFrameId) {
+      clearAnimationTimeout(this.endFrameId);
+    }
+    this.endFrameId = setAnimationTimeout(endTransition, duration);
+  };
+
+  public getCollapsedStyles(): Record<string, string> {
+    let styles: Record<string, string> = {
+      height: `${this.#options.collapsedHeight}px`,
+      overflow: "hidden",
+      display: this.#options.collapsedHeight === 0 ? "none" : "block",
+    };
+    return styles;
+  }
+
+  public setCollapsedStyles(): void {
+    let target = this.#getElement();
+    for (let [property, value] of Object.entries(this.getCollapsedStyles())) {
+      target.style.setProperty(property, value);
     }
   }
 
-  private getTransitionStyles = (height: number | string) => {
-    if (this.options.hasDisabledAnimation) {
-      return ''
-    }
-    const duration =
-      this.options.duration === 'auto'
-        ? getAutoHeightDuration(height)
-        : this.options.duration
-    return `height ${duration}ms ${this.options.easing}`
-  }
-
-  private handleTransitionEnd = (e: TransitionEvent) => {
-    if (e.propertyName !== 'height') {
-      return
-    }
-
-    if (this.isExpanded) {
-      this.setStyles({
-        height: '',
-        overflow: '',
-        transition: '',
-        display: '',
-      })
-      this.options.onExpandEnd?.()
-    } else {
-      this.setStyles({
-        ...this.getCollapsedStyles(),
-        transition: '',
-      })
-      this.options.onCollapseEnd?.()
+  public unsetCollapsedStyles(): void {
+    let target = this.#getElement();
+    for (let property of Object.keys(this.getCollapsedStyles())) {
+      target.style.removeProperty(property);
     }
   }
 
-  open = (): void => {
-    // don't repeat if already open
-    if (this.isExpanded || !this.isMounted) {
-      return
+  public open(): void {
+    const target = this.#getElement();
+    this.#options.onExpandedChange(true);
+
+    if (this.frameId) cancelAnimationFrame(this.frameId);
+    if (this.endFrameId) clearAnimationTimeout(this.endFrameId);
+
+    if (prefersReducedMotion()) {
+      target.style.removeProperty("display");
+      target.style.removeProperty("height");
+      target.style.removeProperty("overflow");
+      return;
     }
 
-    const target = this.options.getCollapseElement()
-    if (!target) {
-      return
-    }
+    paddingWarning(target);
+    this.frameId = requestAnimationFrame(() => {
+      this.#options.onTransitionStateChange("expandStart");
+      target.style.setProperty("display", "block");
+      target.style.setProperty("overflow", "hidden");
+      target.style.setProperty("height", `${this.#options.collapsedHeight}px`);
 
-    this.isExpanded = true
-    this.options.onExpandedChange?.(true)
-    this.options.onExpandStart?.()
-    paddingWarning(target)
-    requestAnimationFrame(() => {
-      this.setStyles({
-        ...this.options.expandStyles,
-        display: 'block',
-        overflow: 'hidden',
-        height: `${this.options.collapsedHeight}px`,
-      })
-      requestAnimationFrame(() => {
-        const height = target.scrollHeight
-
-        // Order important! So setting properties directly
-        target.style.transition = this.getTransitionStyles(height)
-        target.style.height = `${height}px`
-      })
-    })
+      this.frameId = requestAnimationFrame(() => {
+        this.#options.onTransitionStateChange("expanding");
+        const height = target.scrollHeight;
+        const duration = this.#getDuration(height);
+        this.#setTransitionEndTimeout("open", duration);
+        target.style.transition = `height ${duration}ms ${this.#options.easing}`;
+        target.style.height = `${height}px`;
+      });
+    });
   }
 
-  close = () => {
-    // don't repeat if already closed
-    if (!this.isExpanded) {
-      return
+  public close(): void {
+    this.#options.onExpandedChange(false);
+
+    if (this.frameId) cancelAnimationFrame(this.frameId);
+    if (this.endFrameId) clearAnimationTimeout(this.endFrameId);
+
+    if (prefersReducedMotion()) {
+      this.setCollapsedStyles();
+      return;
     }
 
-    const target = this.options.getCollapseElement()
-    if (!target) {
-      return
-    }
+    this.#options.onTransitionStateChange("collapseStart");
+    this.frameId = requestAnimationFrame(() => {
+      const target = this.#getElement();
 
-    if (!this.isMounted) {
-      this.init()
-      return
-    }
+      const height = target.scrollHeight;
+      const duration = this.#getDuration(height);
+      this.#setTransitionEndTimeout("close", duration);
+      target.style.transition = `height ${duration}ms ${this.#options.easing}`;
+      target.style.height = `${height}px`;
 
-    this.isExpanded = false
-    this.options.onExpandedChange?.(false)
-    this.options.onCollapseStart?.()
-    requestAnimationFrame(() => {
-      const height = target.scrollHeight
-      this.setStyles({
-        ...this.options.collapseStyles,
-        transition: this.getTransitionStyles(height),
-        height: `${height}px`,
-      })
-      requestAnimationFrame(() => {
-        this.setStyles({
-          height: `${this.options.collapsedHeight}px`,
-          overflow: 'hidden',
-        })
-      })
-    })
+      this.frameId = requestAnimationFrame(() => {
+        this.#options.onTransitionStateChange("collapsing");
+        target.style.overflow = "hidden";
+        target.style.height = `${this.#options.collapsedHeight}px`;
+      });
+    });
   }
+}
 
-  toggle = () => {
-    if (this.isExpanded) {
-      this.close()
-    } else {
-      this.open()
-    }
-  }
-
-  getCollapse = () => {
-    const hasToggle = Boolean(this.options.getToggleElement?.())
-    return {
-      id: this.id,
-      'aria-hidden': this.isExpanded ? undefined : true,
-      onTransitionEndHandler: this.handleTransitionEnd,
-      style: {
-        boxSizing: 'border-box' as const,
-      },
-      role: 'region',
-      'aria-labelledby': hasToggle ? `${this.id}-toggle` : undefined,
-    }
-  }
-
-  getToggle = (
-    { disabled }: { disabled?: boolean } = { disabled: false }
-  ): {
-    onClickHandler: () => void
-    id: string
-    'aria-controls': string
-    'aria-expanded': boolean
-    disabled?: boolean
-    type?: 'button'
-    'aria-disabled'?: boolean
-    role?: 'button'
-    tabIndex?: 0 | -1
-  } => {
-    const toggleElement = this.options.getToggleElement?.()
-    const isButton = toggleElement ? toggleElement.tagName === 'BUTTON' : false
-    const props: any = {
-      onClickHandler: disabled ? () => {} : this.toggle,
-      id: `${this.id}-toggle`,
-      'aria-controls': this.id,
-      'aria-expanded': this.isExpanded,
-    }
-    if (isButton) {
-      props.type = 'button'
-      props.disabled = disabled ? true : undefined
-    } else {
-      props['aria-disabled'] = disabled ? true : undefined
-      props.role = 'button'
-      props.tabIndex = disabled ? -1 : 0
-    }
-    return props
-  }
+/** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+export function prefersReducedMotion() {
+  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+  return query.matches;
 }

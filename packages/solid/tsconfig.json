@@ -1,0 +1,11 @@
+{
+  "extends": "@collapsed-internal/tsconfig/base.json",
+  "compilerOptions": {
+    "noEmitOnError": false,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "inlineSources": true,
+    "baseUrl": "."
+  }
+}

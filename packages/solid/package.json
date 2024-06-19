@@ -1,0 +1,37 @@
+{
+  "name": "@collapsed/solid",
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@collapsed-internal/build": "workspace:*",
+    "@collapsed-internal/tsconfig": "workspace:*",
+    "@types/node": "^20",
+    "solid-js": "^1.8.17",
+    "tslib": "^2.4.1",
+    "tsup": "^8",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@collapsed/core": "workspace:*"
+  }
+}

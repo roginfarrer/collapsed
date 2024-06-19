@@ -14,7 +14,8 @@ jobs:
     env:
       CI: true
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_REMOTE_ONLY: true
 
     steps:
       - name: Checkout
@@ -22,10 +23,18 @@ jobs:
         with:
           fetch-depth: 2
 
-      - uses: pnpm/action-setup@v2
+      - name: Cache turbo build setup
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: pnpm/action-setup@v4
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
@@ -43,12 +52,4 @@ jobs:
         run: pnpm test
 
       - name: Cypress
-        run: cd packages/react && npx cypress install && npx cypress run --component && cd -
-
-      # - name: Cypress run
-      #   uses: cypress-io/github-action@v5
-      #   with:
-      #     command-prefix: npx
-      #     install: false
-      #     component: true
-      #     working-directory: ./packages/react
+        run: pnpx cypress install && pnpm cypress:run
