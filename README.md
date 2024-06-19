@@ -11,9 +11,9 @@ Headless UI for building flexible and accessible animating expand/collapse secti
 npm install react-collapsed
 ```
 
-[View installation and usage docs here!](/packages/react-collapsed)
+## [—> View installation and usage docs here! <—](/packages/react-collapsed)
 
-## Experimental Framework Adapters
+### Experimental Framework Adapters
 
 [react-collapsed][react-collapsed] is stable and ready to use. I've also been exploring a rewrite with a framework-agnostic core that's also available with a few different framework adapters (indicated with the `@collapsed/` namespace). Here's a breakdown to clarify what's available and their stability:
 
