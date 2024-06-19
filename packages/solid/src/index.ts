@@ -2,7 +2,6 @@ import { Collapse, CollapseOptions } from "@collapsed/core";
 import {
   createEffect,
   createSignal,
-  createUniqueId,
   on,
   mergeProps,
   createComputed,
@@ -22,10 +21,15 @@ export interface UseCollapseParams
    * @default false
    */
   initialExpanded?: boolean;
+  /**
+   * Unique identifier used to for associating elements appropriately for accessibility.
+   */
+  id?: string;
 }
 
+let id = 0;
+
 export function createCollapse(options: UseCollapseParams) {
-  const id = createUniqueId();
   const [isExpanded, setExpanded] = createSignal(false);
   const [isAnimating, setAnimating] = createSignal(false);
   let [collapseEl, setCollapseEl] = createSignal<HTMLElement>();
@@ -77,7 +81,7 @@ export function createCollapse(options: UseCollapseParams) {
     setCollapsedStyles(collapse.getCollapsedStyles());
   });
 
-  const disclosureId = `collapsed-disclosure-${id}`;
+  const disclosureId = options.id ?? `collapsed-disclosure-${++id}`;
 
   const getToggleProps = <T extends HTMLElement>(
     args?: JSX.HTMLAttributes<T>,

@@ -1,17 +1,19 @@
-import { createSignal } from "solid-js";
+import { createSignal, createUniqueId } from "solid-js";
 import { createCollapse } from "@collapsed/solid";
 import "./app.css";
 
-export default function App() {
+function Collapse() {
+  const id = createUniqueId();
   const [collapseHeight, setCollapseHeight] = createSignal(60);
   const collapse = createCollapse({
+    id,
     get collapsedHeight() {
       return Number.isNaN(collapseHeight()) ? 0 : collapseHeight();
     },
   });
 
   return (
-    <main>
+    <div>
       <h1>Hello world!</h1>
       <input
         type="number"
@@ -33,6 +35,15 @@ export default function App() {
         <p>Hello there</p>
         <p>Hello there</p>
       </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <main>
+      <Collapse />
+      <Collapse />
     </main>
   );
 }
