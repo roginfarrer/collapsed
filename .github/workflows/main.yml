@@ -43,4 +43,4 @@ jobs:
         run: pnpm test
 
       - name: Cypress
-        run: pnpm cypress:run
+        run: pnpx cypress install && pnpm cypress:run
