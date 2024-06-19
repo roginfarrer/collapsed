@@ -2,7 +2,7 @@ import * as React from "react";
 import { Collapse, CollapseOptions } from "@collapsed/core";
 import { AssignableRef, mergeRefs, useControlledState } from "./utils";
 
-export interface UseCollapseParams
+export interface UseCollapseOptions
   extends Omit<CollapseOptions, "getDisclosureElement"> {
   /**
    * If true, the disclosure is expanded.
@@ -30,7 +30,7 @@ export function useCollapse({
   collapsedHeight = 0,
   onTransitionStateChange = () => {},
   id: propId,
-}: UseCollapseParams = {}) {
+}: UseCollapseOptions = {}) {
   const reactId = React.useId();
   const [isExpanded, setExpanded] = useControlledState(
     propExpanded,
