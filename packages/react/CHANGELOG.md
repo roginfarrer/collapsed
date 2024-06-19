@@ -1,5 +1,18 @@
 Changelog has been moved to [the releases tab](https://github.com/roginfarrer/react-collapsed/releases).
 
+## 5.0.0
+
+### Major Changes
+
+- 42793ee: NOTE: See `packages/react-collapsed` for stable API.
+
+  Complete rewrite using rewritten `@collapsed/core`. API remains the same.
+
+### Patch Changes
+
+- Updated dependencies [42793ee]
+  - @collapsed/core@5.0.0
+
 ## 4.0.1
 
 ### Patch Changes
@@ -41,18 +54,18 @@ Complete rewrite using React hooks!
 - Adds support for unmounting the contents of the Collapse element when closed
 
 ```js
-import React from 'react'
-import useCollapse from 'react-collapsed'
+import React from "react";
+import useCollapse from "react-collapsed";
 
 function Demo() {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse()
+  const { getCollapseProps, getToggleProps, isOpen } = useCollapse();
 
   return (
     <>
-      <button {...getToggleProps()}>{isOpen ? 'Collapse' : 'Expand'}</button>
+      <button {...getToggleProps()}>{isOpen ? "Collapse" : "Expand"}</button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </>
-  )
+  );
 }
 ```
 

@@ -12,5 +12,6 @@
     "solid-js": "^1.8.17",
     "@collapsed/solid": "workspace:*",
     "vinxi": "^0.3.11"
-  }
+  },
+  "version": null
 }
