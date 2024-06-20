@@ -13,5 +13,5 @@
     "@collapsed/solid": "workspace:*",
     "vinxi": "^0.3.11"
   },
-  "version": null
+  "version": "0.1.0"
 }
