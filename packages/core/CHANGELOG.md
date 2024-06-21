@@ -1,5 +1,11 @@
 # @collapsed/core
 
+## 5.0.0
+
+### Major Changes
+
+- 42793ee: Full rewrite to narrow API to collapse animation and remove internal state. Intended for use with framework wrappers.
+
 ## 4.0.1
 
 ### Patch Changes
