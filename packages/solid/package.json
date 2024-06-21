@@ -33,5 +33,8 @@
   },
   "dependencies": {
     "@collapsed/core": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

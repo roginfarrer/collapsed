@@ -51,5 +51,8 @@
     "@collapsed/core": "workspace:*",
     "lit": "^3.0.0",
     "tiny-warning": "^1.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
