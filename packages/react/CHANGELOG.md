@@ -1,5 +1,11 @@
 Changelog has been moved to [the releases tab](https://github.com/roginfarrer/react-collapsed/releases).
 
+## 5.1.0
+
+### Minor Changes
+
+- 3e498c4: Updated react peer dependency versions to include React 19
+
 ## 5.0.0
 
 ### Major Changes
