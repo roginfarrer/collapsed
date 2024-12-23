@@ -1,5 +1,11 @@
 # react-collapsed
 
+## 4.2.0
+
+### Minor Changes
+
+- 3e498c4: Updated react peer dependency versions to include React 19
+
 ## 4.1.2
 
 ### Patch Changes
@@ -84,18 +90,18 @@ Complete rewrite using React hooks!
 - Adds support for unmounting the contents of the Collapse element when closed
 
 ```js
-import React from 'react'
-import useCollapse from 'react-collapsed'
+import React from "react";
+import useCollapse from "react-collapsed";
 
 function Demo() {
-  const { getCollapseProps, getToggleProps, isOpen } = useCollapse()
+  const { getCollapseProps, getToggleProps, isOpen } = useCollapse();
 
   return (
     <>
-      <button {...getToggleProps()}>{isOpen ? 'Collapse' : 'Expand'}</button>
+      <button {...getToggleProps()}>{isOpen ? "Collapse" : "Expand"}</button>
       <section {...getCollapseProps()}>Collapsed content 🙈</section>
     </>
-  )
+  );
 }
 ```
 
