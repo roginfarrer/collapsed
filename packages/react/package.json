@@ -31,8 +31,8 @@
     "cypress:run": "cypress run --component"
   },
   "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
